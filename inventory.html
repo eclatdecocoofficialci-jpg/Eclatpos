@@ -1,103 +1,109 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Éclat de Coco - Inventory</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <title>Inventory | Éclat de Coco POS</title>
   <link rel="stylesheet" href="style.css">
-  <meta name="theme-color" content="#f8bbd0" />
   <style>
+    /* 🌸 Inventory Page Layout */
     .inventory-container {
       display: flex;
       height: calc(100vh - 70px);
+      background-color: #fff;
     }
 
-    /* Left input bar */
-    .inventory-form {
+    /* 💖 Left Pink Sidebar */
+    .inventory-sidebar {
+      background: #fce4ec;
       width: 320px;
-      background: #f8bbd0;
-      color: #fff;
-      padding: 20px;
+      padding: 25px;
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
-      border-right: 3px solid #f48fb1;
+      gap: 15px;
+      border-right: 2px solid #f8bbd0;
     }
 
-    .inventory-form h3 {
-      color: #fff;
-      text-align: center;
-      margin-bottom: 15px;
-    }
-
-    .inventory-form label {
-      font-weight: 500;
-      margin-top: 8px;
-    }
-
-    .inventory-form input,
-    .inventory-form select {
-      padding: 8px;
-      border: none;
-      border-radius: 6px;
-      margin-top: 5px;
+    .inventory-sidebar h3 {
+      color: #e91e63;
+      font-size: 22px;
       margin-bottom: 10px;
-      width: 100%;
+      text-align: center;
     }
 
-    .inventory-form button {
-      background: #e91e63;
-      border: none;
-      border-radius: 8px;
-      color: white;
+    .inventory-sidebar label {
+      font-weight: 500;
+      color: #e91e63;
+      font-size: 14px;
+    }
+
+    .inventory-sidebar input,
+    .inventory-sidebar select {
       padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #f8bbd0;
+      outline: none;
+      font-size: 15px;
+      background: #fff;
+    }
+
+    .inventory-sidebar button {
+      margin-top: 10px;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background-color: #e91e63;
+      color: white;
       font-weight: 600;
       cursor: pointer;
-      transition: 0.3s ease;
+      transition: 0.3s;
     }
 
-    .inventory-form button:hover {
-      background: #d81b60;
+    .inventory-sidebar button:hover {
+      background-color: #c2185b;
+      transform: translateY(-2px);
     }
 
-    /* Right table area */
+    /* 💅 Right Side Table */
     .inventory-table {
       flex: 1;
-      background: #fff;
       padding: 20px;
       overflow-y: auto;
     }
 
-    .inventory-table h3 {
-      color: #e91e63;
-      margin-bottom: 15px;
-    }
-
-    table {
+    .inventory-table table {
       width: 100%;
       border-collapse: collapse;
       background: white;
+      border-radius: 10px;
+      overflow: hidden;
     }
 
-    th, td {
-      border: 1px solid #f8bbd0;
-      text-align: center;
-      padding: 10px;
-    }
-
-    th {
+    .inventory-table th {
       background: #ffe6ef;
       color: #e91e63;
+      padding: 12px;
+      border-bottom: 2px solid #f8bbd0;
+    }
+
+    .inventory-table td {
+      padding: 12px;
+      text-align: center;
+      border-bottom: 1px solid #f8bbd0;
+    }
+
+    .inventory-table tr:hover {
+      background-color: #fce4ec;
     }
 
     .action-btn {
       background: #f8bbd0;
-      color: #e91e63;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
+      color: #e91e63;
       padding: 5px 10px;
       cursor: pointer;
+      transition: 0.3s;
     }
 
     .action-btn:hover {
@@ -106,8 +112,8 @@
     }
   </style>
 </head>
-
 <body>
+  <!-- 🌸 Navigation Bar -->
   <nav>
     <h2>Éclat de Coco POS</h2>
     <div class="nav-buttons">
@@ -121,46 +127,44 @@
     </div>
   </nav>
 
+  <!-- 💖 Inventory Section -->
   <div class="inventory-container">
-    <!-- Left pink input form -->
-    <div class="inventory-form">
-      <h3>Add New Product</h3>
+    <!-- Left Sidebar -->
+    <div class="inventory-sidebar">
+      <h3>Add Product</h3>
+
       <label>Category</label>
-      <select id="category">
-        <option value="SA">Savon</option>
-        <option value="LO">Lotion</option>
-        <option value="BU">Beurre corporel</option>
-        <option value="MA">Masque</option>
-        <option value="CH">Cheveux</option>
-      </select>
+      <input type="text" id="category" placeholder="e.g. Savon" />
 
       <label>Product Name</label>
-      <input type="text" id="productName" placeholder="Ex: Rose Vanille">
+      <input type="text" id="productName" placeholder="e.g. Rose Vanille" />
 
       <label>Quantity</label>
-      <input type="number" id="quantity" placeholder="0">
+      <input type="number" id="quantity" placeholder="e.g. 10" />
 
-      <label>Price (FCFA)</label>
-      <input type="number" id="price" placeholder="0">
+      <label>Cost (CFA)</label>
+      <input type="number" id="cost" placeholder="e.g. 2000" />
 
-      <label>Cost (FCFA)</label>
-      <input type="number" id="cost" placeholder="0">
+      <label>Price (CFA)</label>
+      <input type="number" id="price" placeholder="e.g. 3500" />
 
-      <button onclick="addProduct()">➕ Add Product</button>
+      <label>Generated Code</label>
+      <input type="text" id="code" readonly placeholder="Auto" />
+
+      <button onclick="addProduct()">Add Product</button>
     </div>
 
-    <!-- Right white table -->
+    <!-- Right Table -->
     <div class="inventory-table">
-      <h3>Inventory List</h3>
       <table id="inventoryTable">
         <thead>
           <tr>
             <th>Code</th>
-            <th>Nom</th>
-            <th>Catégorie</th>
-            <th>Qté</th>
-            <th>Prix</th>
-            <th>Coût</th>
+            <th>Product</th>
+            <th>Category</th>
+            <th>Quantity</th>
+            <th>Cost</th>
+            <th>Price</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -170,69 +174,66 @@
   </div>
 
   <script>
-    let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
-
-    function generateCode(categoryPrefix) {
-      const count = inventory.filter(p => p.category === categoryPrefix).length + 1;
-      return categoryPrefix + String(count).padStart(3, '0');
+    let counter = 1;
+    function generateCode(category) {
+      if (!category) return '';
+      const prefix = category.substring(0, 2).toUpperCase();
+      const code = prefix + String(counter).padStart(3, '0');
+      counter++;
+      return code;
     }
 
     function addProduct() {
-      const category = document.getElementById('category').value;
+      const category = document.getElementById('category').value.trim();
       const productName = document.getElementById('productName').value.trim();
       const quantity = document.getElementById('quantity').value;
-      const price = document.getElementById('price').value;
       const cost = document.getElementById('cost').value;
+      const price = document.getElementById('price').value;
+      const code = generateCode(category);
 
-      if (!productName || !quantity || !price || !cost) {
-        alert("Veuillez remplir tous les champs !");
+      if (!category || !productName || !quantity || !cost || !price) {
+        alert('Please fill in all fields.');
         return;
       }
 
-      const code = generateCode(category);
-      const product = { code, productName, category, quantity, price, cost };
-      inventory.push(product);
-      localStorage.setItem('inventory', JSON.stringify(inventory));
-      displayInventory();
-      clearFields();
-    }
+      const table = document.getElementById('inventoryTable').querySelector('tbody');
+      const row = table.insertRow();
+      row.innerHTML = `
+        <td>${code}</td>
+        <td>${productName}</td>
+        <td>${category}</td>
+        <td>${quantity}</td>
+        <td>${cost}</td>
+        <td>${price}</td>
+        <td>
+          <button class="action-btn" onclick="editRow(this)">Edit</button>
+          <button class="action-btn" onclick="deleteRow(this)">Delete</button>
+        </td>
+      `;
 
-    function clearFields() {
+      document.getElementById('code').value = code;
+      document.getElementById('category').value = '';
       document.getElementById('productName').value = '';
       document.getElementById('quantity').value = '';
-      document.getElementById('price').value = '';
       document.getElementById('cost').value = '';
+      document.getElementById('price').value = '';
     }
 
-    function deleteProduct(index) {
-      if (confirm("Supprimer ce produit ?")) {
-        inventory.splice(index, 1);
-        localStorage.setItem('inventory', JSON.stringify(inventory));
-        displayInventory();
-      }
+    function editRow(btn) {
+      const row = btn.closest('tr');
+      const cells = row.querySelectorAll('td');
+      document.getElementById('code').value = cells[0].textContent;
+      document.getElementById('productName').value = cells[1].textContent;
+      document.getElementById('category').value = cells[2].textContent;
+      document.getElementById('quantity').value = cells[3].textContent;
+      document.getElementById('cost').value = cells[4].textContent;
+      document.getElementById('price').value = cells[5].textContent;
+      row.remove();
     }
 
-    function displayInventory() {
-      const tbody = document.querySelector('#inventoryTable tbody');
-      tbody.innerHTML = '';
-      inventory.forEach((p, index) => {
-        const row = `
-          <tr>
-            <td>${p.code}</td>
-            <td>${p.productName}</td>
-            <td>${p.category}</td>
-            <td>${p.quantity}</td>
-            <td>${p.price}</td>
-            <td>${p.cost}</td>
-            <td><button class="action-btn" onclick="deleteProduct(${index})">Delete</button></td>
-          </tr>
-        `;
-        tbody.innerHTML += row;
-      });
+    function deleteRow(btn) {
+      btn.closest('tr').remove();
     }
-
-    // Load inventory on page load
-    displayInventory();
   </script>
 </body>
 </html>
