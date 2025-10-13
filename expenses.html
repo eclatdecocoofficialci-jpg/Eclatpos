@@ -1,11 +1,137 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Page in progress</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dépenses | Éclat de Coco POS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
-<body style="font-family:Poppins; text-align:center; margin-top:100px; color:#e91e63;">
-  <h1>This page is under construction 💅</h1>
-  <a href="index.html" style="color:#e91e63; text-decoration:none;">← Back to POS</a>
+
+<body>
+  <nav>
+    <h2>Éclat de Coco POS</h2>
+    <div class="nav-buttons">
+      <a href="index.html">POS</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="sales.html">Sales Invoices</a>
+      <a href="products.html">Products</a>
+      <a href="inventory.html">Inventory</a>
+      <a href="expenses.html" class="active">Expenses</a>
+      <a href="reports.html">Reports</a>
+    </div>
+  </nav>
+
+  <!-- 🌸 Expense Entry Form -->
+  <section class="inventory-section">
+    <div class="inventory-form">
+      <h3>Ajouter une Dépense</h3>
+      <label>Nom de la dépense :</label>
+      <input type="text" id="expense-name" placeholder="Ex : Achat emballages">
+
+      <label>Montant (FCFA) :</label>
+      <input type="number" id="expense-amount" placeholder="Ex : 5000">
+
+      <label>Date :</label>
+      <input type="date" id="expense-date">
+
+      <button id="add-expense-btn">➕ Ajouter</button>
+    </div>
+
+    <!-- 💕 Expense Table -->
+    <div class="inventory-table">
+      <h3>Liste des Dépenses</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Montant (FCFA)</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="expense-table-body">
+          <tr><td colspan="4">Aucune dépense enregistrée</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <script>
+    // 🌸 Load expenses from localStorage
+    const expenses = JSON.parse(localStorage.getItem('expenses')) || [];
+
+    const nameInput = document.getElementById('expense-name');
+    const amountInput = document.getElementById('expense-amount');
+    const dateInput = document.getElementById('expense-date');
+    const addBtn = document.getElementById('add-expense-btn');
+    const tableBody = document.getElementById('expense-table-body');
+
+    // 💕 Display existing expenses
+    function loadExpenses() {
+      tableBody.innerHTML = '';
+      if (expenses.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="4">Aucune dépense enregistrée</td></tr>';
+        return;
+      }
+
+      expenses.forEach((exp, index) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${exp.name}</td>
+          <td>${exp.amount.toLocaleString()}</td>
+          <td>${exp.date}</td>
+          <td>
+            <button onclick="editExpense(${index})">✏️</button>
+            <button onclick="deleteExpense(${index})">🗑️</button>
+          </td>
+        `;
+        tableBody.appendChild(tr);
+      });
+    }
+
+    // ➕ Add new expense
+    addBtn.addEventListener('click', () => {
+      const name = nameInput.value.trim();
+      const amount = parseFloat(amountInput.value);
+      const date = dateInput.value;
+
+      if (!name || !amount || !date) {
+        alert('Veuillez remplir tous les champs.');
+        return;
+      }
+
+      expenses.push({ name, amount, date });
+      localStorage.setItem('expenses', JSON.stringify(expenses));
+
+      nameInput.value = '';
+      amountInput.value = '';
+      dateInput.value = '';
+
+      loadExpenses();
+    });
+
+    // 🧺 Edit expense
+    function editExpense(index) {
+      const exp = expenses[index];
+      const newName = prompt("Modifier le nom :", exp.name);
+      if (newName !== null) {
+        exp.name = newName;
+        localStorage.setItem('expenses', JSON.stringify(expenses));
+        loadExpenses();
+      }
+    }
+
+    // 🗑️ Delete expense
+    function deleteExpense(index) {
+      if (confirm("Supprimer cette dépense ?")) {
+        expenses.splice(index, 1);
+        localStorage.setItem('expenses', JSON.stringify(expenses));
+        loadExpenses();
+      }
+    }
+
+    loadExpenses();
+  </script>
 </body>
 </html>
