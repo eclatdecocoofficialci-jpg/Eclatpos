@@ -1,7 +1,6 @@
 let subtotal = 0;
 let orderNumber = 1001;
 
-// ➕ Ajouter un produit au panier
 function addToCart(name, price) {
   const cart = document.getElementById("cartItems");
   const row = document.createElement("tr");
@@ -18,14 +17,12 @@ function addToCart(name, price) {
   document.getElementById("total").textContent = subtotal;
 }
 
-// 💾 Enregistrer la commande
 function saveOrder() {
   alert("✅ Commande enregistrée avec succès !");
   orderNumber++;
   document.getElementById("orderId").textContent = orderNumber;
 }
 
-// 🖨️ Imprimer le reçu
 function printReceipt() {
   const name = document.getElementById("clientName").value;
   const phone = document.getElementById("clientPhone").value;
@@ -46,7 +43,7 @@ function printReceipt() {
   rItems.innerHTML = "";
   cartRows.forEach(r => {
     const cloned = r.cloneNode(true);
-    cloned.deleteCell(2); // supprime la colonne "Prix"
+    cloned.deleteCell(2);
     rItems.appendChild(cloned);
   });
 
