@@ -6,6 +6,140 @@
   <title>Dépenses | Éclat de Coco POS</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #fff;
+      color: #444;
+      margin: 0;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: white;
+      border-bottom: 2px solid #f8bbd0;
+      padding: 10px 25px;
+      box-shadow: 0 2px 8px rgba(233, 30, 99, 0.1);
+    }
+
+    nav h2 {
+      color: #e91e63;
+      font-weight: 600;
+    }
+
+    .nav-buttons a {
+      text-decoration: none;
+      color: #e91e63;
+      background: #fce4ec;
+      border-radius: 10px;
+      padding: 8px 14px;
+      margin-left: 8px;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    .nav-buttons a:hover {
+      background: #f8bbd0;
+    }
+
+    .nav-buttons a.active {
+      background: #e91e63;
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(233, 30, 99, 0.3);
+    }
+
+    section {
+      padding: 30px;
+    }
+
+    h2 {
+      color: #e91e63;
+      margin-bottom: 20px;
+    }
+
+    .expense-form {
+      background: #fff;
+      border: 1px solid #f8bbd0;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 3px 10px rgba(233, 30, 99, 0.08);
+      margin-bottom: 25px;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .expense-form input,
+    .expense-form select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #f8bbd0;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      font-size: 15px;
+    }
+
+    .expense-form button {
+      background: #e91e63;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    .expense-form button:hover {
+      background: #c2185b;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border: 1px solid #f8bbd0;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(233, 30, 99, 0.08);
+    }
+
+    th, td {
+      border: 1px solid #f8bbd0;
+      padding: 12px;
+      text-align: center;
+    }
+
+    th {
+      background: #ffe6ef;
+      color: #e91e63;
+    }
+
+    .delete-btn {
+      background: #f8bbd0;
+      color: #e91e63;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 12px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .delete-btn:hover {
+      background: #e91e63;
+      color: white;
+    }
+
+    #total-expenses {
+      font-weight: 600;
+      font-size: 18px;
+      color: #e91e63;
+      margin-top: 15px;
+      text-align: right;
+    }
+  </style>
 </head>
 
 <body>
@@ -14,7 +148,7 @@
     <div class="nav-buttons">
       <a href="index.html">POS</a>
       <a href="dashboard.html">Dashboard</a>
-      <a href="sales.html">Sales Invoices</a>
+      <a href="sales_invoices.html">Sales Invoices</a>
       <a href="products.html">Products</a>
       <a href="inventory.html">Inventory</a>
       <a href="expenses.html" class="active">Expenses</a>
@@ -22,116 +156,99 @@
     </div>
   </nav>
 
-  <!-- 🌸 Expense Entry Form -->
-  <section class="inventory-section">
-    <div class="inventory-form">
-      <h3>Ajouter une Dépense</h3>
-      <label>Nom de la dépense :</label>
-      <input type="text" id="expense-name" placeholder="Ex : Achat emballages">
+  <section>
+    <h2>Ajouter une Dépense</h2>
 
-      <label>Montant (FCFA) :</label>
-      <input type="number" id="expense-amount" placeholder="Ex : 5000">
+    <form class="expense-form" id="expenseForm">
+      <input type="text" id="expenseName" placeholder="Nom de la dépense (ex: Loyer, Emballage...)" required>
+      <input type="number" id="expenseAmount" placeholder="Montant (FCFA)" required>
+      <input type="date" id="expenseDate" required>
+      <select id="expenseCategory" required>
+        <option value="">Sélectionnez une catégorie</option>
+        <option value="Loyer">Loyer</option>
+        <option value="Emballage">Emballage</option>
+        <option value="Ingrédients">Ingrédients</option>
+        <option value="Transport">Transport</option>
+        <option value="Divers">Divers</option>
+      </select>
+      <button type="submit">Ajouter</button>
+    </form>
 
-      <label>Date :</label>
-      <input type="date" id="expense-date">
+    <h2>Liste des Dépenses</h2>
 
-      <button id="add-expense-btn">➕ Ajouter</button>
-    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Nom</th>
+          <th>Catégorie</th>
+          <th>Montant (FCFA)</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="expenseTableBody">
+        <tr><td colspan="5">Aucune dépense pour le moment</td></tr>
+      </tbody>
+    </table>
 
-    <!-- 💕 Expense Table -->
-    <div class="inventory-table">
-      <h3>Liste des Dépenses</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Nom</th>
-            <th>Montant (FCFA)</th>
-            <th>Date</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="expense-table-body">
-          <tr><td colspan="4">Aucune dépense enregistrée</td></tr>
-        </tbody>
-      </table>
-    </div>
+    <p id="total-expenses">Total: 0 FCFA</p>
   </section>
 
   <script>
-    // 🌸 Load expenses from localStorage
-    const expenses = JSON.parse(localStorage.getItem('expenses')) || [];
+    const expenseForm = document.getElementById('expenseForm');
+    const tableBody = document.getElementById('expenseTableBody');
+    const totalExpenses = document.getElementById('total-expenses');
 
-    const nameInput = document.getElementById('expense-name');
-    const amountInput = document.getElementById('expense-amount');
-    const dateInput = document.getElementById('expense-date');
-    const addBtn = document.getElementById('add-expense-btn');
-    const tableBody = document.getElementById('expense-table-body');
+    let expenses = JSON.parse(localStorage.getItem('expenses')) || [];
 
-    // 💕 Display existing expenses
-    function loadExpenses() {
+    function renderExpenses() {
       tableBody.innerHTML = '';
       if (expenses.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="4">Aucune dépense enregistrée</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="5">Aucune dépense pour le moment</td></tr>';
+        totalExpenses.textContent = 'Total: 0 FCFA';
         return;
       }
+
+      let total = 0;
 
       expenses.forEach((exp, index) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td>${exp.name}</td>
-          <td>${exp.amount.toLocaleString()}</td>
           <td>${exp.date}</td>
-          <td>
-            <button onclick="editExpense(${index})">✏️</button>
-            <button onclick="deleteExpense(${index})">🗑️</button>
-          </td>
+          <td>${exp.name}</td>
+          <td>${exp.category}</td>
+          <td>${parseFloat(exp.amount).toLocaleString()}</td>
+          <td><button class="delete-btn" onclick="deleteExpense(${index})">🗑 Supprimer</button></td>
         `;
         tableBody.appendChild(tr);
+        total += parseFloat(exp.amount);
       });
+
+      totalExpenses.textContent = 'Total: ' + total.toLocaleString() + ' FCFA';
     }
 
-    // ➕ Add new expense
-    addBtn.addEventListener('click', () => {
-      const name = nameInput.value.trim();
-      const amount = parseFloat(amountInput.value);
-      const date = dateInput.value;
+    expenseForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('expenseName').value;
+      const amount = document.getElementById('expenseAmount').value;
+      const date = document.getElementById('expenseDate').value;
+      const category = document.getElementById('expenseCategory').value;
 
-      if (!name || !amount || !date) {
-        alert('Veuillez remplir tous les champs.');
-        return;
-      }
-
-      expenses.push({ name, amount, date });
+      expenses.push({ name, amount, date, category });
       localStorage.setItem('expenses', JSON.stringify(expenses));
-
-      nameInput.value = '';
-      amountInput.value = '';
-      dateInput.value = '';
-
-      loadExpenses();
+      expenseForm.reset();
+      renderExpenses();
     });
 
-    // 🧺 Edit expense
-    function editExpense(index) {
-      const exp = expenses[index];
-      const newName = prompt("Modifier le nom :", exp.name);
-      if (newName !== null) {
-        exp.name = newName;
-        localStorage.setItem('expenses', JSON.stringify(expenses));
-        loadExpenses();
-      }
-    }
-
-    // 🗑️ Delete expense
     function deleteExpense(index) {
-      if (confirm("Supprimer cette dépense ?")) {
+      if (confirm('Supprimer cette dépense ?')) {
         expenses.splice(index, 1);
         localStorage.setItem('expenses', JSON.stringify(expenses));
-        loadExpenses();
+        renderExpenses();
       }
     }
 
-    loadExpenses();
+    renderExpenses();
   </script>
 </body>
 </html>
