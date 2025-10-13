@@ -1,7 +1,8 @@
 let subtotal = 0;
 let orderNumber = 1001;
 
-function addToCart(code, name, price) {
+// ➕ Ajouter un produit au panier
+function addToCart(name, price) {
   const cart = document.getElementById("cartItems");
   const row = document.createElement("tr");
   row.innerHTML = `
@@ -15,37 +16,38 @@ function addToCart(code, name, price) {
   subtotal += price;
   document.getElementById("subtotal").textContent = subtotal;
   document.getElementById("total").textContent = subtotal;
-  document.getElementById("finalTotal").textContent = subtotal;
 }
 
+// 💾 Enregistrer la commande
 function saveOrder() {
   alert("✅ Commande enregistrée avec succès !");
   orderNumber++;
   document.getElementById("orderId").textContent = orderNumber;
 }
 
+// 🖨️ Imprimer le reçu
 function printReceipt() {
   const name = document.getElementById("clientName").value;
   const phone = document.getElementById("clientPhone").value;
   const address = document.getElementById("clientAddress").value;
-  const receipt = document.getElementById("receiptPreview");
+  const receipt = document.getElementById("receipt");
   const date = new Date().toLocaleDateString();
 
-  document.getElementById("receiptClientName").textContent = name;
-  document.getElementById("receiptClientPhone").textContent = phone;
-  document.getElementById("receiptClientAddress").textContent = address;
-  document.getElementById("receiptOrderID").textContent = document.getElementById("orderId").textContent;
-  document.getElementById("receiptDate").textContent = date;
-  document.getElementById("receiptTotal").textContent = subtotal;
-  document.getElementById("receiptTotalLine").textContent = subtotal;
+  document.getElementById("rName").textContent = name;
+  document.getElementById("rPhone").textContent = phone;
+  document.getElementById("rAddress").textContent = address;
+  document.getElementById("rOrder").textContent = orderNumber;
+  document.getElementById("rDate").textContent = date;
+  document.getElementById("rTotal").textContent = subtotal;
+  document.getElementById("rTotal2").textContent = subtotal;
 
   const cartRows = document.querySelectorAll("#cartItems tr");
-  const receiptBody = document.getElementById("receiptItems");
-  receiptBody.innerHTML = "";
+  const rItems = document.getElementById("rItems");
+  rItems.innerHTML = "";
   cartRows.forEach(r => {
     const cloned = r.cloneNode(true);
-    cloned.deleteCell(2);
-    receiptBody.appendChild(cloned);
+    cloned.deleteCell(2); // supprime la colonne "Prix"
+    rItems.appendChild(cloned);
   });
 
   receipt.style.display = "block";
