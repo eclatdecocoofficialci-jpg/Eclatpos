@@ -6,51 +6,16 @@
   <title>Éclat de Coco POS</title>
 
   <!-- 🌸 Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Great+Vibes&display=swap" rel="stylesheet">
-
-  <!-- 🌸 App Manifest for Offline Install -->
-  <link rel="manifest" href="manifest.json">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 
   <style>
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
-      background: white;
-      overflow: hidden;
+      background: #fff;
     }
 
-    /* 🌸 WELCOME SCREEN */
-    #welcomeScreen {
-      position: fixed;
-      inset: 0;
-      background: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      z-index: 9999;
-      transition: opacity 0.6s ease;
-    }
-
-    #welcomeText {
-      font-family: 'Great Vibes', cursive;
-      font-size: 60px;
-      color: #e91e63;
-      text-align: center;
-      opacity: 0;
-      transition: opacity 0.5s ease;
-      letter-spacing: 2px;
-    }
-
-    .fade-in {
-      opacity: 1 !important;
-    }
-
-    /* 🌸 POS PAGE (hidden initially) */
-    #posApp {
-      display: none;
-    }
-
+    /* 🌸 Navbar */
     nav {
       display: flex;
       justify-content: space-between;
@@ -62,6 +27,7 @@
     nav .logo {
       font-weight: 600;
       color: #fff;
+      font-size: 20px;
     }
 
     .nav-buttons a {
@@ -75,101 +41,200 @@
       text-decoration: underline;
     }
 
-    /* Basic POS layout placeholders (you already have full pages) */
+    /* 🌸 POS Layout */
     #pos {
       display: flex;
-      gap: 20px;
+      justify-content: space-between;
       padding: 20px;
+      gap: 20px;
     }
-    .left-section { flex: 1; background: #fff; }
-    .cashier { flex: 1; background: #fff; border-left: 2px solid #f8bbd0; padding: 20px;}
+
+    /* Left: Categories */
+    .categories {
+      width: 25%;
+      background: #ffe6ef;
+      border-radius: 10px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .categories h3 {
+      color: #e91e63;
+      margin-bottom: 10px;
+    }
+
+    .category-btn {
+      background-color: #f8bbd0;
+      border: none;
+      border-radius: 12px;
+      padding: 20px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      color: #b6004a;
+      transition: 0.3s;
+    }
+
+    .category-btn.active {
+      background-color: #e91e63;
+      color: #fff;
+    }
+
+    .category-btn:hover {
+      background-color: #ec407a;
+      color: white;
+    }
+
+    /* Middle: Products */
+    .products {
+      width: 45%;
+      border-left: 2px solid #f8bbd0;
+      border-right: 2px solid #f8bbd0;
+      padding: 0 20px;
+    }
+
+    .products h3 {
+      color: #e91e63;
+    }
+
+    .products input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      border: 1px solid #f8bbd0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      border: 1px solid #f8bbd0;
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #fff0f5;
+      color: #e91e63;
+    }
+
+    /* Right: Cashier */
+    .cashier {
+      width: 28%;
+    }
+
+    .cashier h3 {
+      color: #e91e63;
+    }
+
+    .cashier input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #f8bbd0;
+      border-radius: 8px;
+    }
+
+    .cashier button {
+      width: 100%;
+      background-color: #e91e63;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .cashier button:hover {
+      background-color: #d81b60;
+    }
   </style>
 </head>
 
 <body>
+  <!-- 🌸 Navigation -->
+  <nav>
+    <h2 class="logo">Éclat de Coco POS</h2>
+    <div class="nav-buttons">
+      <a href="index.html" class="active">POS</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="sales_invoices.html">Sales Invoices</a>
+      <a href="products.html">Products</a>
+      <a href="inventory.html">Inventory</a>
+      <a href="expenses.html">Expenses</a>
+      <a href="reports.html">Reports</a>
+    </div>
+  </nav>
 
-  <!-- 🌸 WELCOME SCREEN (no login) -->
-  <div id="welcomeScreen">
-    <div id="welcomeText"></div>
-  </div>
+  <!-- 🌸 POS Section -->
+  <section id="pos">
+    <!-- Categories -->
+    <div class="categories">
+      <h3>Catégories</h3>
+      <button class="category-btn active" onclick="filterCategory('Savon')">Savon</button>
+      <button class="category-btn" onclick="filterCategory('Lotion')">Lotion</button>
+      <button class="category-btn" onclick="filterCategory('Beurre corporel')">Beurre corporel</button>
+    </div>
 
-  <!-- 🌸 POS APP -->
-  <div id="posApp">
-    <nav>
-      <h2 class="logo">Éclat de Coco POS</h2>
-      <div class="nav-buttons">
-        <a href="index.html" class="active">POS</a>
-        <a href="dashboard.html">Dashboard</a>
-        <a href="sales_invoices.html">Sales Invoices</a>
-        <a href="products.html">Products</a>
-        <a href="inventory.html">Inventory</a>
-        <a href="expenses.html">Expenses</a>
-        <a href="reports.html">Reports</a>
-      </div>
-    </nav>
+    <!-- Products -->
+    <div class="products">
+      <h3>Produits</h3>
+      <input type="text" id="search" placeholder="Rechercher un produit..." oninput="searchProduct()">
+      <table>
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Nom</th>
+            <th>Prix</th>
+            <th>+</th>
+          </tr>
+        </thead>
+        <tbody id="productList"></tbody>
+      </table>
+    </div>
 
-    <section id="pos">
-      <div class="left-section">
-        <h3>Produits</h3>
-        <input type="text" id="search" placeholder="Rechercher..." oninput="searchProduct()">
-        <table>
-          <thead>
-            <tr><th>Code</th><th>Nom</th><th>Prix</th><th>+</th></tr>
-          </thead>
-          <tbody id="productList"></tbody>
-        </table>
-      </div>
+    <!-- Cashier -->
+    <div class="cashier">
+      <h3>Caisse</h3>
+      <input type="text" id="clientName" placeholder="Nom du client">
+      <input type="text" id="clientPhone" placeholder="Téléphone">
+      <input type="text" id="clientAddress" placeholder="Adresse">
 
-      <div class="cashier">
-        <h3>Caisse</h3>
-        <input type="text" id="clientName" placeholder="Client">
-        <input type="text" id="clientPhone" placeholder="Téléphone">
-        <table>
-          <thead><tr><th>Produit</th><th>Qté</th><th>Total</th></tr></thead>
-          <tbody id="cart"></tbody>
-        </table>
-        <p><strong>Total:</strong> <span id="total">0</span> FCFA</p>
-        <button onclick="saveAndPrint()">🖨️ Imprimer & Enregistrer</button>
-      </div>
-    </section>
-  </div>
+      <table>
+        <thead>
+          <tr><th>Produit</th><th>Qté</th><th>Total</th></tr>
+        </thead>
+        <tbody id="cart"></tbody>
+      </table>
+
+      <p><strong>Total:</strong> <span id="total">0</span> FCFA</p>
+      <button onclick="saveAndPrint()">🖨️ Imprimer & Enregistrer</button>
+    </div>
+  </section>
 
   <script>
-    // 🌸 Word-by-word fade animation (then auto-show POS)
-    const text = ["Bienvenue", "à", "Éclat", "de", "Coco", "Official"];
-    const welcomeText = document.getElementById("welcomeText");
-    let index = 0;
+    // ===== Products =====
+    const sampleProducts = [
+      { code: "SA001", productName: "Rose Vanilla Soap", price: 1500, category: "Savon" },
+      { code: "SA002", productName: "Lavender Bliss Soap", price: 2000, category: "Savon" },
+      { code: "LO001", productName: "Coconut Lotion", price: 3500, category: "Lotion" },
+      { code: "BB001", productName: "Vanilla Body Butter", price: 4000, category: "Beurre corporel" },
+    ];
 
-    function showWords() {
-      if (index < text.length) {
-        welcomeText.textContent += (index > 0 ? " " : "") + text[index];
-        welcomeText.classList.add("fade-in");
-        index++;
-        setTimeout(showWords, 500); // 0.5s per word
-      } else {
-        // After all words are shown -> fade welcome and show POS
-        setTimeout(() => {
-          const welcome = document.getElementById("welcomeScreen");
-          welcome.style.opacity = "0";
-          setTimeout(() => {
-            welcome.style.display = "none";
-            document.getElementById("posApp").style.display = "block";
-            // optional: load product data once POS is visible
-            loadProductsFromInventory();
-          }, 600);
-        }, 600);
-      }
-    }
-    window.onload = showWords;
+    localStorage.setItem("inventory", JSON.stringify(sampleProducts));
 
-    // ===== Load products from localStorage (keeps behavior from before) =====
-    function loadProductsFromInventory() {
-      const inventory = JSON.parse(localStorage.getItem('inventory')) || [];
-      const productList = document.getElementById('productList');
-      productList.innerHTML = '';
-
+    function loadProducts() {
+      const inventory = JSON.parse(localStorage.getItem("inventory")) || [];
+      const productList = document.getElementById("productList");
+      productList.innerHTML = "";
       inventory.forEach(item => {
-        const row = document.createElement('tr');
+        const row = document.createElement("tr");
         row.dataset.category = item.category;
         row.innerHTML = `
           <td>${item.code}</td>
@@ -181,66 +246,69 @@
       });
     }
 
-    // ===== Search =====
+    function filterCategory(category) {
+      document.querySelectorAll(".category-btn").forEach(btn => btn.classList.remove("active"));
+      event.target.classList.add("active");
+      document.querySelectorAll("#productList tr").forEach(row => {
+        row.style.display = row.dataset.category === category ? "" : "none";
+      });
+    }
+
     function searchProduct() {
-      const searchValue = document.getElementById('search').value.toLowerCase();
-      document.querySelectorAll('#productList tr').forEach(row => {
-        row.style.display = row.innerText.toLowerCase().includes(searchValue) ? '' : 'none';
+      const searchValue = document.getElementById("search").value.toLowerCase();
+      document.querySelectorAll("#productList tr").forEach(row => {
+        row.style.display = row.innerText.toLowerCase().includes(searchValue) ? "" : "none";
       });
     }
 
     // ===== Cart =====
     let subtotal = 0;
     function addToCart(name, price) {
-      const cart = document.getElementById('cart');
-      const row = document.createElement('tr');
+      const cart = document.getElementById("cart");
+      const row = document.createElement("tr");
       row.innerHTML = `<td>${name}</td><td>1</td><td>${price}</td>`;
       cart.appendChild(row);
       subtotal += price;
-      document.getElementById('total').textContent = subtotal;
+      document.getElementById("total").textContent = subtotal;
     }
 
-    // ===== Save + Print (saves to localStorage.sales) =====
     function saveAndPrint() {
-      const clientName = document.getElementById('clientName').value || "Client anonyme";
-      const clientPhone = document.getElementById('clientPhone').value || "-";
-      const total = parseFloat(document.getElementById('total').textContent) || 0;
-      const cartItems = Array.from(document.querySelectorAll('#cart tr')).map(tr => {
-        const tds = tr.querySelectorAll('td');
+      const clientName = document.getElementById("clientName").value || "Client anonyme";
+      const clientPhone = document.getElementById("clientPhone").value || "-";
+      const total = parseFloat(document.getElementById("total").textContent);
+      const cartItems = Array.from(document.querySelectorAll("#cart tr")).map(tr => {
+        const tds = tr.querySelectorAll("td");
         return { product: tds[0].innerText, qty: parseInt(tds[1].innerText), total: parseFloat(tds[2].innerText) };
       });
 
-      const sales = JSON.parse(localStorage.getItem('sales')) || [];
-      sales.push({
+      const sales = JSON.parse(localStorage.getItem("sales")) || [];
+      const saleData = {
         id: Date.now(),
         date: new Date().toLocaleString(),
         client: clientName,
         phone: clientPhone,
         items: cartItems,
         total: total
-      });
-      localStorage.setItem('sales', JSON.stringify(sales));
+      };
 
+      sales.push(saleData);
+      localStorage.setItem("sales", JSON.stringify(sales));
       alert("✅ Vente enregistrée !");
       window.print();
-
-      // Reset
-      document.getElementById('cart').innerHTML = '';
-      document.getElementById('total').textContent = '0';
-      subtotal = 0;
     }
 
-    // ===== Service Worker Registration for Offline Mode =====
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js')
-        .then(() => console.log('✅ Service Worker registered'))
-        .catch(err => console.error('⚠️ Service Worker failed:', err));
+    window.onload = loadProducts;
+
+    // ===== Offline Support =====
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("service-worker.js");
     }
   </script>
 
-  <!-- 🌸 App Icon -->
+  <!-- 🌸 App Icon & PWA -->
   <link rel="icon" type="image/png" href="icon.png">
   <link rel="apple-touch-icon" href="icon.png">
+  <meta name="theme-color" content="#f8bbd0">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Éclat de Coco POS">
