@@ -232,3 +232,75 @@ th {
   background: #f8bbd0;
   color: #e91e63;
 }
+/* 🎀 Dashboard Layout */
+.dashboard {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  padding: 30px;
+  gap: 20px;
+  background: #fff0f6;
+}
+
+.card {
+  background: white;
+  border: 2px solid #f8bbd0;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(233, 30, 99, 0.1);
+  padding: 20px;
+  width: 220px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(233, 30, 99, 0.2);
+}
+
+.card h3 {
+  color: #e91e63;
+  margin-bottom: 10px;
+}
+
+.card p {
+  font-size: 20px;
+  font-weight: 600;
+  color: #444;
+}
+
+/* 💅 Recent Sales Table */
+.recent-sales {
+  padding: 20px 40px;
+}
+
+.recent-sales h4 {
+  color: #e91e63;
+  margin-bottom: 15px;
+}
+
+.recent-sales table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border: 1px solid #f8bbd0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.recent-sales th {
+  background: #ffe6ef;
+  color: #e91e63;
+  padding: 12px;
+  text-align: left;
+}
+
+.recent-sales td {
+  border-top: 1px solid #f8bbd0;
+  padding: 10px;
+  text-align: left;
+}
+
+.recent-sales tr:hover {
+  background: #fff5fa;
+}
