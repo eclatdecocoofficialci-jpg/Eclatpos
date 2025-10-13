@@ -50,7 +50,55 @@ nav h2 {
   box-shadow: 0 2px 8px rgba(233, 30, 99, 0.3);
 }
 
-/* 💅 Scrollable product area */
+/* 💅 POS Layout */
+#pos {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Left Section (Products + Categories) */
+.left-section {
+  flex: 1.4;
+  display: flex;
+  flex-direction: column;
+  border-right: 2px solid #f8bbd0;
+  background: #fff;
+  position: relative;
+}
+
+/* Right Section (Caisse) */
+.cashier {
+  flex: 0.7;
+  background: #fff;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cashier h3 {
+  color: #e91e63;
+}
+
+.cashier input {
+  margin: 5px 0;
+  padding: 8px;
+  border: 1px solid #f8bbd0;
+  border-radius: 8px;
+}
+
+/* 🧾 Receipt Table */
+.receipt {
+  display: none;
+  background: #fff;
+  border: 1px solid #f8bbd0;
+  border-radius: 10px;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+/* 💅 Product Section */
 .product-section {
   flex: 1;
   padding: 20px;
@@ -59,6 +107,14 @@ nav h2 {
 
 .product-section h3 {
   color: #e91e63;
+  margin-bottom: 10px;
+}
+
+.product-section input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #f8bbd0;
+  border-radius: 8px;
   margin-bottom: 10px;
 }
 
@@ -79,30 +135,23 @@ th {
   background-color: #ffe6ef;
   color: #e91e63;
 }
-#pos {
+
+/* 🪞 Category Bar (Bottom Section) */
+.category-bar {
+  background: linear-gradient(180deg, #ffe6ef, #fff0f6);
+  border-top: 2px solid #f8bbd0;
+  padding: 10px 15px;
   display: flex;
-  flex: 1;
-  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
 }
 
-.left-section {
-  flex: 1.4;
-  display: flex;
-  flex-direction: column;
-  border-right: 2px solid #f8bbd0;
-  background: #fff;
-}
-
-.cashier {
-  flex: 0.7;
-  background: #fff;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-/* 🪞 Category Buttons */
+/* 🧸 Category Buttons */
 .category-btn {
   background: #f8bbd0;
   color: #e91e63;
@@ -125,4 +174,61 @@ th {
   color: white;
   transform: scale(1.05);
   box-shadow: 0 0 12px rgba(233, 30, 99, 0.3);
+}
+
+/* 🎀 Popup Overlay for Category Management */
+.popup-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.35);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.4s ease;
+  z-index: 100;
+}
+
+.popup {
+  background: #fff;
+  padding: 25px;
+  border-radius: 15px;
+  width: 300px;
+  text-align: center;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+  animation: popUp 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes popUp {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.popup input {
+  width: 90%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #f8bbd0;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.popup button {
+  background: #e91e63;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 15px;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.popup button.cancel {
+  background: #f8bbd0;
+  color: #e91e63;
 }
