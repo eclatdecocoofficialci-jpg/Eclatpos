@@ -304,3 +304,52 @@ th {
 .recent-sales tr:hover {
   background: #fff5fa;
 }
+/* 🧾 Sales Page */
+.sales {
+  padding: 30px;
+}
+
+.sales h2 {
+  color: #e91e63;
+  margin-bottom: 15px;
+}
+
+#print-btn {
+  background: #e91e63;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-bottom: 15px;
+  transition: background 0.3s ease;
+}
+
+#print-btn:hover {
+  background: #d81b60;
+}
+
+.sales table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #f8bbd0;
+}
+
+.sales th, .sales td {
+  padding: 12px;
+  border-bottom: 1px solid #f8bbd0;
+  text-align: left;
+}
+
+.sales th {
+  background: #ffe6ef;
+  color: #e91e63;
+}
+
+.sales tr:hover {
+  background: #fff5fa;
+}
