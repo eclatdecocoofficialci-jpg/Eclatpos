@@ -1,309 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Éclat de Coco POS</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background-color: #fff5fb;
-      color: #333;
-    }
-
-    nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #fff;
-      border-bottom: 3px solid #f8bbd0;
-      padding: 10px 20px;
-      box-shadow: 0 2px 10px rgba(233, 30, 99, 0.15);
-    }
-    .nav-buttons button {
-      background: #e91e63;
-      color: white;
-      border: none;
-      border-radius: 20px;
-      padding: 8px 14px;
-      margin-left: 8px;
-      cursor: pointer;
-      font-weight: 500;
-    }
-    .nav-buttons button:hover, .nav-buttons button.active {
-      background: #c2185b;
-    }
-
-    section { display: none; padding: 20px; }
-
-    /* Dashboard */
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 15px;
-      margin-top: 20px;
-    }
-    .card {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(233, 30, 99, 0.15);
-      padding: 15px;
-      text-align: center;
-    }
-    .card h3 { color: #e91e63; margin-bottom: 5px; }
-
-    .filters { text-align: center; margin: 20px 0; }
-    .filters button {
-      background: #f8bbd0;
-      border: none;
-      border-radius: 8px;
-      color: white;
-      padding: 8px 12px;
-      margin: 0 5px;
-      cursor: pointer;
-    }
-    .filters button.active { background: #e91e63; }
-
-    canvas {
-      background: white;
-      border-radius: 10px;
-      padding: 10px;
-      width: 100%;
-      max-width: 600px;
-      margin: 0 auto;
-      display: block;
-    }
-
-    /* POS */
-    .pos-layout {
-      display: flex;
-      justify-content: space-between;
-      padding: 25px;
-      gap: 20px;
-    }
-    .product-section, .cashier-section {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(233, 30, 99, 0.15);
-      padding: 20px;
-    }
-    .product-section { flex: 1.5; }
-    .cashier-section { flex: 1; border: 2px solid #f8bbd0; }
-
-    h1, h2 { color: #e91e63; text-align: center; }
-
-    input, select, button {
-      font-family: 'Poppins', sans-serif;
-    }
-    input, select {
-      width: 100%;
-      padding: 10px;
-      border-radius: 6px;
-      border: 1px solid #ddd;
-      margin-bottom: 10px;
-    }
-    button {
-      background-color: #e91e63;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      padding: 8px 12px;
-      cursor: pointer;
-    }
-    button:hover { background-color: #d81b60; }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-    th, td {
-      border-bottom: 1px solid #f1f1f1;
-      padding: 8px;
-      text-align: center;
-    }
-
-    /* Inventory Layout */
-    .inventory-layout {
-      display: flex;
-      gap: 20px;
-      padding: 20px;
-    }
-    .inventory-form {
-      flex: 0.7;
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(233,30,99,0.1);
-      padding: 20px;
-    }
-    .inventory-table {
-      flex: 2;
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(233,30,99,0.1);
-      padding: 20px;
-      overflow-x: auto;
-    }
-
-    footer {
-      text-align: center;
-      color: #999;
-      font-size: 14px;
-      padding: 20px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Éclat POS</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#f8bbd0">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Poppins',sans-serif;background:#fff5fb;}
+#welcome{position:fixed;inset:0;background:#e91e63;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;z-index:9999;}
+#welcome input{padding:10px;border-radius:8px;border:none;width:160px;text-align:center;font-size:16px;}
+#welcome button{margin-top:12px;background:#fff;color:#e91e63;border:none;border-radius:8px;padding:10px 20px;cursor:pointer;font-weight:600;}
+nav{display:flex;justify-content:space-around;background:white;border-bottom:3px solid #f8bbd0;padding:10px;}
+nav button{background:#f8bbd0;color:#e91e63;border:none;border-radius:10px;padding:8px 14px;cursor:pointer;font-weight:500;}
+nav button.active{background:#e91e63;color:#fff;}
+section{display:none;padding:15px;}
+h2{color:#e91e63;}
+.card{background:#fff;border:2px solid #f8bbd0;border-radius:10px;padding:15px;text-align:center;margin:10px;}
+table{width:100%;border-collapse:collapse;margin-top:10px;}
+th,td{border:1px solid #f8bbd0;padding:8px;text-align:center;font-size:14px;}
+button.edit,button.delete{background:white;border:1px solid #e91e63;color:#e91e63;border-radius:6px;padding:4px 10px;margin:2px;cursor:pointer;}
+button.edit:hover,button.delete:hover{background:#e91e63;color:#fff;}
+input,select{width:100%;padding:8px;margin-bottom:8px;border:1px solid #f8bbd0;border-radius:6px;}
+.sidebar{width:35%;float:left;}
+.tablearea{width:60%;float:right;}
+@media(max-width:900px){.sidebar,.tablearea{width:100%;float:none;}}
+</style>
 </head>
-
 <body>
-  <nav>
-    <h2 style="color:#e91e63;">Éclat de Coco POS</h2>
-    <div class="nav-buttons">
-      <button class="active" onclick="showSection('dashboard')">Dashboard</button>
-      <button onclick="showSection('pos')">POS</button>
-      <button onclick="showSection('inventory')">Inventory</button>
-      <button onclick="showSection('suppliers')">Suppliers</button>
-      <button onclick="showSection('customers')">Customers</button>
-      <button onclick="showSection('expenses')">Expenses</button>
-    </div>
-  </nav>
+<div id="welcome">
+  <h1>Welcome to Éclat de Coco Official 💖</h1>
+  <p>Enter access code</p>
+  <input type="password" id="code" placeholder="••••">
+  <button onclick="checkCode()">Enter</button>
+  <p id="err" style="display:none;color:#fff;">Wrong code</p>
+</div>
 
-  <!-- DASHBOARD -->
-  <section id="dashboard" style="display:block;">
-    <h2>Welcome, Sara Ajami 💖</h2>
-    <p id="todayDate"></p>
-    <div class="cards">
-      <div class="card"><h3>Total Sales</h3><p>0 FCFA</p></div>
-      <div class="card"><h3>Total Orders</h3><p>0</p></div>
-      <div class="card"><h3>Total Customers</h3><p>0</p></div>
-      <div class="card"><h3>Total Expenses</h3><p>0 FCFA</p></div>
-    </div>
+<nav>
+  <button class="active" onclick="show('dashboard')">Dashboard</button>
+  <button onclick="show('pos')">POS</button>
+  <button onclick="show('inventory')">Inventory</button>
+  <button onclick="show('suppliers')">Suppliers</button>
+  <button onclick="show('customers')">Customers</button>
+  <button onclick="show('expenses')">Expenses</button>
+  <button onclick="show('invoices')">Sales Invoices</button>
+</nav>
 
-    <div class="filters">
-      <button class="active">Daily</button>
-      <button>Weekly</button>
-      <button>Monthly</button>
-    </div>
+<section id="dashboard" style="display:block;">
+  <h2>Dashboard</h2>
+  <div class="card">Welcome back, Sara 💖</div>
+</section>
 
-    <canvas id="salesChart"></canvas>
-  </section>
+<section id="pos">
+  <h2>Point de Vente</h2>
+  <p>ID Commande: <span id="orderId">1001</span></p>
+  <input id="clientName" placeholder="Client Name">
+  <input id="clientPhone" placeholder="Phone">
+  <table>
+    <thead><tr><th>Product</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead>
+    <tbody id="cart"></tbody>
+  </table>
+  <p>Total: <span id="total">0</span> FCFA</p>
+  <button onclick="saveOrder()">Save</button>
+</section>
 
-  <!-- POS -->
-  <section id="pos">
-    <div class="pos-layout">
-      <div class="product-section">
-        <h1>Point de Vente</h1>
-        <input type="text" id="searchProduct" placeholder="🔍 Search by name, code or category...">
-        <table>
-          <thead><tr><th>Code</th><th>Product</th><th>Price (FCFA)</th><th>Action</th></tr></thead>
-          <tbody id="productList">
-            <tr><td>SA001</td><td>Rose Vanilla Soap</td><td>1500</td><td><button>+</button></td></tr>
-          </tbody>
-        </table>
-      </div>
+<section id="inventory">
+  <div class="sidebar">
+    <h2>Add Product</h2>
+    <input id="pname" placeholder="Product Name">
+    <input id="pcat" placeholder="Category">
+    <input id="pprice" placeholder="Price (FCFA)" type="number">
+    <input id="pweight" placeholder="Weight/Density (ml or g)">
+    <input id="pqty" placeholder="Quantity" type="number">
+    <input id="psupp" placeholder="Supplier">
+    <button onclick="addProduct()">Save</button>
+    <button onclick="clearForm()">Clear</button>
+  </div>
+  <div class="tablearea">
+    <table>
+      <thead><tr><th>Code</th><th>Name</th><th>Category</th><th>Price</th><th>Weight</th><th>Qty</th><th>Supplier</th><th>Edit</th><th>Delete</th></tr></thead>
+      <tbody id="invtable"></tbody>
+    </table>
+  </div>
+</section>
 
-      <div class="cashier-section">
-        <h2>🧾 Caisse</h2>
-        <p><strong>ID Commande :</strong> <span>1001</span></p>
-        <input type="text" placeholder="Client name">
-        <input type="text" placeholder="Phone">
-        <input type="text" placeholder="Address">
-        <table>
-          <thead><tr><th>Product</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead>
-          <tbody></tbody>
-        </table>
-        <p><strong>Total:</strong> 0 FCFA</p>
-      </div>
-    </div>
-  </section>
+<section id="suppliers"><div class="sidebar"><h2>Add Supplier</h2>
+<input id="sname" placeholder="Supplier Name"><input id="sphone" placeholder="Phone"><input id="semail" placeholder="Email"><button onclick="addSupplier()">Save</button></div>
+<div class="tablearea"><table><thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Edit</th><th>Delete</th></tr></thead><tbody id="suptable"></tbody></table></div></section>
 
-  <!-- INVENTORY -->
-  <section id="inventory">
-    <h2>Inventory</h2>
-    <div class="inventory-layout">
-      <div class="inventory-form">
-        <input type="text" id="productName" placeholder="Product Name">
-        <input type="text" id="category" placeholder="Category">
-        <input type="text" id="perfume" placeholder="Perfume">
-        <input type="text" id="weight" placeholder="Weight (g) or Density (ml)">
-        <input type="number" id="unitPrice" placeholder="Unit Price (FCFA)">
-        <input type="number" id="quantity" placeholder="Quantity">
-        <input type="text" id="supplier" placeholder="Supplier">
-        <button onclick="addInventory()">Add Product</button>
-      </div>
+<section id="customers"><div class="sidebar"><h2>Add Customer</h2>
+<input id="cname" placeholder="Name"><input id="cphone" placeholder="Phone"><input id="caddress" placeholder="Address"><button onclick="addCustomer()">Save</button></div>
+<div class="tablearea"><table><thead><tr><th>Name</th><th>Phone</th><th>Address</th><th>Edit</th><th>Delete</th></tr></thead><tbody id="custable"></tbody></table></div></section>
 
-      <div class="inventory-table">
-        <table id="inventoryTable">
-          <thead>
-            <tr>
-              <th>Code</th><th>Barcode</th><th>Product</th><th>Category</th>
-              <th>Perfume</th><th>Weight/Density</th><th>Unit Price</th><th>Quantity</th><th>Supplier</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </div>
-  </section>
+<section id="expenses"><div class="sidebar"><h2>Add Expense</h2>
+<input id="ename" placeholder="Expense Type"><input id="eamount" placeholder="Amount" type="number"><button onclick="addExpense()">Save</button></div>
+<div class="tablearea"><table><thead><tr><th>Type</th><th>Amount</th><th>Edit</th><th>Delete</th></tr></thead><tbody id="exptable"></tbody></table></div></section>
 
-  <section id="suppliers"><h2>Suppliers</h2></section>
-  <section id="customers"><h2>Customers</h2></section>
-  <section id="expenses"><h2>Expenses</h2></section>
+<section id="invoices"><h2>Sales Invoices</h2>
+<table><thead><tr><th>ID</th><th>Client</th><th>Total</th><th>Status</th><th>Delete</th></tr></thead><tbody id="invlist"></tbody></table></section>
 
-  <footer>© Éclat de Coco 2025 — Visit Website</footer>
-
-  <script>
-    function showSection(id) {
-      document.querySelectorAll('section').forEach(s => s.style.display = 'none');
-      document.getElementById(id).style.display = 'block';
-      document.querySelectorAll('.nav-buttons button').forEach(b => b.classList.remove('active'));
-      event.target.classList.add('active');
-    }
-
-    let counter = 1;
-    function generateCode(category) {
-      const prefix = category.slice(0, 2).toUpperCase();
-      const code = prefix + String(counter).padStart(3, '0');
-      counter++;
-      return code;
-    }
-
-    function generateBarcode(text) {
-      return '|||' + text + '|||';
-    }
-
-    function addInventory() {
-      const name = document.getElementById('productName').value;
-      const cat = document.getElementById('category').value;
-      const perfume = document.getElementById('perfume').value;
-      const weight = document.getElementById('weight').value;
-      const price = document.getElementById('unitPrice').value;
-      const qty = document.getElementById('quantity').value;
-      const supplier = document.getElementById('supplier').value;
-
-      if (!name || !cat) return alert('Please fill product name and category');
-
-      const code = generateCode(cat);
-      const barcode = generateBarcode(code);
-
-      const table = document.querySelector('#inventoryTable tbody');
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${code}</td>
-        <td>${barcode}</td>
-        <td>${name}</td>
-        <td>${cat}</td>
-        <td>${perfume}</td>
-        <td>${weight}</td>
-        <td>${price}</td>
-        <td>${qty}</td>
-        <td>${supplier}</td>
-      `;
-      table.appendChild(row);
-
-      document.querySelectorAll('.inventory-form input').forEach(i => i.value = '');
-    }
-  </script>
+<script>
+function checkCode(){
+  const v=document.getElementById("code").value;
+  if(v==="1234"){document.getElementById("welcome").style.display="none";}
+  else document.getElementById("err").style.display="block";
+}
+function show(id){
+  document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
+  document.querySelectorAll("section").forEach(s=>s.style.display="none");
+  document.querySelector(`[onclick="show('${id}')"]`).classList.add("active");
+  document.getElementById(id).style.display="block";
+}
+let prodList=[];let counter=1;
+function addProduct(){
+ let cat=document.getElementById("pcat").value.slice(0,2).toUpperCase()||"XX";
+ let code=cat+String(counter).padStart(3,'0');
+ counter++;
+ const p={code,name:pname.value,cat:pcat.value,price:pprice.value,weight:pweight.value,qty:pqty.value,supp:psupp.value};
+ prodList.push(p);
+ renderInv();
+}
+function renderInv(){
+ invtable.innerHTML="";
+ prodList.forEach((p,i)=>invtable.innerHTML+=`<tr><td>${p.code}</td><td>${p.name}</td><td>${p.cat}</td><td>${p.price}</td><td>${p.weight}</td><td>${p.qty}</td><td>${p.supp}</td><td><button class='edit' onclick='editProd(${i})'>Edit</button></td><td><button class='delete' onclick='delProd(${i})'>Delete</button></td></tr>`);
+}
+function editProd(i){let p=prodList[i];pname.value=p.name;pcat.value=p.cat;pprice.value=p.price;pweight.value=p.weight;pqty.value=p.qty;psupp.value=p.supp;prodList.splice(i,1);renderInv();}
+function delProd(i){prodList.splice(i,1);renderInv();}
+function clearForm(){document.querySelectorAll('#inventory input').forEach(i=>i.value="");}
+let suppliers=[],customers=[],expenses=[],invoices=[];
+function addSupplier(){suppliers.push({name:sname.value,phone:sphone.value,email:semail.value});renderSup();}
+function renderSup(){suptable.innerHTML="";suppliers.forEach((s,i)=>suptable.innerHTML+=`<tr><td>${s.name}</td><td>${s.phone}</td><td>${s.email}</td><td><button class='edit' onclick='editSup(${i})'>Edit</button></td><td><button class='delete' onclick='delSup(${i})'>Delete</button></td></tr>`);}
+function editSup(i){let s=suppliers[i];sname.value=s.name;sphone.value=s.phone;semail.value=s.email;suppliers.splice(i,1);renderSup();}
+function delSup(i){suppliers.splice(i,1);renderSup();}
+function addCustomer(){customers.push({name:cname.value,phone:cphone.value,address:caddress.value});renderCus();}
+function renderCus(){custable.innerHTML="";customers.forEach((c,i)=>custable.innerHTML+=`<tr><td>${c.name}</td><td>${c.phone}</td><td>${c.address}</td><td><button class='edit' onclick='editCus(${i})'>Edit</button></td><td><button class='delete' onclick='delCus(${i})'>Delete</button></td></tr>`);}
+function editCus(i){let c=customers[i];cname.value=c.name;cphone.value=c.phone;caddress.value=c.address;customers.splice(i,1);renderCus();}
+function delCus(i){customers.splice(i,1);renderCus();}
+function addExpense(){expenses.push({type:ename.value,amount:eamount.value});renderExp();}
+function renderExp(){exptable.innerHTML="";expenses.forEach((e,i)=>exptable.innerHTML+=`<tr><td>${e.type}</td><td>${e.amount}</td><td><button class='edit' onclick='editExp(${i})'>Edit</button></td><td><button class='delete' onclick='delExp(${i})'>Delete</button></td></tr>`);}
+function editExp(i){let e=expenses[i];ename.value=e.type;eamount.value=e.amount;expenses.splice(i,1);renderExp();}
+function delExp(i){expenses.splice(i,1);renderExp();}
+let orderID=1001;
+function saveOrder(){
+ let c=document.getElementById('clientName').value;
+ invoices.push({id:orderID,client:c,total:document.getElementById('total').innerText,status:'Paid'});
+ orderID++;
+ renderInvList();
+ alert("✅ Command saved");
+}
+function renderInvList(){invlist.innerHTML="";invoices.forEach((v,i)=>invlist.innerHTML+=`<tr><td>${v.id}</td><td>${v.client}</td><td>${v.total}</td><td>${v.status}</td><td><button class='delete' onclick='delInvoice(${i})'>Delete</button></td></tr>`);}
+function delInvoice(i){invoices.splice(i,1);renderInvList();}
+</script>
+<script>
+if('serviceWorker' in navigator){navigator.serviceWorker.register('service-worker.js');}
+</script>
 </body>
 </html>
