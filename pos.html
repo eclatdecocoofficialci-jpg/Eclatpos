@@ -1,44 +1,54 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>POS - Éclat de Coco</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Éclat de Coco POS</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     body {
-      background-color: #fff5fb;
+      margin: 0;
       font-family: 'Poppins', sans-serif;
-    }
-    .pos-container {
+      background-color: #fff5fb;
       display: flex;
       justify-content: space-between;
-      padding: 30px;
+      padding: 25px;
       gap: 20px;
     }
+
     .product-section, .cashier-section {
       background: white;
-      padding: 20px;
       border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(233, 30, 99, 0.1);
+      box-shadow: 0 4px 10px rgba(233, 30, 99, 0.15);
+      padding: 20px;
     }
-    .product-section { flex: 1.5; }
+
+    .product-section {
+      flex: 1.5;
+    }
+
     .cashier-section {
       flex: 1;
       border: 2px solid #f8bbd0;
     }
+
     h1, h2 {
       color: #e91e63;
       text-align: center;
     }
+
+    input, select, button {
+      font-family: 'Poppins', sans-serif;
+    }
+
     input, select {
       width: 100%;
-      padding: 8px;
-      margin-bottom: 10px;
+      padding: 10px;
       border-radius: 6px;
       border: 1px solid #ddd;
+      margin-bottom: 10px;
     }
+
     button {
       background-color: #e91e63;
       color: white;
@@ -47,21 +57,48 @@
       padding: 8px 12px;
       cursor: pointer;
     }
-    button:hover { background-color: #d81b60; }
+
+    button:hover {
+      background-color: #d81b60;
+    }
+
+    .categories {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .category-btn {
+      background: #f8bbd0;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 12px;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .category-btn.active {
+      background: #e91e63;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 10px;
     }
+
     th, td {
-      padding: 8px;
       border-bottom: 1px solid #f1f1f1;
+      padding: 8px;
       text-align: center;
     }
+
     .summary p {
       font-size: 15px;
       margin: 6px 0;
     }
+
     .receipt {
       background: white;
       padding: 15px;
@@ -71,146 +108,127 @@
       margin: 20px auto;
       display: none;
     }
-    .delivery-line {
-      text-align: right;
-      font-style: italic;
-      color: #555;
-      font-size: 13px;
-    }
   </style>
 </head>
 
 <body>
-  <div class="pos-container">
-    <!-- 🧴 PRODUITS -->
-    <div class="product-section">
-      <h1>Point de Vente</h1>
-      <input type="text" id="searchProduct" placeholder="🔍 Rechercher par nom, code ou catégorie...">
+  <!-- 🧴 PRODUITS -->
+  <div class="product-section">
+    <h1>Point de Vente</h1>
+    <input type="text" id="searchProduct" placeholder="🔍 Rechercher par nom, code ou catégorie...">
 
-      <div class="categories">
-        <button class="category-btn">Savons</button>
-        <button class="category-btn">Lotion</button>
-        <button class="category-btn">Body Butter</button>
-        <button class="category-btn">Masque Cheveux</button>
-        <button class="category-btn">Dessert Savons</button>
-        <button class="category-btn">+ Ajouter Nouveau</button>
-      </div>
-
-      <table class="product-table">
-        <thead>
-          <tr>
-            <th>Code</th>
-            <th>Produit</th>
-            <th>Prix (FCFA)</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody id="productList">
-          <tr>
-            <td>SA001</td>
-            <td>Rose Vanilla Soap</td>
-            <td>1500</td>
-            <td><button onclick="addToCart('SA001','Rose Vanilla Soap',1500)">+</button></td>
-          </tr>
-          <tr>
-            <td>SA002</td>
-            <td>Lavender Bliss Soap</td>
-            <td>2000</td>
-            <td><button onclick="addToCart('SA002','Lavender Bliss Soap',2000)">+</button></td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="categories">
+      <button class="category-btn active">Savons</button>
+      <button class="category-btn">Lotion</button>
+      <button class="category-btn">Body Butter</button>
+      <button class="category-btn">Masque Cheveux</button>
+      <button class="category-btn">Dessert Savons</button>
+      <button class="category-btn">+ Ajouter</button>
     </div>
 
-    <!-- 💵 CAISSE -->
-    <div class="cashier-section">
-      <h2>🧾 Caisse</h2>
-      <div class="client-form">
-        <input type="text" id="clientName" placeholder="Nom du client">
-        <input type="text" id="clientPhone" placeholder="Téléphone">
-        <input type="text" id="clientAddress" placeholder="Adresse">
-      </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Produit</th>
+          <th>Prix (FCFA)</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="productList">
+        <tr>
+          <td>SA001</td>
+          <td>Rose Vanilla Soap</td>
+          <td>1500</td>
+          <td><button onclick="addToCart('Rose Vanilla Soap',1500)">+</button></td>
+        </tr>
+        <tr>
+          <td>SA002</td>
+          <td>Lavender Bliss Soap</td>
+          <td>2000</td>
+          <td><button onclick="addToCart('Lavender Bliss Soap',2000)">+</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-      <p><strong>ID Commande :</strong> <span id="orderId">1001</span></p>
+  <!-- 💵 CAISSE -->
+  <div class="cashier-section">
+    <h2>🧾 Caisse</h2>
+    <p><strong>ID Commande :</strong> <span id="orderId">1001</span></p>
 
-      <table class="cart-table">
+    <div class="client-form">
+      <input type="text" id="clientName" placeholder="Nom du client">
+      <input type="text" id="clientPhone" placeholder="Téléphone">
+      <input type="text" id="clientAddress" placeholder="Adresse">
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Produit</th>
+          <th>Qté</th>
+          <th>Prix</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody id="cartItems"></tbody>
+    </table>
+
+    <div class="summary">
+      <p><strong>Sous-total :</strong> <span id="subtotal">0</span> FCFA</p>
+      <p><strong>Total :</strong> <span id="total">0</span> FCFA</p>
+    </div>
+
+    <label>Méthode de paiement :</label>
+    <select id="paymentMethod">
+      <option>Cash</option>
+      <option>Wave</option>
+      <option>Orange Money</option>
+      <option>Moov Money</option>
+      <option>Visa</option>
+    </select>
+
+    <div style="display:flex; gap:10px; margin-top:10px;">
+      <button onclick="saveOrder()">💾 Enregistrer</button>
+      <button onclick="printReceipt()">🖨️ Imprimer</button>
+    </div>
+
+    <!-- 🧾 REÇU -->
+    <div class="receipt" id="receipt">
+      <h3 style="text-align:center; color:#e91e63;">Bienvenue chez Éclat de Coco</h3>
+      <p style="text-align:center; font-size:13px;">100% Produits Naturels 🌿</p>
+      <hr>
+      <p><strong>Nom:</strong> <span id="rName"></span></p>
+      <p><strong>Adresse:</strong> <span id="rAddress"></span></p>
+      <p><strong>Téléphone:</strong> <span id="rPhone"></span></p>
+      <p><strong>ID Commande:</strong> <span id="rOrder"></span></p>
+      <p><strong>Date:</strong> <span id="rDate"></span></p>
+      <table style="width:100%;border-collapse:collapse;margin-top:10px;">
         <thead>
-          <tr>
-            <th>Produit</th>
-            <th>Qté</th>
-            <th>Prix</th>
-            <th>Total</th>
-          </tr>
+          <tr><th>Produit</th><th>Qté</th><th>Total</th></tr>
         </thead>
-        <tbody id="cartItems"></tbody>
+        <tbody id="rItems"></tbody>
       </table>
-
-      <div class="summary">
-        <p><strong>Sous-total :</strong> <span id="subtotal">0</span> FCFA</p>
-        <p><strong>Total :</strong> <span id="total">0</span> FCFA</p>
-        <p class="delivery-line">Le total est <span id="finalTotal">0</span> FCFA sans la livraison.</p>
-      </div>
-
-      <div class="payment-section">
-        <label>Méthode de paiement :</label>
-        <select id="paymentMethod">
-          <option>Cash</option>
-          <option>Wave</option>
-          <option>Orange Money</option>
-          <option>Moov Money</option>
-          <option>Visa</option>
-        </select>
-      </div>
-
-      <div class="actions">
-        <button onclick="saveOrder()">💾 Enregistrer</button>
-        <button onclick="printReceipt()">🖨️ Imprimer Reçu</button>
-      </div>
-
-      <!-- 🧾 REÇU -->
-      <div class="receipt" id="receiptPreview">
-        <h2 style="text-align:center; color:#e91e63;">Bienvenue chez Éclat de Coco</h2>
-        <p style="text-align:center; font-size:13px;">100% Produits Organiques 🌿</p>
-        <hr>
-
-        <p><strong>Nom du Client :</strong> <span id="receiptClientName"></span></p>
-        <p><strong>Adresse :</strong> <span id="receiptClientAddress"></span></p>
-        <p><strong>Téléphone :</strong> <span id="receiptClientPhone"></span></p>
-        <p><strong>ID Commande :</strong> <span id="receiptOrderID"></span></p>
-        <p><strong>Date :</strong> <span id="receiptDate"></span></p>
-
-        <table style="width:100%; border-collapse:collapse; margin-top:10px;">
-          <thead>
-            <tr style="border-bottom:1px solid #ccc;">
-              <th style="text-align:left;">Produit</th>
-              <th>Qté</th>
-              <th>Total</th>
-            </tr>
-          </thead>
-          <tbody id="receiptItems"></tbody>
-        </table>
-
-        <hr>
-        <p style="text-align:right;"><strong>Total:</strong> <span id="receiptTotal"></span> FCFA</p>
-        <p class="delivery-line">Le total est <span id="receiptTotalLine"></span> FCFA sans la livraison.</p>
-
-        <p style="text-align:center; font-style:italic; margin-top:15px;">Merci pour votre achat 💖</p>
-
-        <div style="text-align:center; font-size:12px; margin-top:20px; color:#555;">
-          <p>📞 WhatsApp : <strong>0777000803</strong></p>
-          <p>📧 Gmail : <strong>eclatdecocoofficialci@gmail.com</strong></p>
-          <p>📸 Instagram : <strong>@eclatdecoco.official</strong></p>
-        </div>
-      </div>
+      <hr>
+      <p><strong>Total:</strong> <span id="rTotal"></span> FCFA</p>
+      <p>Le total est <span id="rTotal2"></span> FCFA sans la livraison.</p>
+      <hr>
+      <p style="font-size:12px;text-align:center;">
+        WhatsApp : 0777000803<br>
+        📧 eclatdecocoofficialci@gmail.com<br>
+        Instagram : @eclatdecoco.official<br>
+        ⚠️ Aucun retour possible
+      </p>
     </div>
   </div>
 
   <script>
     let subtotal = 0;
-    let orderNumber = 1001;
+    let orderId = 1001;
 
-    function addToCart(code, name, price) {
-      const cart = document.getElementById("cartItems");
+    function addToCart(name, price) {
+      const tbody = document.getElementById("cartItems");
       const row = document.createElement("tr");
       row.innerHTML = `
         <td>${name}</td>
@@ -218,41 +236,40 @@
         <td>${price}</td>
         <td>${price}</td>
       `;
-      cart.appendChild(row);
+      tbody.appendChild(row);
       subtotal += price;
       document.getElementById("subtotal").textContent = subtotal;
       document.getElementById("total").textContent = subtotal;
-      document.getElementById("finalTotal").textContent = subtotal;
     }
 
     function saveOrder() {
-      alert("✅ Commande enregistrée avec succès !");
-      orderNumber++;
-      document.getElementById("orderId").textContent = orderNumber;
+      alert("✅ Commande enregistrée !");
+      orderId++;
+      document.getElementById("orderId").textContent = orderId;
     }
 
     function printReceipt() {
       const name = document.getElementById("clientName").value;
       const phone = document.getElementById("clientPhone").value;
       const address = document.getElementById("clientAddress").value;
-      const receipt = document.getElementById("receiptPreview");
-      const date = new Date().toLocaleDateString();
+      const receipt = document.getElementById("receipt");
+      const now = new Date().toLocaleDateString();
 
-      document.getElementById("receiptClientName").textContent = name;
-      document.getElementById("receiptClientPhone").textContent = phone;
-      document.getElementById("receiptClientAddress").textContent = address;
-      document.getElementById("receiptOrderID").textContent = document.getElementById("orderId").textContent;
-      document.getElementById("receiptDate").textContent = date;
-      document.getElementById("receiptTotal").textContent = subtotal;
-      document.getElementById("receiptTotalLine").textContent = subtotal;
+      document.getElementById("rName").textContent = name;
+      document.getElementById("rPhone").textContent = phone;
+      document.getElementById("rAddress").textContent = address;
+      document.getElementById("rOrder").textContent = orderId;
+      document.getElementById("rDate").textContent = now;
+      document.getElementById("rTotal").textContent = subtotal;
+      document.getElementById("rTotal2").textContent = subtotal;
 
       const cartRows = document.querySelectorAll("#cartItems tr");
-      const receiptBody = document.getElementById("receiptItems");
-      receiptBody.innerHTML = "";
+      const rItems = document.getElementById("rItems");
+      rItems.innerHTML = "";
       cartRows.forEach(r => {
         const cloned = r.cloneNode(true);
         cloned.deleteCell(2);
-        receiptBody.appendChild(cloned);
+        rItems.appendChild(cloned);
       });
 
       receipt.style.display = "block";
