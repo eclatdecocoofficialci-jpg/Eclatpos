@@ -7,13 +7,15 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
+  <!-- Navigation -->
   <nav>
     <h2>Éclat de Coco POS</h2>
     <div class="nav-buttons">
       <a href="index.html">POS</a>
       <a href="dashboard.html">Dashboard</a>
-      <a href="sales.html">Sales Invoices</a>
+      <a href="sales_invoices.html">Sales Invoices</a>
       <a href="products.html" class="active">Products</a>
       <a href="inventory.html">Inventory</a>
       <a href="expenses.html">Expenses</a>
@@ -21,70 +23,154 @@
     </div>
   </nav>
 
-  <section class="product-section">
-    <h3>Liste des Produits</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Code</th>
-          <th>Nom du Produit</th>
-          <th>Catégorie</th>
-          <th>Quantité</th>
-          <th>Prix (FCFA)</th>
-          <th>Coût (FCFA)</th>
-          <th>Barcode</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="product-table-body">
-        <tr><td colspan="8">Aucun produit enregistré</td></tr>
-      </tbody>
-    </table>
+  <!-- Products Section -->
+  <section class="product-layout">
+    <!-- Left Form -->
+    <div class="add-product">
+      <h3>Add Product</h3>
+
+      <label>Category</label>
+      <input type="text" id="category" placeholder="e.g. Savon">
+
+      <label>Product Name</label>
+      <input type="text" id="productName" placeholder="e.g. Rose Vanille">
+
+      <label>Quantity</label>
+      <input type="number" id="quantity" placeholder="e.g. 10">
+
+      <label>Cost (FCFA)</label>
+      <input type="number" id="cost" placeholder="e.g. 2000">
+
+      <label>Price (FCFA)</label>
+      <input type="number" id="price" placeholder="e.g. 3500">
+
+      <label>Generated Code</label>
+      <input type="text" id="code" readonly placeholder="Auto">
+
+      <label>Barcode</label>
+      <div class="barcode-row">
+        <input type="text" id="barcode" placeholder="Auto-generated">
+        <button onclick="generateBarcode()">Generate</button>
+      </div>
+
+      <button class="add-btn" onclick="addProduct()">Add Product</button>
+    </div>
+
+    <!-- Right Table -->
+    <div class="product-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Product</th>
+            <th>Category</th>
+            <th>Quantity</th>
+            <th>Cost</th>
+            <th>Price</th>
+            <th>Barcode</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="productTableBody">
+          <tr><td colspan="8">No products yet</td></tr>
+        </tbody>
+      </table>
+    </div>
   </section>
 
   <script>
-    // 🌸 Load products from localStorage
+    // Load existing products
     const products = JSON.parse(localStorage.getItem('products')) || [];
-    const tableBody = document.getElementById('product-table-body');
+    const tableBody = document.getElementById('productTableBody');
 
-    if (products.length > 0) {
+    function displayProducts() {
       tableBody.innerHTML = '';
-      products.forEach((p, index) => {
+      if (products.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="8">No products yet</td></tr>';
+        return;
+      }
+
+      products.forEach((p, i) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td>${p.code || '-'}</td>
-          <td>${p.name || '-'}</td>
-          <td>${p.category || '-'}</td>
-          <td>${p.quantity || 0}</td>
-          <td>${p.price?.toLocaleString() || 0}</td>
-          <td>${p.cost?.toLocaleString() || 0}</td>
-          <td>${p.barcode || '-'}</td>
+          <td>${p.code}</td>
+          <td>${p.name}</td>
+          <td>${p.category}</td>
+          <td>${p.quantity}</td>
+          <td>${p.cost}</td>
+          <td>${p.price}</td>
+          <td>${p.barcode}</td>
           <td>
-            <button class="edit-btn" onclick="editProduct(${index})">✏️</button>
-            <button class="delete-btn" onclick="deleteProduct(${index})">🗑️</button>
+            <button class="edit-btn" onclick="editProduct(${i})">Edit</button>
+            <button class="delete-btn" onclick="deleteProduct(${i})">Delete</button>
           </td>
         `;
         tableBody.appendChild(tr);
       });
     }
 
-    // 🩷 Delete product
-    function deleteProduct(index) {
-      if (confirm('Supprimer ce produit ?')) {
-        products.splice(index, 1);
+    displayProducts();
+
+    // Generate Product Code
+    function generateCode(category) {
+      const prefix = category.slice(0, 2).toUpperCase() || 'PR';
+      const number = (products.length + 1).toString().padStart(3, '0');
+      return `${prefix}${number}`;
+    }
+
+    // Generate Barcode
+    function generateBarcode() {
+      const randomBarcode = Math.floor(100000000000 + Math.random() * 900000000000);
+      document.getElementById('barcode').value = randomBarcode;
+    }
+
+    // Add Product
+    function addProduct() {
+      const category = document.getElementById('category').value.trim();
+      const name = document.getElementById('productName').value.trim();
+      const quantity = document.getElementById('quantity').value;
+      const cost = document.getElementById('cost').value;
+      const price = document.getElementById('price').value;
+      const barcode = document.getElementById('barcode').value || Math.floor(100000000000 + Math.random() * 900000000000);
+      const code = generateCode(category);
+
+      if (!category || !name || !quantity || !cost || !price) {
+        alert("Please fill all fields");
+        return;
+      }
+
+      products.push({ code, name, category, quantity, cost, price, barcode });
+      localStorage.setItem('products', JSON.stringify(products));
+      displayProducts();
+
+      document.getElementById('category').value = '';
+      document.getElementById('productName').value = '';
+      document.getElementById('quantity').value = '';
+      document.getElementById('cost').value = '';
+      document.getElementById('price').value = '';
+      document.getElementById('barcode').value = '';
+      document.getElementById('code').value = '';
+
+      alert('✅ Product added successfully!');
+    }
+
+    // Edit Product
+    function editProduct(index) {
+      const p = products[index];
+      const newName = prompt("Edit product name:", p.name);
+      if (newName) {
+        p.name = newName;
         localStorage.setItem('products', JSON.stringify(products));
-        location.reload();
+        displayProducts();
       }
     }
 
-    // 🪞 Edit product
-    function editProduct(index) {
-      const product = products[index];
-      const newName = prompt('Modifier le nom du produit :', product.name);
-      if (newName !== null) {
-        product.name = newName;
+    // Delete Product
+    function deleteProduct(index) {
+      if (confirm("Delete this product?")) {
+        products.splice(index, 1);
         localStorage.setItem('products', JSON.stringify(products));
-        location.reload();
+        displayProducts();
       }
     }
   </script>
