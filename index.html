@@ -1,425 +1,210 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Éclat de Coco POS</title>
-
-  <!-- 🌸 Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Produits | Éclat de Coco POS</title>
   <style>
     body {
-      margin: 0;
       font-family: 'Poppins', sans-serif;
-      background: #fff;
+      margin: 0;
+      background-color: #fff;
     }
 
-    /* 🌸 Navbar */
-    nav {
+    .container {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: #f8bbd0;
-      padding: 15px 25px;
+      height: 100vh;
     }
 
-    nav .logo {
-      font-weight: 600;
-      color: #fff;
-      font-size: 20px;
-    }
-
-    .nav-buttons a {
-      text-decoration: none;
-      color: #fff;
-      margin-left: 10px;
-      font-weight: 500;
-    }
-
-    .nav-buttons a.active {
-      text-decoration: underline;
-    }
-
-    /* 🌸 POS Layout */
-    #pos {
-      display: flex;
-      justify-content: space-between;
+    .add-product {
+      background-color: #ffcce0;
       padding: 20px;
-      gap: 20px;
-    }
-
-    /* Left: Categories */
-    .categories {
       width: 25%;
-      background: #ffe6ef;
-      border-radius: 10px;
-      padding: 20px;
       display: flex;
       flex-direction: column;
-      gap: 15px;
-    }
-
-    .categories h3 {
-      color: #e91e63;
-      margin-bottom: 10px;
-    }
-
-    .category-btn {
-      background-color: #f8bbd0;
-      border: none;
-      border-radius: 12px;
-      padding: 20px;
-      font-size: 18px;
-      font-weight: 600;
-      cursor: pointer;
-      color: #b6004a;
-      transition: 0.3s;
-    }
-
-    .category-btn.active {
-      background-color: #e91e63;
+      gap: 10px;
       color: #fff;
     }
 
-    .category-btn:hover {
-      background-color: #ec407a;
-      color: white;
+    .add-product h2 {
+      color: #fff;
+      text-align: center;
     }
 
-    /* Middle: Products */
-    .products {
-      width: 45%;
-      border-left: 2px solid #f8bbd0;
-      border-right: 2px solid #f8bbd0;
-      padding: 0 20px;
-    }
-
-    .products h3 {
-      color: #e91e63;
-    }
-
-    .products input, .products select {
+    input {
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
       width: 100%;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #e91e63;
+      color: #fff;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .auto-info {
+      background: #ffe6f0;
+      color: #d81b60;
+      border-radius: 5px;
       padding: 8px;
-      margin-bottom: 10px;
-      border-radius: 8px;
-      border: 1px solid #f8bbd0;
+      font-size: 14px;
+      font-weight: 500;
+      text-align: center;
+      margin-top: 5px;
+    }
+
+    .product-list {
+      width: 75%;
+      padding: 20px;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
+      background-color: #ffe6f0;
     }
 
     th, td {
-      border: 1px solid #f8bbd0;
-      padding: 8px;
+      padding: 10px;
       text-align: center;
+      border-bottom: 1px solid #fff;
     }
 
     th {
-      background-color: #fff0f5;
-      color: #e91e63;
-    }
-
-    /* Right: Cashier */
-    .cashier {
-      width: 28%;
-    }
-
-    .cashier h3 {
-      color: #e91e63;
-    }
-
-    .cashier input {
-      width: 100%;
-      padding: 8px;
-      margin-bottom: 10px;
-      border: 1px solid #f8bbd0;
-      border-radius: 8px;
-    }
-
-    .cashier button {
-      width: 100%;
-      background-color: #e91e63;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 10px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-
-    .cashier button:hover {
-      background-color: #d81b60;
-    }
-
-    /* 🌸 Add Product Section */
-    .add-product {
-      margin-top: 15px;
-      background-color: #fce4ec;
-      border-radius: 10px;
-      padding: 15px;
-    }
-
-    .add-product h4 {
-      color: #e91e63;
-      margin-bottom: 8px;
-    }
-
-    .add-product input, .add-product select {
-      width: 100%;
-      padding: 8px;
-      margin-bottom: 8px;
-      border: 1px solid #f8bbd0;
-      border-radius: 8px;
-    }
-
-    .add-product button {
-      background-color: #e91e63;
+      background-color: #ffb6c1;
       color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 10px;
-      width: 100%;
-      cursor: pointer;
-      font-weight: 600;
     }
 
-    .add-product button:hover {
-      background-color: #d81b60;
+    td {
+      color: #333;
     }
   </style>
 </head>
-
 <body>
-  <!-- 🌸 Navigation -->
-  <nav>
-    <h2 class="logo">Éclat de Coco POS</h2>
-    <div class="nav-buttons">
-      <a href="index.html" class="active">POS</a>
-      <a href="dashboard.html">Dashboard</a>
-      <a href="sales_invoices.html">Sales Invoices</a>
-      <a href="products.html">Products</a>
-      <a href="inventory.html">Inventory</a>
-      <a href="expenses.html">Expenses</a>
-      <a href="reports.html">Reports</a>
-    </div>
-  </nav>
-
-  <!-- 🌸 POS Section -->
-  <section id="pos">
-    <!-- Categories -->
-    <div class="categories">
-      <h3>Catégories</h3>
-      <button class="category-btn active" onclick="filterCategory('Savon')">Savon</button>
-      <button class="category-btn" onclick="filterCategory('Lotion')">Lotion</button>
-      <button class="category-btn" onclick="filterCategory('Beurre corporel')">Beurre corporel</button>
-
-      <div class="add-product">
-        <h4>+ Ajouter un produit</h4>
-        <input type="text" id="newProductName" placeholder="Nom du produit">
-        <select id="newProductCategory">
-          <option value="">Choisir catégorie</option>
-          <option value="Savon">Savon</option>
-          <option value="Lotion">Lotion</option>
-          <option value="Beurre corporel">Beurre corporel</option>
-        </select>
-        <input type="number" id="newProductPrice" placeholder="Prix (FCFA)">
-        <button onclick="addNewProduct()">Ajouter</button>
+  <div class="container">
+    <div class="add-product">
+      <h2>Ajouter un Produit</h2>
+      <input type="text" id="productName" placeholder="Nom du Produit (Ex: Savon Rose Vanille)">
+      <input type="text" id="category" placeholder="Catégorie (Ex: Savons)">
+      <div id="autoDisplay" class="auto-info" style="display:none;">
+        Code: <span id="codePreview"></span> | Code-barres: <span id="barcodePreview"></span>
       </div>
+      <input type="number" id="quantity" placeholder="Quantité (Ex: 10)">
+      <input type="number" id="price" placeholder="Prix (FCFA)">
+      <input type="number" id="cost" placeholder="Coût (FCFA)">
+      <button id="addProduct">+ Ajouter Produit</button>
     </div>
 
-    <!-- Products -->
-    <div class="products">
-      <h3>Produits</h3>
-      <input type="text" id="search" placeholder="Rechercher un produit..." oninput="searchProduct()">
+    <div class="product-list">
+      <h2>Liste des Produits</h2>
       <table>
         <thead>
           <tr>
             <th>Code</th>
             <th>Nom</th>
+            <th>Catégorie</th>
+            <th>Quantité</th>
             <th>Prix</th>
-            <th>+</th>
+            <th>Coût</th>
+            <th>Code-barres</th>
           </tr>
         </thead>
-        <tbody id="productList"></tbody>
+        <tbody id="productTableBody"></tbody>
       </table>
     </div>
-
-    <!-- Cashier -->
-    <div class="cashier">
-      <h3>Caisse</h3>
-      <input type="text" id="clientName" placeholder="Nom du client">
-      <input type="text" id="clientPhone" placeholder="Téléphone">
-      <input type="text" id="clientAddress" placeholder="Adresse">
-
-      <table>
-        <thead>
-          <tr><th>Produit</th><th>Qté</th><th>Total</th></tr>
-        </thead>
-        <tbody id="cart"></tbody>
-      </table>
-
-      <p><strong>Total:</strong> <span id="total">0</span> FCFA</p>
-      <button onclick="saveAndPrint()">🖨️ Imprimer & Enregistrer</button>
-    </div>
-  </section>
+  </div>
 
   <script>
-    let products = JSON.parse(localStorage.getItem("inventory")) || [
-      { code: "SA001", productName: "Rose Vanilla Soap", price: 1500, category: "Savon" },
-      { code: "LO001", productName: "Coconut Lotion", price: 3500, category: "Lotion" },
-      { code: "BB001", productName: "Vanilla Body Butter", price: 4000, category: "Beurre corporel" },
-    ];
+    const products = JSON.parse(localStorage.getItem('products')) || [];
+    const tableBody = document.getElementById('productTableBody');
+    const addButton = document.getElementById('addProduct');
+    const categoryInput = document.getElementById('category');
+    const codePreview = document.getElementById('codePreview');
+    const barcodePreview = document.getElementById('barcodePreview');
+    const autoDisplay = document.getElementById('autoDisplay');
 
-    function saveInventory() {
-      localStorage.setItem("inventory", JSON.stringify(products));
-    }
-
-    function generateProductCode(category) {
+    function generateCode(category) {
+      if (!category) return '';
       const prefix = category.substring(0, 2).toUpperCase();
-      const sameCat = products.filter(p => p.category === category);
+      const sameCat = products.filter(p => p.category.toLowerCase() === category.toLowerCase());
       const nextNum = (sameCat.length + 1).toString().padStart(3, '0');
       return prefix + nextNum;
     }
 
-    function addNewProduct() {
-      const name = document.getElementById("newProductName").value.trim();
-      const category = document.getElementById("newProductCategory").value;
-      const price = parseFloat(document.getElementById("newProductPrice").value);
+    function generateBarcode() {
+      return Math.floor(100000000 + Math.random() * 900000000).toString();
+    }
 
-      if (!name || !category || isNaN(price)) {
-        alert("⚠️ Veuillez remplir tous les champs !");
+    function renderTable() {
+      tableBody.innerHTML = '';
+      products.forEach(p => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${p.code}</td>
+          <td>${p.name}</td>
+          <td>${p.category}</td>
+          <td>${p.quantity}</td>
+          <td>${p.price}</td>
+          <td>${p.cost}</td>
+          <td>${p.barcode}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    // Auto-generate code + barcode when category changes
+    categoryInput.addEventListener('input', () => {
+      const category = categoryInput.value.trim();
+      if (category) {
+        const code = generateCode(category);
+        const barcode = generateBarcode();
+        codePreview.textContent = code;
+        barcodePreview.textContent = barcode;
+        autoDisplay.style.display = 'block';
+      } else {
+        autoDisplay.style.display = 'none';
+      }
+    });
+
+    addButton.addEventListener('click', () => {
+      const name = document.getElementById('productName').value.trim();
+      const category = categoryInput.value.trim();
+      const quantity = document.getElementById('quantity').value;
+      const price = document.getElementById('price').value;
+      const cost = document.getElementById('cost').value;
+
+      if (!name || !category) {
+        alert('Veuillez entrer le nom et la catégorie du produit.');
         return;
       }
 
-      const code = generateProductCode(category);
-      const newProd = { code, productName: name, price, category };
-      products.push(newProd);
-      saveInventory();
-      loadProducts();
-      alert(`✅ Produit ajouté : ${code} - ${name}`);
+      const code = codePreview.textContent || generateCode(category);
+      const barcode = barcodePreview.textContent || generateBarcode();
 
-      document.getElementById("newProductName").value = "";
-      document.getElementById("newProductCategory").value = "";
-      document.getElementById("newProductPrice").value = "";
-    }
+      const product = { code, name, category, quantity, price, cost, barcode };
+      products.push(product);
+      localStorage.setItem('products', JSON.stringify(products));
 
-    function loadProducts() {
-      const productList = document.getElementById("productList");
-      productList.innerHTML = "";
-      products.forEach(item => {
-        const row = document.createElement("tr");
-        row.dataset.category = item.category;
-        row.innerHTML = `
-          <td>${item.code}</td>
-          <td>${item.productName}</td>
-          <td>${item.price}</td>
-          <td><button onclick="addToCart('${item.productName}', ${item.price})">+</button></td>
-        `;
-        productList.appendChild(row);
-      });
-    }
+      renderTable();
 
-    function filterCategory(category) {
-      document.querySelectorAll(".category-btn").forEach(btn => btn.classList.remove("active"));
-      event.target.classList.add("active");
-      document.querySelectorAll("#productList tr").forEach(row => {
-        row.style.display = row.dataset.category === category ? "" : "none";
-      });
-    }
+      // Reset form
+      document.getElementById('productName').value = '';
+      categoryInput.value = '';
+      document.getElementById('quantity').value = '';
+      document.getElementById('price').value = '';
+      document.getElementById('cost').value = '';
+      autoDisplay.style.display = 'none';
+    });
 
-    function searchProduct() {
-      const searchValue = document.getElementById("search").value.toLowerCase();
-      document.querySelectorAll("#productList tr").forEach(row => {
-        row.style.display = row.innerText.toLowerCase().includes(searchValue) ? "" : "none";
-      });
-    }
-
-    // ===== Cart =====
-    let subtotal = 0;
-    function addToCart(name, price) {
-      const cart = document.getElementById("cart");
-      const row = document.createElement("tr");
-      row.innerHTML = `<td>${name}</td><td>1</td><td>${price}</td>`;
-      cart.appendChild(row);
-      subtotal += price;
-      document.getElementById("total").textContent = subtotal;
-    }
-
-    function saveAndPrint() {
-      const clientName = document.getElementById("clientName").value || "Client anonyme";
-      const clientPhone = document.getElementById("clientPhone").value || "-";
-      const total = parseFloat(document.getElementById("total").textContent);
-      const cartItems = Array.from(document.querySelectorAll("#cart tr")).map(tr => {
-        const tds = tr.querySelectorAll("td");
-        return { product: tds[0].innerText, qty: parseInt(tds[1].innerText), total: parseFloat(tds[2].innerText) };
-      });
-
-      const sales = JSON.parse(localStorage.getItem("sales")) || [];
-      const saleData = {
-        id: Date.now(),
-        date: new Date().toLocaleString(),
-        client: clientName,
-        phone: clientPhone,
-        items: cartItems,
-        total: total
-      };
-
-      sales.push(saleData);
-      localStorage.setItem("sales", JSON.stringify(sales));
-      alert("✅ Vente enregistrée !");
-      window.print();
-    }
-
-    window.onload = loadProducts;
-
-    // ===== Offline Support =====
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("service-worker.js");
-    }
-    // === Auto-generate Product Code ===
-function generateAutoCode() {
-  const categoryInput = document.querySelector('input[placeholder="Ex: Savons"]');
-  const codeInput = document.querySelector('input[placeholder="Ex: P001"]');
-
-  if (!categoryInput || !codeInput) return;
-
-  const category = categoryInput.value.trim();
-  if (category.length < 2) {
-    codeInput.value = "";
-    return;
-  }
-
-  // Get current inventory
-  const products = JSON.parse(localStorage.getItem("products")) || [];
-  const prefix = category.substring(0, 2).toUpperCase();
-
-  // Count how many products are already in this category
-  const sameCat = products.filter(p => p.category?.toLowerCase() === category.toLowerCase());
-  const nextNumber = (sameCat.length + 1).toString().padStart(3, '0');
-
-  codeInput.value = prefix + nextNumber;
-}
-
-// Trigger when typing category or when product name is entered
-document.addEventListener("DOMContentLoaded", () => {
-  const categoryInput = document.querySelector('input[placeholder="Ex: Savons"]');
-  const nameInput = document.querySelector('input[placeholder="Ex: Savon Rose Vanille"]');
-
-  if (categoryInput) categoryInput.addEventListener("input", generateAutoCode);
-  if (nameInput) nameInput.addEventListener("input", generateAutoCode);
-});
+    // Load saved data
+    renderTable();
   </script>
-
-  <!-- 🌸 App Icon & PWA -->
-  <link rel="icon" type="image/png" href="icon.png">
-  <link rel="apple-touch-icon" href="icon.png">
-  <meta name="theme-color" content="#f8bbd0">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Éclat de Coco POS">
 </body>
 </html>
