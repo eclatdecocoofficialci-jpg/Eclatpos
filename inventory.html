@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Éclat de Coco - Inventory</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <meta name="theme-color" content="#f8bbd0" />
+  <style>
+    .inventory-container {
+      display: flex;
+      height: calc(100vh - 70px);
+    }
+
+    /* Left input bar */
+    .inventory-form {
+      width: 320px;
+      background: #f8bbd0;
+      color: #fff;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      border-right: 3px solid #f48fb1;
+    }
+
+    .inventory-form h3 {
+      color: #fff;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .inventory-form label {
+      font-weight: 500;
+      margin-top: 8px;
+    }
+
+    .inventory-form input,
+    .inventory-form select {
+      padding: 8px;
+      border: none;
+      border-radius: 6px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      width: 100%;
+    }
+
+    .inventory-form button {
+      background: #e91e63;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      padding: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .inventory-form button:hover {
+      background: #d81b60;
+    }
+
+    /* Right table area */
+    .inventory-table {
+      flex: 1;
+      background: #fff;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .inventory-table h3 {
+      color: #e91e63;
+      margin-bottom: 15px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+    }
+
+    th, td {
+      border: 1px solid #f8bbd0;
+      text-align: center;
+      padding: 10px;
+    }
+
+    th {
+      background: #ffe6ef;
+      color: #e91e63;
+    }
+
+    .action-btn {
+      background: #f8bbd0;
+      color: #e91e63;
+      border: none;
+      border-radius: 6px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+
+    .action-btn:hover {
+      background: #e91e63;
+      color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <h2>Éclat de Coco POS</h2>
+    <div class="nav-buttons">
+      <a href="index.html">POS</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="sales_invoices.html">Sales Invoices</a>
+      <a href="products.html">Products</a>
+      <a href="inventory.html" class="active">Inventory</a>
+      <a href="expenses.html">Expenses</a>
+      <a href="reports.html">Reports</a>
+    </div>
+  </nav>
+
+  <div class="inventory-container">
+    <!-- Left pink input form -->
+    <div class="inventory-form">
+      <h3>Add New Product</h3>
+      <label>Category</label>
+      <select id="category">
+        <option value="SA">Savon</option>
+        <option value="LO">Lotion</option>
+        <option value="BU">Beurre corporel</option>
+        <option value="MA">Masque</option>
+        <option value="CH">Cheveux</option>
+      </select>
+
+      <label>Product Name</label>
+      <input type="text" id="productName" placeholder="Ex: Rose Vanille">
+
+      <label>Quantity</label>
+      <input type="number" id="quantity" placeholder="0">
+
+      <label>Price (FCFA)</label>
+      <input type="number" id="price" placeholder="0">
+
+      <label>Cost (FCFA)</label>
+      <input type="number" id="cost" placeholder="0">
+
+      <button onclick="addProduct()">➕ Add Product</button>
+    </div>
+
+    <!-- Right white table -->
+    <div class="inventory-table">
+      <h3>Inventory List</h3>
+      <table id="inventoryTable">
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Nom</th>
+            <th>Catégorie</th>
+            <th>Qté</th>
+            <th>Prix</th>
+            <th>Coût</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+
+    function generateCode(categoryPrefix) {
+      const count = inventory.filter(p => p.category === categoryPrefix).length + 1;
+      return categoryPrefix + String(count).padStart(3, '0');
+    }
+
+    function addProduct() {
+      const category = document.getElementById('category').value;
+      const productName = document.getElementById('productName').value.trim();
+      const quantity = document.getElementById('quantity').value;
+      const price = document.getElementById('price').value;
+      const cost = document.getElementById('cost').value;
+
+      if (!productName || !quantity || !price || !cost) {
+        alert("Veuillez remplir tous les champs !");
+        return;
+      }
+
+      const code = generateCode(category);
+      const product = { code, productName, category, quantity, price, cost };
+      inventory.push(product);
+      localStorage.setItem('inventory', JSON.stringify(inventory));
+      displayInventory();
+      clearFields();
+    }
+
+    function clearFields() {
+      document.getElementById('productName').value = '';
+      document.getElementById('quantity').value = '';
+      document.getElementById('price').value = '';
+      document.getElementById('cost').value = '';
+    }
+
+    function deleteProduct(index) {
+      if (confirm("Supprimer ce produit ?")) {
+        inventory.splice(index, 1);
+        localStorage.setItem('inventory', JSON.stringify(inventory));
+        displayInventory();
+      }
+    }
+
+    function displayInventory() {
+      const tbody = document.querySelector('#inventoryTable tbody');
+      tbody.innerHTML = '';
+      inventory.forEach((p, index) => {
+        const row = `
+          <tr>
+            <td>${p.code}</td>
+            <td>${p.productName}</td>
+            <td>${p.category}</td>
+            <td>${p.quantity}</td>
+            <td>${p.price}</td>
+            <td>${p.cost}</td>
+            <td><button class="action-btn" onclick="deleteProduct(${index})">Delete</button></td>
+          </tr>
+        `;
+        tbody.innerHTML += row;
+      });
+    }
+
+    // Load inventory on page load
+    displayInventory();
+  </script>
+</body>
+</html>
