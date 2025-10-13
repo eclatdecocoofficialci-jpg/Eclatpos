@@ -79,6 +79,28 @@ th {
   background-color: #ffe6ef;
   color: #e91e63;
 }
+#pos {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.left-section {
+  flex: 1.4;
+  display: flex;
+  flex-direction: column;
+  border-right: 2px solid #f8bbd0;
+  background: #fff;
+}
+
+.cashier {
+  flex: 0.7;
+  background: #fff;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
 
 /* 🪞 Category Buttons */
 .category-btn {
