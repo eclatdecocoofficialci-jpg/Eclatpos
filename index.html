@@ -5,28 +5,67 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Éclat de Coco POS</title>
 
-  <!-- 🌸 PWA + Fonts -->
+  <!-- 🌸 Fonts + PWA -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#f8bbd0" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Great+Vibes&display=swap" rel="stylesheet">
 
   <style>
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
       background: #fff;
+      overflow: hidden;
+    }
+
+    /* 🌸 INTRO SCREEN */
+    #introScreen {
+      position: fixed;
+      inset: 0;
+      background: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 10000;
+      animation: fadeOutIntro 1s ease 5s forwards;
+    }
+
+    .intro-text {
+      font-family: 'Great Vibes', cursive;
+      font-size: 48px;
+      color: #e91e63;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 3px solid #e91e63;
+      width: 0;
+      animation: typing 3s steps(30) 0.5s forwards, blink 0.8s step-end infinite alternate;
+    }
+
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 370px; }
+    }
+
+    @keyframes blink {
+      50% { border-color: transparent; }
+    }
+
+    @keyframes fadeOutIntro {
+      to { opacity: 0; visibility: hidden; }
     }
 
     /* 🌸 LOGIN SCREEN */
     #loginScreen {
       position: fixed;
       inset: 0;
-      display: flex;
+      display: none;
       justify-content: center;
       align-items: center;
       background: #ffe6ef;
       z-index: 9999;
       transition: opacity 0.8s ease;
+      flex-direction: column;
     }
 
     .login-box {
@@ -37,17 +76,18 @@
       text-align: center;
       width: 300px;
       max-width: 85%;
+      opacity: 0;
+      animation: fadeInBox 1s ease 5.5s forwards;
+    }
+
+    @keyframes fadeInBox {
+      to { opacity: 1; }
     }
 
     .login-box h2 {
       color: #e91e63;
       margin-bottom: 20px;
       font-weight: 600;
-    }
-
-    .login-box p {
-      color: #555;
-      margin-bottom: 15px;
     }
 
     .login-box input {
@@ -84,16 +124,7 @@
       color: #888;
     }
 
-    .fade-out {
-      animation: fadeOut 0.8s ease forwards;
-    }
-
-    @keyframes fadeOut {
-      from { opacity: 1; }
-      to { opacity: 0; visibility: hidden; }
-    }
-
-    /* 🌸 POS PAGE LAYOUT */
+    /* 🌸 POS PAGE */
     nav {
       display: flex;
       justify-content: space-between;
@@ -168,54 +199,20 @@
       border-bottom: 1px solid #f1f1f1;
     }
 
-    button {
-      cursor: pointer;
-    }
-
-    /* 🌸 POPUP */
-    .popup-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.3);
-      justify-content: center;
-      align-items: center;
-      z-index: 10000;
-    }
-
-    .popup {
-      background: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      width: 250px;
-      text-align: center;
-    }
-
-    .popup input {
-      width: 100%;
-      margin-bottom: 10px;
-      padding: 8px;
-    }
-
-    .popup button {
-      background: #e91e63;
-      color: #fff;
-      border: none;
-      padding: 8px 15px;
-      border-radius: 8px;
-    }
-
-    .popup .cancel {
-      background: #aaa;
-    }
+    button { cursor: pointer; }
   </style>
 </head>
 
 <body>
+  <!-- 🌸 INTRO -->
+  <div id="introScreen">
+    <div class="intro-text">Bienvenue à Éclat de Coco</div>
+  </div>
+
   <!-- 🌸 LOGIN -->
   <div id="loginScreen">
     <div class="login-box">
-      <h2>Bienvenue 🌸</h2>
+      <h2>Connexion</h2>
       <p>Entrez le code d’accès</p>
       <input type="password" id="accessCode" placeholder="••••" />
       <button onclick="checkCode()">Entrer</button>
@@ -270,36 +267,26 @@
         <button onclick="saveAndPrint()">🖨️ Imprimer & Enregistrer</button>
       </div>
     </section>
-
-    <div class="popup-overlay" id="popupOverlay">
-      <div class="popup">
-        <h3>Ajouter catégorie</h3>
-        <input type="text" id="newCategory" placeholder="Nom">
-        <div>
-          <button onclick="addCategory()">Ajouter</button>
-          <button class="cancel" onclick="closePopup()">Annuler</button>
-        </div>
-      </div>
-    </div>
   </div>
 
   <script>
+    // 🌸 Show login after intro
+    setTimeout(() => {
+      document.getElementById("loginScreen").style.display = "flex";
+    }, 5000);
+
     // 🌸 Login
     function checkCode() {
       const code = document.getElementById("accessCode").value.trim();
-      const login = document.getElementById("loginScreen");
       if (code === "123") {
-        login.classList.add("fade-out");
-        setTimeout(() => {
-          login.style.display = "none";
-          document.getElementById("posApp").style.display = "block";
-        }, 800);
+        document.getElementById("loginScreen").style.display = "none";
+        document.getElementById("posApp").style.display = "block";
       } else {
         alert("❌ Code incorrect");
       }
     }
 
-    // 🌸 Load products from localStorage
+    // 🌸 Load Products
     function loadProductsFromInventory() {
       const inventory = JSON.parse(localStorage.getItem("inventory")) || [];
       const list = document.getElementById("productList");
@@ -317,75 +304,6 @@
       });
     }
     document.addEventListener("DOMContentLoaded", loadProductsFromInventory);
-
-    // 🌸 Search
-    function searchProduct() {
-      const value = document.getElementById("search").value.toLowerCase();
-      document.querySelectorAll("#productList tr").forEach(tr => {
-        tr.style.display = tr.innerText.toLowerCase().includes(value) ? "" : "none";
-      });
-    }
-
-    // 🌸 Filter
-    function filterCategory(category) {
-      document.querySelectorAll(".category-btn").forEach(btn => btn.classList.remove("active"));
-      event.target.classList.add("active");
-      document.querySelectorAll("#productList tr").forEach(row => {
-        row.style.display = row.dataset.category === category ? "" : "none";
-      });
-    }
-
-    // 🌸 Cart
-    let subtotal = 0;
-    function addToCart(name, price) {
-      const cart = document.getElementById("cart");
-      const tr = document.createElement("tr");
-      tr.innerHTML = `<td>${name}</td><td>1</td><td>${price}</td>`;
-      cart.appendChild(tr);
-      subtotal += price;
-      document.getElementById("total").textContent = subtotal;
-    }
-
-    // 🌸 Save + Print
-    function saveAndPrint() {
-      const clientName = document.getElementById("clientName").value || "Client anonyme";
-      const total = parseFloat(document.getElementById("total").textContent);
-      const cartItems = Array.from(document.querySelectorAll("#cart tr")).map(tr => {
-        const tds = tr.querySelectorAll("td");
-        return { produit: tds[0].innerText, qty: 1, total: parseFloat(tds[2].innerText) };
-      });
-
-      const sales = JSON.parse(localStorage.getItem("sales")) || [];
-      sales.push({ id: Date.now(), date: new Date().toLocaleString(), client: clientName, items: cartItems, total });
-      localStorage.setItem("sales", JSON.stringify(sales));
-      alert("✅ Vente enregistrée !");
-      window.print();
-      document.getElementById("cart").innerHTML = "";
-      document.getElementById("total").textContent = "0";
-      subtotal = 0;
-    }
-
-    // 🌸 Popup
-    function addCategory() {
-      const name = document.getElementById("newCategory").value.trim();
-      if (name) {
-        const btn = document.createElement("button");
-        btn.className = "category-btn";
-        btn.textContent = name;
-        btn.onclick = () => filterCategory(name);
-        document.getElementById("categoryList").appendChild(btn);
-      }
-      closePopup();
-    }
-    function closePopup() {
-      document.getElementById("popupOverlay").style.display = "none";
-      document.getElementById("newCategory").value = "";
-    }
-
-    // 🌸 Service Worker
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("service-worker.js");
-    }
   </script>
 
   <!-- 🌸 iPad App Icon -->
