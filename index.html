@@ -122,7 +122,7 @@
       });
     }
 
-    // ===== Cart + Save =====
+    // ===== Cart =====
     let subtotal = 0;
     function addToCart(name, price) {
       const cart = document.getElementById('cart');
@@ -133,27 +133,42 @@
       document.getElementById('total').textContent = subtotal;
     }
 
+    // ===== Save and Print (Connected to Sales Page) =====
     function saveAndPrint() {
-      const clientName = document.getElementById('clientName').value;
-      const clientPhone = document.getElementById('clientPhone').value;
-      const total = document.getElementById('total').textContent;
+      const clientName = document.getElementById('clientName').value || "Client anonyme";
+      const clientPhone = document.getElementById('clientPhone').value || "-";
+      const total = parseFloat(document.getElementById('total').textContent);
       const cartItems = Array.from(document.querySelectorAll('#cart tr')).map(tr => {
         const tds = tr.querySelectorAll('td');
-        return { product: tds[0].innerText, qty: tds[1].innerText, total: tds[2].innerText };
+        return { product: tds[0].innerText, qty: parseInt(tds[1].innerText), total: parseFloat(tds[2].innerText) };
       });
 
-      const invoices = JSON.parse(localStorage.getItem('salesInvoices')) || [];
-      invoices.push({
+      // 🌸 Load existing sales
+      const sales = JSON.parse(localStorage.getItem('sales')) || [];
+
+      // 🧾 Add this new sale
+      const saleData = {
         id: Date.now(),
         date: new Date().toLocaleString(),
-        clientName,
-        clientPhone,
-        total,
-        items: cartItems
-      });
-      localStorage.setItem('salesInvoices', JSON.stringify(invoices));
+        client: clientName,
+        phone: clientPhone,
+        items: cartItems,
+        total: total
+      };
 
+      sales.push(saleData);
+      localStorage.setItem('sales', JSON.stringify(sales));
+
+      alert("✅ Sale saved successfully!");
       window.print();
+
+      // Reset after printing
+      document.getElementById('clientName').value = '';
+      document.getElementById('clientPhone').value = '';
+      document.getElementById('clientAddress').value = '';
+      document.getElementById('cart').innerHTML = '';
+      document.getElementById('total').textContent = '0';
+      subtotal = 0;
     }
 
     // ===== Category Popup =====
