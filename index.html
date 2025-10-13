@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Éclat de Coco POS</title>
 
-  <!-- 🌸 Fonts + PWA -->
+  <!-- 🌸 PWA + Fonts -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#f8bbd0" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Great+Vibes&display=swap" rel="stylesheet">
@@ -15,82 +15,66 @@
       margin: 0;
       font-family: 'Poppins', sans-serif;
       background: #fff;
-      overflow: hidden;
     }
 
-    /* 🌸 INTRO SCREEN */
-    #introScreen {
+    /* 🌸 WELCOME SCREEN */
+    #welcomeScreen {
       position: fixed;
       inset: 0;
       background: #fff;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      flex-direction: column;
       z-index: 10000;
-      animation: fadeOutIntro 1s ease 5s forwards;
+      transition: opacity 1s ease;
     }
 
-    .intro-text {
+    .welcome-text {
       font-family: 'Great Vibes', cursive;
-      font-size: 48px;
+      font-size: 52px;
       color: #e91e63;
-      white-space: nowrap;
-      overflow: hidden;
-      border-right: 3px solid #e91e63;
-      width: 0;
-      animation: typing 3s steps(30) 0.5s forwards, blink 0.8s step-end infinite alternate;
-    }
-
-    @keyframes typing {
-      from { width: 0; }
-      to { width: 370px; }
-    }
-
-    @keyframes blink {
-      50% { border-color: transparent; }
-    }
-
-    @keyframes fadeOutIntro {
-      to { opacity: 0; visibility: hidden; }
-    }
-
-    /* 🌸 LOGIN SCREEN */
-    #loginScreen {
-      position: fixed;
-      inset: 0;
-      display: none;
+      text-align: center;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
       justify-content: center;
-      align-items: center;
-      background: #ffe6ef;
-      z-index: 9999;
-      transition: opacity 0.8s ease;
-      flex-direction: column;
     }
 
-    .login-box {
+    .welcome-text span {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInWord 1s forwards;
+    }
+
+    @keyframes fadeInWord {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    #loginBox {
+      display: none;
       background: #fff;
-      padding: 40px 30px;
+      padding: 30px 25px;
       border-radius: 15px;
       box-shadow: 0 6px 20px rgba(0,0,0,0.1);
       text-align: center;
       width: 300px;
       max-width: 85%;
-      opacity: 0;
-      animation: fadeInBox 1s ease 5.5s forwards;
+      margin-top: 25px;
+      animation: fadeIn 1s ease forwards;
     }
 
-    @keyframes fadeInBox {
-      to { opacity: 1; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    .login-box h2 {
-      color: #e91e63;
-      margin-bottom: 20px;
-      font-weight: 600;
+    #loginBox p {
+      color: #555;
+      margin-bottom: 15px;
     }
 
-    .login-box input {
+    #loginBox input {
       width: 100%;
       padding: 10px;
       border: 2px solid #f8bbd0;
@@ -101,7 +85,7 @@
       margin-bottom: 15px;
     }
 
-    .login-box button {
+    #loginBox button {
       width: 100%;
       padding: 10px;
       background-color: #e91e63;
@@ -113,18 +97,18 @@
       transition: background 0.3s ease;
     }
 
-    .login-box button:hover {
+    #loginBox button:hover {
       background-color: #d81b60;
     }
 
-    .login-box small {
+    #loginBox small {
       display: block;
       margin-top: 15px;
       font-size: 13px;
       color: #888;
     }
 
-    /* 🌸 POS PAGE */
+    /* 🌸 POS PAGE LAYOUT */
     nav {
       display: flex;
       justify-content: space-between;
@@ -199,20 +183,61 @@
       border-bottom: 1px solid #f1f1f1;
     }
 
-    button { cursor: pointer; }
+    button {
+      cursor: pointer;
+    }
+
+    /* 🌸 POPUP */
+    .popup-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.3);
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+    }
+
+    .popup {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      width: 250px;
+      text-align: center;
+    }
+
+    .popup input {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 8px;
+    }
+
+    .popup button {
+      background: #e91e63;
+      color: #fff;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 8px;
+    }
+
+    .popup .cancel {
+      background: #aaa;
+    }
   </style>
 </head>
 
 <body>
-  <!-- 🌸 INTRO -->
-  <div id="introScreen">
-    <div class="intro-text">Bienvenue à Éclat de Coco</div>
-  </div>
+  <!-- 🌸 WELCOME + LOGIN -->
+  <div id="welcomeScreen">
+    <h1 class="welcome-text">
+      <span style="animation-delay: 0s;">Bienvenue</span>
+      <span style="animation-delay: 1s;">à</span>
+      <span style="animation-delay: 2s;">Éclat</span>
+      <span style="animation-delay: 3s;">de Coco</span>
+      <span style="animation-delay: 4s;">Official</span>
+    </h1>
 
-  <!-- 🌸 LOGIN -->
-  <div id="loginScreen">
-    <div class="login-box">
-      <h2>Connexion</h2>
+    <div id="loginBox">
       <p>Entrez le code d’accès</p>
       <input type="password" id="accessCode" placeholder="••••" />
       <button onclick="checkCode()">Entrer</button>
@@ -270,23 +295,29 @@
   </div>
 
   <script>
-    // 🌸 Show login after intro
-    setTimeout(() => {
-      document.getElementById("loginScreen").style.display = "flex";
-    }, 5000);
+    // 🌸 Show login after words animation
+    window.addEventListener("DOMContentLoaded", () => {
+      setTimeout(() => {
+        document.getElementById("loginBox").style.display = "block";
+      }, 5000);
+    });
 
     // 🌸 Login
     function checkCode() {
       const code = document.getElementById("accessCode").value.trim();
+      const screen = document.getElementById("welcomeScreen");
       if (code === "123") {
-        document.getElementById("loginScreen").style.display = "none";
-        document.getElementById("posApp").style.display = "block";
+        screen.style.opacity = "0";
+        setTimeout(() => {
+          screen.style.display = "none";
+          document.getElementById("posApp").style.display = "block";
+        }, 1000);
       } else {
         alert("❌ Code incorrect");
       }
     }
 
-    // 🌸 Load Products
+    // 🌸 Load products
     function loadProductsFromInventory() {
       const inventory = JSON.parse(localStorage.getItem("inventory")) || [];
       const list = document.getElementById("productList");
@@ -304,6 +335,53 @@
       });
     }
     document.addEventListener("DOMContentLoaded", loadProductsFromInventory);
+
+    function searchProduct() {
+      const value = document.getElementById("search").value.toLowerCase();
+      document.querySelectorAll("#productList tr").forEach(tr => {
+        tr.style.display = tr.innerText.toLowerCase().includes(value) ? "" : "none";
+      });
+    }
+
+    function filterCategory(category) {
+      document.querySelectorAll(".category-btn").forEach(btn => btn.classList.remove("active"));
+      event.target.classList.add("active");
+      document.querySelectorAll("#productList tr").forEach(row => {
+        row.style.display = row.dataset.category === category ? "" : "none";
+      });
+    }
+
+    let subtotal = 0;
+    function addToCart(name, price) {
+      const cart = document.getElementById("cart");
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td>${name}</td><td>1</td><td>${price}</td>`;
+      cart.appendChild(tr);
+      subtotal += price;
+      document.getElementById("total").textContent = subtotal;
+    }
+
+    function saveAndPrint() {
+      const clientName = document.getElementById("clientName").value || "Client anonyme";
+      const total = parseFloat(document.getElementById("total").textContent);
+      const cartItems = Array.from(document.querySelectorAll("#cart tr")).map(tr => {
+        const tds = tr.querySelectorAll("td");
+        return { produit: tds[0].innerText, qty: 1, total: parseFloat(tds[2].innerText) };
+      });
+
+      const sales = JSON.parse(localStorage.getItem("sales")) || [];
+      sales.push({ id: Date.now(), date: new Date().toLocaleString(), client: clientName, items: cartItems, total });
+      localStorage.setItem("sales", JSON.stringify(sales));
+      alert("✅ Vente enregistrée !");
+      window.print();
+      document.getElementById("cart").innerHTML = "";
+      document.getElementById("total").textContent = "0";
+      subtotal = 0;
+    }
+
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("service-worker.js");
+    }
   </script>
 
   <!-- 🌸 iPad App Icon -->
