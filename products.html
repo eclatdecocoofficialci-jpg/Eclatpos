@@ -1,11 +1,92 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Page in progress</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Produits | Éclat de Coco POS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
-<body style="font-family:Poppins; text-align:center; margin-top:100px; color:#e91e63;">
-  <h1>This page is under construction 💅</h1>
-  <a href="index.html" style="color:#e91e63; text-decoration:none;">← Back to POS</a>
+<body>
+  <nav>
+    <h2>Éclat de Coco POS</h2>
+    <div class="nav-buttons">
+      <a href="index.html">POS</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="sales.html">Sales Invoices</a>
+      <a href="products.html" class="active">Products</a>
+      <a href="inventory.html">Inventory</a>
+      <a href="expenses.html">Expenses</a>
+      <a href="reports.html">Reports</a>
+    </div>
+  </nav>
+
+  <section class="product-section">
+    <h3>Liste des Produits</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Nom du Produit</th>
+          <th>Catégorie</th>
+          <th>Quantité</th>
+          <th>Prix (FCFA)</th>
+          <th>Coût (FCFA)</th>
+          <th>Barcode</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="product-table-body">
+        <tr><td colspan="8">Aucun produit enregistré</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <script>
+    // 🌸 Load products from localStorage
+    const products = JSON.parse(localStorage.getItem('products')) || [];
+    const tableBody = document.getElementById('product-table-body');
+
+    if (products.length > 0) {
+      tableBody.innerHTML = '';
+      products.forEach((p, index) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${p.code || '-'}</td>
+          <td>${p.name || '-'}</td>
+          <td>${p.category || '-'}</td>
+          <td>${p.quantity || 0}</td>
+          <td>${p.price?.toLocaleString() || 0}</td>
+          <td>${p.cost?.toLocaleString() || 0}</td>
+          <td>${p.barcode || '-'}</td>
+          <td>
+            <button class="edit-btn" onclick="editProduct(${index})">✏️</button>
+            <button class="delete-btn" onclick="deleteProduct(${index})">🗑️</button>
+          </td>
+        `;
+        tableBody.appendChild(tr);
+      });
+    }
+
+    // 🩷 Delete product
+    function deleteProduct(index) {
+      if (confirm('Supprimer ce produit ?')) {
+        products.splice(index, 1);
+        localStorage.setItem('products', JSON.stringify(products));
+        location.reload();
+      }
+    }
+
+    // 🪞 Edit product
+    function editProduct(index) {
+      const product = products[index];
+      const newName = prompt('Modifier le nom du produit :', product.name);
+      if (newName !== null) {
+        product.name = newName;
+        localStorage.setItem('products', JSON.stringify(products));
+        location.reload();
+      }
+    }
+  </script>
 </body>
 </html>
