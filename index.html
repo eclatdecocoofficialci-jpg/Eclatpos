@@ -380,6 +380,38 @@
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("service-worker.js");
     }
+    // === Auto-generate Product Code ===
+function generateAutoCode() {
+  const categoryInput = document.querySelector('input[placeholder="Ex: Savons"]');
+  const codeInput = document.querySelector('input[placeholder="Ex: P001"]');
+
+  if (!categoryInput || !codeInput) return;
+
+  const category = categoryInput.value.trim();
+  if (category.length < 2) {
+    codeInput.value = "";
+    return;
+  }
+
+  // Get current inventory
+  const products = JSON.parse(localStorage.getItem("products")) || [];
+  const prefix = category.substring(0, 2).toUpperCase();
+
+  // Count how many products are already in this category
+  const sameCat = products.filter(p => p.category?.toLowerCase() === category.toLowerCase());
+  const nextNumber = (sameCat.length + 1).toString().padStart(3, '0');
+
+  codeInput.value = prefix + nextNumber;
+}
+
+// Trigger when typing category or when product name is entered
+document.addEventListener("DOMContentLoaded", () => {
+  const categoryInput = document.querySelector('input[placeholder="Ex: Savons"]');
+  const nameInput = document.querySelector('input[placeholder="Ex: Savon Rose Vanille"]');
+
+  if (categoryInput) categoryInput.addEventListener("input", generateAutoCode);
+  if (nameInput) nameInput.addEventListener("input", generateAutoCode);
+});
   </script>
 
   <!-- 🌸 App Icon & PWA -->
