@@ -6,11 +6,11 @@
   <title>Inventory | Éclat de Coco POS</title>
   <link rel="stylesheet" href="style.css" />
   <style>
-    /* 💗 Specific layout for Inventory Page */
     .inventory-container {
       display: flex;
       height: 100vh;
       background: #fff;
+      font-family: 'Poppins', sans-serif;
     }
 
     .inventory-form {
@@ -30,17 +30,18 @@
       margin-bottom: 15px;
     }
 
+    .inventory-form label {
+      font-weight: 500;
+      color: #fff;
+    }
+
     .inventory-form input {
       width: 100%;
       padding: 10px;
       border: none;
       border-radius: 8px;
       outline: none;
-    }
-
-    .inventory-form label {
-      font-weight: 500;
-      color: #fff;
+      font-size: 14px;
     }
 
     .inventory-form button {
@@ -51,7 +52,6 @@
       padding: 10px;
       cursor: pointer;
       font-weight: 600;
-      margin-top: 10px;
       transition: all 0.3s ease;
     }
 
@@ -68,6 +68,7 @@
     .inventory-table table {
       width: 100%;
       border-collapse: collapse;
+      text-align: center;
     }
 
     .inventory-table th {
@@ -79,7 +80,6 @@
 
     .inventory-table td {
       border: 1px solid #f8bbd0;
-      text-align: center;
       padding: 8px;
     }
 
@@ -112,6 +112,8 @@
       color: #e91e63;
       border: 2px solid #e91e63;
       font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
     }
 
     .barcode-box button:hover {
@@ -182,28 +184,18 @@
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>SA001</td>
-            <td>Rose vanille</td>
-            <td>Savon</td>
-            <td>8</td>
-            <td>1000</td>
-            <td>3000</td>
-            <td>123456789012</td>
-            <td>
-              <button class="edit-btn">Edit</button>
-              <button class="delete-btn" onclick="deleteRow(this)">Delete</button>
-            </td>
-          </tr>
+        <tbody id="productBody">
+          <tr><td colspan="8">No products yet</td></tr>
         </tbody>
       </table>
     </div>
   </div>
 
   <script>
-    // 💖 Auto Code Generation
-    let categoryCodes = {
+    const tableBody = document.getElementById('productBody');
+    let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+
+    const categoryCodes = {
       "savon": "SA",
       "lotion": "LO",
       "masque": "MA",
@@ -217,13 +209,37 @@
       return prefix + randomNum;
     }
 
-    // 💖 Generate Barcode (Random 12-digit number)
     function generateBarcode() {
       const randomBarcode = Math.floor(100000000000 + Math.random() * 900000000000);
       document.getElementById('barcode').value = randomBarcode;
     }
 
-    // 💖 Add Product to Table
+    function loadInventory() {
+      tableBody.innerHTML = '';
+      if (inventory.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="8">No products yet</td></tr>';
+        return;
+      }
+
+      inventory.forEach((item, i) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${item.code}</td>
+          <td>${item.productName}</td>
+          <td>${item.category}</td>
+          <td>${item.quantity}</td>
+          <td>${item.cost}</td>
+          <td>${item.price}</td>
+          <td>${item.barcode}</td>
+          <td>
+            <button class="edit-btn" onclick="editProduct(${i})">Edit</button>
+            <button class="delete-btn" onclick="deleteProduct(${i})">Delete</button>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
     function addProduct() {
       const category = document.getElementById('category').value.trim();
       const name = document.getElementById('name').value.trim();
@@ -240,37 +256,43 @@
       const code = generateProductCode(category);
       document.getElementById('code').value = code;
 
-      const table = document.getElementById('productTable').getElementsByTagName('tbody')[0];
-      const row = table.insertRow();
+      const newProduct = {
+        code,
+        productName: name,
+        category,
+        quantity,
+        cost,
+        price,
+        barcode
+      };
 
-      row.innerHTML = `
-        <td>${code}</td>
-        <td>${name}</td>
-        <td>${category}</td>
-        <td>${quantity}</td>
-        <td>${cost}</td>
-        <td>${price}</td>
-        <td>${barcode}</td>
-        <td>
-          <button class="edit-btn">Edit</button>
-          <button class="delete-btn" onclick="deleteRow(this)">Delete</button>
-        </td>
-      `;
+      inventory.push(newProduct);
+      localStorage.setItem('inventory', JSON.stringify(inventory));
+      loadInventory();
 
-      document.getElementById('category').value = '';
-      document.getElementById('name').value = '';
-      document.getElementById('quantity').value = '';
-      document.getElementById('cost').value = '';
-      document.getElementById('price').value = '';
-      document.getElementById('barcode').value = '';
-      document.getElementById('code').value = '';
+      // 🧼 Clear form completely
+      document.querySelectorAll('.inventory-form input').forEach(input => input.value = '');
     }
 
-    // 💖 Delete Row
-    function deleteRow(btn) {
-      const row = btn.parentNode.parentNode;
-      row.parentNode.removeChild(row);
+    function deleteProduct(index) {
+      if (confirm("Delete this product?")) {
+        inventory.splice(index, 1);
+        localStorage.setItem('inventory', JSON.stringify(inventory));
+        loadInventory();
+      }
     }
+
+    function editProduct(index) {
+      const product = inventory[index];
+      const newName = prompt("Edit product name:", product.productName);
+      if (newName !== null && newName.trim() !== "") {
+        inventory[index].productName = newName.trim();
+        localStorage.setItem('inventory', JSON.stringify(inventory));
+        loadInventory();
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadInventory);
   </script>
 </body>
 </html>
