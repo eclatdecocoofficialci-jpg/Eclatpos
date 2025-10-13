@@ -5,73 +5,48 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Éclat de Coco POS</title>
 
-  <!-- 🌸 Fonts + PWA -->
+  <!-- 🌸 Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Great+Vibes&display=swap" rel="stylesheet">
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#f8bbd0" />
 
   <style>
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
-      background: #fff;
+      background: white;
+      overflow: hidden;
     }
 
     /* 🌸 WELCOME SCREEN */
     #welcomeScreen {
       position: fixed;
       inset: 0;
-      background: #fff;
+      background: white;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
-      z-index: 10000;
-      transition: opacity 1s ease;
+      flex-direction: column;
+      z-index: 9999;
     }
 
-    .welcome-text {
+    #welcomeText {
       font-family: 'Great Vibes', cursive;
-      font-size: 52px;
+      font-size: 60px;
       color: #e91e63;
       text-align: center;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .welcome-text span {
       opacity: 0;
-      transform: translateY(20px);
-      animation: fadeInWord 0.8s forwards;
-    }
-
-    @keyframes fadeInWord {
-      to { opacity: 1; transform: translateY(0); }
+      transition: opacity 0.5s ease;
+      letter-spacing: 2px;
     }
 
     #loginBox {
       display: none;
+      margin-top: 40px;
       background: #fff;
-      padding: 30px 25px;
+      padding: 40px 30px;
       border-radius: 15px;
       box-shadow: 0 6px 20px rgba(0,0,0,0.1);
       text-align: center;
       width: 300px;
-      max-width: 85%;
-      margin-top: 25px;
-      animation: fadeIn 1s ease forwards;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    #loginBox p {
-      color: #555;
-      margin-bottom: 15px;
     }
 
     #loginBox input {
@@ -101,25 +76,46 @@
       background-color: #d81b60;
     }
 
-    #loginBox small {
-      display: block;
-      margin-top: 15px;
-      font-size: 13px;
-      color: #888;
+    .fade-in {
+      opacity: 1 !important;
+    }
+
+    /* 🌸 POS PAGE HIDDEN INITIALLY */
+    #posApp {
+      display: none;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #f8bbd0;
+      padding: 15px 25px;
+    }
+
+    nav .logo {
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .nav-buttons a {
+      text-decoration: none;
+      color: #fff;
+      margin-left: 10px;
+      font-weight: 500;
+    }
+
+    .nav-buttons a.active {
+      text-decoration: underline;
     }
   </style>
 </head>
 
 <body>
-  <!-- 🌸 WELCOME + LOGIN -->
+
+  <!-- 🌸 WELCOME SCREEN -->
   <div id="welcomeScreen">
-    <h1 class="welcome-text">
-      <span style="animation-delay: 0s;">Bienvenue</span>
-      <span style="animation-delay: 0.5s;">à</span>
-      <span style="animation-delay: 1s;">Éclat</span>
-      <span style="animation-delay: 1.5s;">de Coco</span>
-      <span style="animation-delay: 2s;">Official</span>
-    </h1>
+    <div id="welcomeText"></div>
 
     <div id="loginBox">
       <p>Entrez le code d’accès</p>
@@ -130,7 +126,7 @@
   </div>
 
   <!-- 🌸 POS APP -->
-  <div id="posApp" style="display:none;">
+  <div id="posApp">
     <nav>
       <h2 class="logo">Éclat de Coco POS</h2>
       <div class="nav-buttons">
@@ -143,60 +139,35 @@
         <a href="reports.html">Reports</a>
       </div>
     </nav>
-
-    <section id="pos">
-      <div class="left-section">
-        <h3>Produits</h3>
-        <input type="text" id="search" placeholder="Rechercher..." oninput="searchProduct()">
-        <table>
-          <thead>
-            <tr><th>Code</th><th>Nom</th><th>Prix</th><th>+</th></tr>
-          </thead>
-          <tbody id="productList"></tbody>
-        </table>
-      </div>
-
-      <div class="cashier">
-        <h3>Caisse</h3>
-        <input type="text" id="clientName" placeholder="Client">
-        <input type="text" id="clientPhone" placeholder="Téléphone">
-        <table>
-          <thead><tr><th>Produit</th><th>Qté</th><th>Total</th></tr></thead>
-          <tbody id="cart"></tbody>
-        </table>
-        <p><strong>Total:</strong> <span id="total">0</span> FCFA</p>
-        <button onclick="saveAndPrint()">🖨️ Imprimer & Enregistrer</button>
-      </div>
-    </section>
   </div>
 
-  <!-- 🌸 Welcome Sound -->
-  <audio id="welcomeSound" src="welcome.mp3" preload="auto"></audio>
-
   <script>
-    // 🌸 Play welcome sound and show login
-    window.addEventListener("DOMContentLoaded", () => {
-      const sound = document.getElementById("welcomeSound");
-      sound.play().catch(() => {
-        console.log("🔇 Sound autoplay blocked — will play on first tap.");
-        document.body.addEventListener("click", () => sound.play(), { once: true });
-      });
+    // 🌸 Word-by-word fade animation
+    const text = ["Bienvenue", "à", "Éclat", "de", "Coco", "Official"];
+    const welcomeText = document.getElementById("welcomeText");
+    let index = 0;
 
-      setTimeout(() => {
-        document.getElementById("loginBox").style.display = "block";
-      }, 3000); // after all words appear
-    });
+    function showWords() {
+      if (index < text.length) {
+        welcomeText.textContent += (index > 0 ? " " : "") + text[index];
+        welcomeText.classList.add("fade-in");
+        index++;
+        setTimeout(showWords, 500); // 0.5s per word
+      } else {
+        // After all words are shown, display login
+        setTimeout(() => {
+          document.getElementById("loginBox").style.display = "block";
+        }, 600);
+      }
+    }
+    window.onload = showWords;
 
-    // 🌸 Login function
+    // 🌸 Login
     function checkCode() {
       const code = document.getElementById("accessCode").value.trim();
-      const screen = document.getElementById("welcomeScreen");
       if (code === "123") {
-        screen.style.opacity = "0";
-        setTimeout(() => {
-          screen.style.display = "none";
-          document.getElementById("posApp").style.display = "block";
-        }, 1000);
+        document.getElementById("welcomeScreen").style.display = "none";
+        document.getElementById("posApp").style.display = "block";
       } else {
         alert("❌ Code incorrect");
       }
