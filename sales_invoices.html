@@ -3,95 +3,211 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Éclat de Coco – Factures</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Sales Invoices | Éclat de Coco POS</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-  <meta name="theme-color" content="#f8bbd0" />
+  <link rel="stylesheet" href="style.css">
+
   <style>
     body {
       font-family: 'Poppins', sans-serif;
-      background-color: #fff0f5;
+      background: #fff;
+      color: #444;
       margin: 0;
-      padding: 0;
     }
+
     nav {
-      background: #f8bbd0;
-      padding: 10px 20px;
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
+      background: white;
+      border-bottom: 2px solid #f8bbd0;
+      padding: 10px 25px;
+      box-shadow: 0 2px 8px rgba(233, 30, 99, 0.1);
     }
-    .logo {
-      font-size: 20px;
+
+    nav h2 {
+      color: #e91e63;
       font-weight: 600;
-      color: white;
     }
+
     .nav-buttons a {
       text-decoration: none;
-      margin: 0 8px;
-      color: white;
+      color: #e91e63;
+      background: #fce4ec;
+      border-radius: 10px;
+      padding: 8px 14px;
+      margin-left: 8px;
       font-weight: 500;
+      transition: 0.3s;
     }
+
+    .nav-buttons a:hover {
+      background: #f8bbd0;
+    }
+
     .nav-buttons a.active {
-      border-bottom: 2px solid white;
+      background: #e91e63;
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(233, 30, 99, 0.3);
     }
+
     section {
-      padding: 20px;
+      padding: 30px;
     }
+
     h2 {
-      color: #d81b60;
-      text-align: center;
+      color: #e91e63;
       margin-bottom: 20px;
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      background: white;
-      border-radius: 10px;
+      background: #fff;
+      border: 1px solid #f8bbd0;
+      border-radius: 12px;
       overflow: hidden;
+      box-shadow: 0 3px 10px rgba(233, 30, 99, 0.08);
     }
+
     th, td {
-      padding: 10px;
-      border-bottom: 1px solid #eee;
-      text-align: left;
-    }
-    th {
-      background: #f8bbd0;
-      color: white;
-    }
-    tr:hover {
-      background-color: #fff5f8;
-    }
-    .details {
-      background: #fffafc;
-      border-left: 4px solid #f8bbd0;
-      margin: 10px 0;
-      padding: 10px;
-      border-radius: 8px;
-    }
-    .no-data {
+      border: 1px solid #f8bbd0;
+      padding: 12px;
       text-align: center;
-      color: #aaa;
-      padding: 30px;
     }
+
+    th {
+      background: #ffe6ef;
+      color: #e91e63;
+    }
+
     button {
-      background: #f8bbd0;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 5px;
       cursor: pointer;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 14px;
+      font-weight: 500;
+      transition: 0.3s;
     }
-    button:hover {
-      background: #f48fb1;
+
+    button.view-btn {
+      background-color: #e91e63;
+      color: white;
+    }
+
+    button.view-btn:hover {
+      background-color: #c2185b;
+    }
+
+    #export-btn {
+      background-color: #f8bbd0;
+      color: #e91e63;
+      margin-bottom: 15px;
+    }
+
+    #export-btn:hover {
+      background-color: #e91e63;
+      color: white;
+    }
+
+    /* Modal */
+    .invoice-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+    }
+
+    .invoice-content {
+      background: #fff;
+      padding: 30px;
+      width: 80%;
+      max-width: 750px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(233, 30, 99, 0.25);
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .invoice-content h1 {
+      text-align: center;
+      color: #e91e63;
+      margin-bottom: 5px;
+    }
+
+    .invoice-content p {
+      text-align: center;
+      margin: 4px 0;
+      color: #777;
+    }
+
+    .invoice-content table {
+      margin-top: 20px;
+      border: 1px solid #f8bbd0;
+      width: 100%;
+    }
+
+    .invoice-content th {
+      background: #ffe6ef;
+      color: #e91e63;
+    }
+
+    .close-btn {
+      float: right;
+      background: #f8bbd0;
+      color: #e91e63;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .close-btn:hover {
+      background: #e91e63;
+      color: #fff;
+    }
+
+    .modal-actions {
+      text-align: right;
+      margin-top: 15px;
+    }
+
+    .delete-btn {
+      background: #f8bbd0;
+      color: #e91e63;
+    }
+
+    .delete-btn:hover {
+      background: #e91e63;
+      color: white;
+    }
+
+    .print-btn {
+      background: #e91e63;
+      color: white;
+      margin-left: 8px;
+    }
+
+    .print-btn:hover {
+      background: #c2185b;
     }
   </style>
 </head>
 
 <body>
-  <!-- Navigation -->
   <nav>
-    <h2 class="logo">Éclat de Coco POS</h2>
+    <h2>Éclat de Coco POS</h2>
     <div class="nav-buttons">
       <a href="index.html">POS</a>
       <a href="dashboard.html">Dashboard</a>
@@ -103,70 +219,131 @@
     </div>
   </nav>
 
-  <!-- Sales Table -->
   <section>
-    <h2>🧾 Historique des ventes</h2>
-    <div id="salesContainer"></div>
+    <h2>Sales Invoices</h2>
+    <button id="export-btn">📤 Export All Invoices</button>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Client</th>
+          <th>Phone</th>
+          <th>Total (FCFA)</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="invoice-table-body">
+        <tr><td colspan="5">Aucune facture pour le moment</td></tr>
+      </tbody>
+    </table>
   </section>
 
-  <script>
-    function loadSales() {
-      const salesContainer = document.getElementById('salesContainer');
-      const sales = JSON.parse(localStorage.getItem('sales')) || [];
+  <!-- Popup Modal -->
+  <div class="invoice-modal" id="invoiceModal">
+    <div class="invoice-content" id="invoiceDetails">
+      <button class="close-btn" onclick="closeModal()">✖</button>
+      <h1>Éclat de Coco</h1>
+      <p>Facture Client</p>
+      <hr>
+      <div id="invoice-info"></div>
+      <div class="modal-actions">
+        <button class="delete-btn" onclick="deleteInvoice()">🗑 Supprimer</button>
+        <button class="print-btn" onclick="printInvoice()">🖨 Imprimer</button>
+      </div>
+    </div>
+  </div>
 
-      if (sales.length === 0) {
-        salesContainer.innerHTML = '<p class="no-data">Aucune facture enregistrée.</p>';
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script>
+    const invoices = JSON.parse(localStorage.getItem('salesInvoices')) || [];
+    const tableBody = document.getElementById('invoice-table-body');
+    const modal = document.getElementById('invoiceModal');
+    const infoDiv = document.getElementById('invoice-info');
+    let currentInvoiceId = null;
+
+    function renderInvoices() {
+      tableBody.innerHTML = '';
+      if (invoices.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="5">Aucune facture pour le moment</td></tr>';
         return;
       }
 
-      let html = `
+      invoices.forEach(inv => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${inv.date || '-'}</td>
+          <td>${inv.clientName || '-'}</td>
+          <td>${inv.clientPhone || '-'}</td>
+          <td>${(inv.total || 0).toLocaleString()} FCFA</td>
+          <td><button class="view-btn" onclick="viewInvoice(${inv.id})">Voir</button></td>
+        `;
+        tableBody.appendChild(tr);
+      });
+    }
+
+    function viewInvoice(id) {
+      const inv = invoices.find(i => i.id === id);
+      if (!inv) return;
+
+      currentInvoiceId = id;
+
+      infoDiv.innerHTML = `
+        <p><strong>Date:</strong> ${inv.date}</p>
+        <p><strong>Client:</strong> ${inv.clientName}</p>
+        <p><strong>Téléphone:</strong> ${inv.clientPhone}</p>
         <table>
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Client</th>
-              <th>Téléphone</th>
-              <th>Total (FCFA)</th>
-              <th>Détails</th>
-            </tr>
-          </thead>
+          <thead><tr><th>Produit</th><th>Qté</th><th>Total (FCFA)</th></tr></thead>
           <tbody>
+            ${inv.items.map(it => `<tr><td>${it.product}</td><td>${it.qty}</td><td>${it.total}</td></tr>`).join('')}
+          </tbody>
+        </table>
+        <p style="text-align:right;margin-top:10px;"><strong>Total: ${(inv.total || 0).toLocaleString()} FCFA</strong></p>
       `;
 
-      sales.forEach(sale => {
-        html += `
-          <tr>
-            <td>${sale.date}</td>
-            <td>${sale.client}</td>
-            <td>${sale.phone}</td>
-            <td>${sale.total.toLocaleString()}</td>
-            <td><button onclick="toggleDetails('${sale.id}')">Voir</button></td>
-          </tr>
-          <tr id="details-${sale.id}" style="display:none;">
-            <td colspan="5">
-              <div class="details">
-                <strong>Produits achetés:</strong>
-                <ul>
-                  ${sale.items.map(item => `
-                    <li>${item.product} — ${item.qty} × ${item.total} FCFA</li>
-                  `).join('')}
-                </ul>
-              </div>
-            </td>
-          </tr>
-        `;
-      });
-
-      html += '</tbody></table>';
-      salesContainer.innerHTML = html;
+      modal.style.display = 'flex';
     }
 
-    function toggleDetails(id) {
-      const row = document.getElementById('details-' + id);
-      row.style.display = (row.style.display === 'none') ? 'table-row' : 'none';
+    function closeModal() {
+      modal.style.display = 'none';
     }
 
-    document.addEventListener('DOMContentLoaded', loadSales);
+    function deleteInvoice() {
+      if (!confirm('Supprimer cette facture ?')) return;
+      const index = invoices.findIndex(i => i.id === currentInvoiceId);
+      if (index > -1) {
+        invoices.splice(index, 1);
+        localStorage.setItem('salesInvoices', JSON.stringify(invoices));
+        renderInvoices();
+        closeModal();
+      }
+    }
+
+    function printInvoice() {
+      window.print();
+    }
+
+    function exportToExcel() {
+      if (invoices.length === 0) {
+        alert('Aucune facture à exporter.');
+        return;
+      }
+
+      const data = invoices.map(i => ({
+        Date: i.date,
+        Client: i.clientName,
+        Téléphone: i.clientPhone,
+        Total: i.total,
+      }));
+
+      const ws = XLSX.utils.json_to_sheet(data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Factures");
+      XLSX.writeFile(wb, "Eclat_de_Coco_Factures.xlsx");
+    }
+
+    document.getElementById('export-btn').addEventListener('click', exportToExcel);
+
+    renderInvoices();
   </script>
 </body>
 </html>
