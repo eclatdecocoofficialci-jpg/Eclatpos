@@ -12,6 +12,9 @@
       font-family: 'Poppins', sans-serif;
       background: #fff;
       color: #444;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
       overflow: hidden;
     }
 
@@ -40,87 +43,40 @@
       color: #fff;
     }
 
-    section { display: none; height: calc(100vh - 60px); }
-
-    /* POS layout */
+    /* Layout */
     #pos {
       display: flex;
-      height: 100%;
+      flex: 1;
       overflow: hidden;
     }
 
-    /* Category Bar */
-    .category-bar {
-      width: 28%;
-      background: linear-gradient(180deg, #ffe6ef, #fff0f6);
-      border-right: 2px solid #f8bbd0;
+    /* Left section (Products + Categories) */
+    .left-section {
+      flex: 1.4;
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
-      padding: 15px;
-      position: relative;
-      overflow-y: auto;
-    }
-
-    .category-header {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    .category-header h3 {
-      color: #e91e63;
-      margin: 0;
-    }
-
-    .menu-dots {
-      font-size: 22px;
-      cursor: pointer;
-      color: #e91e63;
-    }
-
-    .category-list {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 15px;
-      width: 100%;
-    }
-
-    .category-btn {
-      background: #f8bbd0;
-      color: #e91e63;
-      border: none;
-      border-radius: 12px;
-      padding: 25px 15px;
-      font-size: 18px;
-      font-weight: 600;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 10px rgba(233, 30, 99, 0.1);
-    }
-
-    .category-btn:hover, .category-btn.active {
-      background: #e91e63;
-      color: white;
-      box-shadow: 0 0 12px rgba(233, 30, 99, 0.3);
-      transform: scale(1.02);
-    }
-
-    /* Product Section */
-    .product-section {
-      flex: 1.2;
-      background: #fff;
       border-right: 2px solid #f8bbd0;
+      position: relative;
+      background: #fff;
+    }
+
+    .product-section {
+      flex: 1;
       padding: 20px;
       overflow-y: auto;
     }
 
     .product-section h3 {
       color: #e91e63;
+      margin-bottom: 10px;
+    }
+
+    .product-section input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #f8bbd0;
+      border-radius: 8px;
+      margin-bottom: 10px;
     }
 
     table {
@@ -134,18 +90,66 @@
       text-align: center;
     }
 
-    /* Cashier Section */
+    /* Fixed Categories at bottom */
+    .category-bar {
+      background: linear-gradient(180deg, #ffe6ef, #fff0f6);
+      border-top: 2px solid #f8bbd0;
+      padding: 10px 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      position: sticky;
+      bottom: 0;
+      z-index: 10;
+    }
+
+    .category-header {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      color: #e91e63;
+      font-size: 22px;
+      cursor: pointer;
+    }
+
+    .category-btn {
+      background: #f8bbd0;
+      color: #e91e63;
+      border: none;
+      border-radius: 16px;
+      padding: 25px;
+      width: 150px;
+      height: 150px;
+      font-size: 18px;
+      font-weight: 600;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(233, 30, 99, 0.1);
+    }
+
+    .category-btn:hover, .category-btn.active {
+      background: #e91e63;
+      color: white;
+      transform: scale(1.05);
+      box-shadow: 0 0 12px rgba(233, 30, 99, 0.3);
+    }
+
+    /* Caisse */
     .cashier {
-      flex: 0.8;
+      flex: 0.7;
       background: #fff;
       padding: 20px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      border-left: 2px solid #f8bbd0;
     }
 
-    .cashier h3 { color: #e91e63; }
+    .cashier h3 {
+      color: #e91e63;
+    }
 
     .cashier input {
       margin: 5px 0;
@@ -163,16 +167,17 @@
       margin-top: 10px;
     }
 
-    /* Popup Add Category */
+    /* Popup Add/Delete Category */
     .popup-overlay {
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background: rgba(0,0,0,0.3);
+      background: rgba(0, 0, 0, 0.35);
       display: none;
       align-items: center;
       justify-content: center;
       animation: fadeIn 0.4s ease;
+      z-index: 100;
     }
 
     .popup {
@@ -229,45 +234,44 @@
     </div>
   </nav>
 
-  <!-- POS Section -->
   <section id="pos" style="display:flex;">
-    <!-- Category Bar -->
-    <div class="category-bar">
-      <div class="category-header">
-        <h3>Categories</h3>
-        <div class="menu-dots" onclick="openCategoryMenu()">⋮</div>
+    <!-- Left Section -->
+    <div class="left-section">
+      <div class="category-header" onclick="openCategoryMenu()">⋮</div>
+
+      <div class="product-section">
+        <h3>Products</h3>
+        <input type="text" id="search" placeholder="Search products..." oninput="searchProduct()">
+        <table>
+          <thead><tr><th>Code</th><th>Name</th><th>Price</th><th>Add</th></tr></thead>
+          <tbody id="productList">
+            <tr data-category="Savon"><td>SA001</td><td>Rose Vanilla Soap</td><td>1500</td><td><button onclick="addToCart('Rose Vanilla Soap',1500)">+</button></td></tr>
+            <tr data-category="Savon"><td>SA002</td><td>Lavender Bliss Soap</td><td>2000</td><td><button onclick="addToCart('Lavender Bliss Soap',2000)">+</button></td></tr>
+            <tr data-category="Lotion"><td>LO001</td><td>Hydra Glow Lotion</td><td>3500</td><td><button onclick="addToCart('Hydra Glow Lotion',3500)">+</button></td></tr>
+            <tr data-category="Beurre corporel"><td>BU001</td><td>Cocoa Dream Butter</td><td>4000</td><td><button onclick="addToCart('Cocoa Dream Butter',4000)">+</button></td></tr>
+          </tbody>
+        </table>
       </div>
 
-      <div class="category-list" id="categoryList">
+      <!-- Fixed Category Bar -->
+      <div class="category-bar" id="categoryList">
         <button class="category-btn active" onclick="filterCategory('Savon')">Savon</button>
         <button class="category-btn" onclick="filterCategory('Lotion')">Lotion</button>
         <button class="category-btn" onclick="filterCategory('Beurre corporel')">Beurre corporel</button>
       </div>
     </div>
 
-    <!-- Product Section -->
-    <div class="product-section">
-      <h3>Products</h3>
-      <input type="text" id="search" placeholder="Search products..." oninput="searchProduct()" style="width:100%; padding:8px; border:1px solid #f8bbd0; margin-bottom:10px;">
-      <table>
-        <thead><tr><th>Code</th><th>Name</th><th>Price</th><th>Add</th></tr></thead>
-        <tbody id="productList">
-          <tr data-category="Savon"><td>SA001</td><td>Rose Vanilla Soap</td><td>1500</td><td><button onclick="addToCart('Rose Vanilla Soap',1500)">+</button></td></tr>
-          <tr data-category="Savon"><td>SA002</td><td>Lavender Bliss Soap</td><td>2000</td><td><button onclick="addToCart('Lavender Bliss Soap',2000)">+</button></td></tr>
-          <tr data-category="Lotion"><td>LO001</td><td>Hydra Glow Lotion</td><td>3500</td><td><button onclick="addToCart('Hydra Glow Lotion',3500)">+</button></td></tr>
-          <tr data-category="Beurre corporel"><td>BU001</td><td>Cocoa Dream Butter</td><td>4000</td><td><button onclick="addToCart('Cocoa Dream Butter',4000)">+</button></td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Cashier Section -->
+    <!-- Right Caisse -->
     <div class="cashier">
       <div>
         <h3>Caisse</h3>
         <input type="text" id="clientName" placeholder="Nom du client">
         <input type="text" id="clientPhone" placeholder="Téléphone">
         <input type="text" id="clientAddress" placeholder="Adresse">
-        <table style="margin-top:10px;"><thead><tr><th>Produit</th><th>Qté</th><th>Total</th></tr></thead><tbody id="cart"></tbody></table>
+        <table style="margin-top:10px;">
+          <thead><tr><th>Produit</th><th>Qté</th><th>Total</th></tr></thead>
+          <tbody id="cart"></tbody>
+        </table>
       </div>
       <div>
         <p><strong>Total:</strong> <span id="total">0</span> FCFA</p>
@@ -276,13 +280,13 @@
     </div>
   </section>
 
-  <!-- Popup -->
+  <!-- Popup Add/Delete Category -->
   <div class="popup-overlay" id="popupOverlay">
     <div class="popup">
-      <h3 style="color:#e91e63;">Add New Category</h3>
+      <h3 style="color:#e91e63;">Manage Categories</h3>
       <input type="text" id="newCategory" placeholder="Category name">
       <div>
-        <button onclick="addCategory()">Save</button>
+        <button onclick="addCategory()">Add</button>
         <button class="cancel" onclick="closePopup()">Cancel</button>
       </div>
     </div>
