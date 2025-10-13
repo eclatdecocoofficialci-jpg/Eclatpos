@@ -99,7 +99,7 @@
       color: #e91e63;
     }
 
-    .products input {
+    .products input, .products select {
       width: 100%;
       padding: 8px;
       margin-bottom: 10px;
@@ -154,6 +154,42 @@
     .cashier button:hover {
       background-color: #d81b60;
     }
+
+    /* 🌸 Add Product Section */
+    .add-product {
+      margin-top: 15px;
+      background-color: #fce4ec;
+      border-radius: 10px;
+      padding: 15px;
+    }
+
+    .add-product h4 {
+      color: #e91e63;
+      margin-bottom: 8px;
+    }
+
+    .add-product input, .add-product select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 8px;
+      border: 1px solid #f8bbd0;
+      border-radius: 8px;
+    }
+
+    .add-product button {
+      background-color: #e91e63;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px;
+      width: 100%;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .add-product button:hover {
+      background-color: #d81b60;
+    }
   </style>
 </head>
 
@@ -180,6 +216,19 @@
       <button class="category-btn active" onclick="filterCategory('Savon')">Savon</button>
       <button class="category-btn" onclick="filterCategory('Lotion')">Lotion</button>
       <button class="category-btn" onclick="filterCategory('Beurre corporel')">Beurre corporel</button>
+
+      <div class="add-product">
+        <h4>+ Ajouter un produit</h4>
+        <input type="text" id="newProductName" placeholder="Nom du produit">
+        <select id="newProductCategory">
+          <option value="">Choisir catégorie</option>
+          <option value="Savon">Savon</option>
+          <option value="Lotion">Lotion</option>
+          <option value="Beurre corporel">Beurre corporel</option>
+        </select>
+        <input type="number" id="newProductPrice" placeholder="Prix (FCFA)">
+        <button onclick="addNewProduct()">Ajouter</button>
+      </div>
     </div>
 
     <!-- Products -->
@@ -219,21 +268,49 @@
   </section>
 
   <script>
-    // ===== Products =====
-    const sampleProducts = [
+    let products = JSON.parse(localStorage.getItem("inventory")) || [
       { code: "SA001", productName: "Rose Vanilla Soap", price: 1500, category: "Savon" },
-      { code: "SA002", productName: "Lavender Bliss Soap", price: 2000, category: "Savon" },
       { code: "LO001", productName: "Coconut Lotion", price: 3500, category: "Lotion" },
       { code: "BB001", productName: "Vanilla Body Butter", price: 4000, category: "Beurre corporel" },
     ];
 
-    localStorage.setItem("inventory", JSON.stringify(sampleProducts));
+    function saveInventory() {
+      localStorage.setItem("inventory", JSON.stringify(products));
+    }
+
+    function generateProductCode(category) {
+      const prefix = category.substring(0, 2).toUpperCase();
+      const sameCat = products.filter(p => p.category === category);
+      const nextNum = (sameCat.length + 1).toString().padStart(3, '0');
+      return prefix + nextNum;
+    }
+
+    function addNewProduct() {
+      const name = document.getElementById("newProductName").value.trim();
+      const category = document.getElementById("newProductCategory").value;
+      const price = parseFloat(document.getElementById("newProductPrice").value);
+
+      if (!name || !category || isNaN(price)) {
+        alert("⚠️ Veuillez remplir tous les champs !");
+        return;
+      }
+
+      const code = generateProductCode(category);
+      const newProd = { code, productName: name, price, category };
+      products.push(newProd);
+      saveInventory();
+      loadProducts();
+      alert(`✅ Produit ajouté : ${code} - ${name}`);
+
+      document.getElementById("newProductName").value = "";
+      document.getElementById("newProductCategory").value = "";
+      document.getElementById("newProductPrice").value = "";
+    }
 
     function loadProducts() {
-      const inventory = JSON.parse(localStorage.getItem("inventory")) || [];
       const productList = document.getElementById("productList");
       productList.innerHTML = "";
-      inventory.forEach(item => {
+      products.forEach(item => {
         const row = document.createElement("tr");
         row.dataset.category = item.category;
         row.innerHTML = `
