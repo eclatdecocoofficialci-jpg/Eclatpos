@@ -3,9 +3,8 @@
   "short_name": "Éclat POS",
   "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#ffe6ef",
+  "background_color": "#f8bbd0",
   "theme_color": "#f8bbd0",
-  "description": "Point de vente hors ligne pour Éclat de Coco",
   "icons": [
     {
       "src": "icon.png",
