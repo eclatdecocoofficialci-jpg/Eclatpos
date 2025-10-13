@@ -10,31 +10,138 @@
       margin: 0;
       font-family: 'Poppins', sans-serif;
       background-color: #fff5fb;
+    }
+
+    /* Splash Screen */
+    #splash {
+      position: fixed;
+      inset: 0;
+      background-color: #e91e63;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      z-index: 1000;
+      transition: opacity 1s ease;
+    }
+    #splash img {
+      width: 120px;
+      border-radius: 50%;
+      margin-bottom: 15px;
+    }
+
+    /* Login */
+    #login {
+      display: none;
+      text-align: center;
+      margin-top: 200px;
+    }
+    #login input {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      width: 150px;
+      font-size: 18px;
+      text-align: center;
+    }
+    #login button {
+      background-color: #e91e63;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      margin-left: 8px;
+      cursor: pointer;
+    }
+
+    /* Navigation */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: white;
+      border-bottom: 3px solid #f8bbd0;
+      padding: 10px 20px;
+      box-shadow: 0 4px 10px rgba(233, 30, 99, 0.15);
+    }
+    nav img {
+      height: 40px;
+    }
+    .nav-buttons {
+      display: flex;
+      gap: 10px;
+    }
+    .nav-buttons button {
+      background: #e91e63;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 8px 14px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    .nav-buttons button:hover { background: #d81b60; }
+    .nav-buttons button.active { background: #c2185b; }
+
+    /* Sections */
+    section { display: none; padding: 20px; }
+
+    /* Dashboard Layout */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(233, 30, 99, 0.15);
+      padding: 15px;
+      text-align: center;
+    }
+    .card h3 { color: #e91e63; margin-bottom: 5px; }
+    .filters {
+      text-align: center;
+      margin: 20px 0;
+    }
+    .filters button {
+      background: #f8bbd0;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      padding: 8px 12px;
+      margin: 0 5px;
+      cursor: pointer;
+    }
+    .filters button.active { background: #e91e63; }
+    canvas {
+      background: white;
+      border-radius: 10px;
+      padding: 10px;
+      max-width: 100%;
+    }
+
+    /* POS layout (your current design) */
+    .pos-layout {
       display: flex;
       justify-content: space-between;
       padding: 25px;
       gap: 20px;
     }
-
     .product-section, .cashier-section {
       background: white;
       border-radius: 12px;
       box-shadow: 0 4px 10px rgba(233, 30, 99, 0.15);
       padding: 20px;
     }
-
     .product-section { flex: 1.5; }
-    .cashier-section {
-      flex: 1;
-      border: 2px solid #f8bbd0;
-    }
-
+    .cashier-section { flex: 1; border: 2px solid #f8bbd0; }
     h1, h2 { color: #e91e63; text-align: center; }
-
     input, select, button {
       font-family: 'Poppins', sans-serif;
     }
-
     input, select {
       width: 100%;
       padding: 10px;
@@ -42,7 +149,6 @@
       border: 1px solid #ddd;
       margin-bottom: 10px;
     }
-
     button {
       background-color: #e91e63;
       color: white;
@@ -51,16 +157,13 @@
       padding: 8px 12px;
       cursor: pointer;
     }
-
     button:hover { background-color: #d81b60; }
-
     .categories {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
       margin-bottom: 10px;
     }
-
     .category-btn {
       background: #f8bbd0;
       border: none;
@@ -69,26 +172,18 @@
       color: #fff;
       cursor: pointer;
     }
-
     .category-btn.active { background: #e91e63; }
-
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 10px;
     }
-
     th, td {
       border-bottom: 1px solid #f1f1f1;
       padding: 8px;
       text-align: center;
     }
-
-    .summary p {
-      font-size: 15px;
-      margin: 6px 0;
-    }
-
+    .summary p { font-size: 15px; margin: 6px 0; }
     .receipt {
       background: white;
       padding: 15px;
@@ -98,122 +193,162 @@
       margin: 20px auto;
       display: none;
     }
+
+    footer {
+      text-align: center;
+      color: #999;
+      font-size: 14px;
+      padding: 20px;
+    }
   </style>
 </head>
 
 <body>
-  <!-- 🧴 PRODUITS -->
-  <div class="product-section">
-    <h1>Point de Vente</h1>
-    <input type="text" id="searchProduct" placeholder="🔍 Rechercher par nom, code ou catégorie...">
-
-    <div class="categories">
-      <button class="category-btn active">Savons</button>
-      <button class="category-btn">Lotion</button>
-      <button class="category-btn">Body Butter</button>
-      <button class="category-btn">Masque Cheveux</button>
-      <button class="category-btn">Dessert Savons</button>
-      <button class="category-btn">+ Ajouter</button>
-    </div>
-
-    <table>
-      <thead>
-        <tr>
-          <th>Code</th>
-          <th>Produit</th>
-          <th>Prix (FCFA)</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody id="productList">
-        <tr>
-          <td>SA001</td>
-          <td>Rose Vanilla Soap</td>
-          <td>1500</td>
-          <td><button onclick="addToCart('Rose Vanilla Soap',1500)">+</button></td>
-        </tr>
-        <tr>
-          <td>SA002</td>
-          <td>Lavender Bliss Soap</td>
-          <td>2000</td>
-          <td><button onclick="addToCart('Lavender Bliss Soap',2000)">+</button></td>
-        </tr>
-      </tbody>
-    </table>
+  <!-- Splash -->
+  <div id="splash">
+    <img src="logo.png" alt="Logo">
+    <h2>Éclat de Coco — POS System</h2>
   </div>
 
-  <!-- 💵 CAISSE -->
-  <div class="cashier-section">
-    <h2>🧾 Caisse</h2>
-    <p><strong>ID Commande :</strong> <span id="orderId">1001</span></p>
-
-    <div class="client-form">
-      <input type="text" id="clientName" placeholder="Nom du client">
-      <input type="text" id="clientPhone" placeholder="Téléphone">
-      <input type="text" id="clientAddress" placeholder="Adresse">
-    </div>
-
-    <table>
-      <thead>
-        <tr>
-          <th>Produit</th>
-          <th>Qté</th>
-          <th>Prix</th>
-          <th>Total</th>
-        </tr>
-      </thead>
-      <tbody id="cartItems"></tbody>
-    </table>
-
-    <div class="summary">
-      <p><strong>Sous-total :</strong> <span id="subtotal">0</span> FCFA</p>
-      <p><strong>Total :</strong> <span id="total">0</span> FCFA</p>
-    </div>
-
-    <label>Méthode de paiement :</label>
-    <select id="paymentMethod">
-      <option>Cash</option>
-      <option>Wave</option>
-      <option>Orange Money</option>
-      <option>Moov Money</option>
-      <option>Visa</option>
-    </select>
-
-    <div style="display:flex; gap:10px; margin-top:10px;">
-      <button onclick="saveOrder()">💾 Enregistrer</button>
-      <button onclick="printReceipt()">🖨️ Imprimer</button>
-    </div>
-
-    <!-- 🧾 REÇU -->
-    <div class="receipt" id="receipt">
-      <h3 style="text-align:center; color:#e91e63;">Bienvenue chez Éclat de Coco</h3>
-      <p style="text-align:center; font-size:13px;">100% Produits Naturels 🌿</p>
-      <hr>
-      <p><strong>Nom:</strong> <span id="rName"></span></p>
-      <p><strong>Adresse:</strong> <span id="rAddress"></span></p>
-      <p><strong>Téléphone:</strong> <span id="rPhone"></span></p>
-      <p><strong>ID Commande:</strong> <span id="rOrder"></span></p>
-      <p><strong>Date:</strong> <span id="rDate"></span></p>
-      <table style="width:100%;border-collapse:collapse;margin-top:10px;">
-        <thead>
-          <tr><th>Produit</th><th>Qté</th><th>Total</th></tr>
-        </thead>
-        <tbody id="rItems"></tbody>
-      </table>
-      <hr>
-      <p><strong>Total:</strong> <span id="rTotal"></span> FCFA</p>
-      <p>Le total est <span id="rTotal2"></span> FCFA sans la livraison.</p>
-      <hr>
-      <p style="font-size:12px;text-align:center;">
-        WhatsApp : 0777000803<br>
-        📧 eclatdecocoofficialci@gmail.com<br>
-        Instagram : @eclatdecoco.official<br>
-        ⚠️ Aucun retour possible
-      </p>
-    </div>
+  <!-- Login -->
+  <div id="login">
+    <h2>Enter Access Code</h2>
+    <input type="password" id="pin" placeholder="••••">
+    <button onclick="checkPin()">Login</button>
   </div>
 
-  <!-- 🔗 External JavaScript -->
+  <!-- App -->
+  <div id="app" style="display:none;">
+    <nav>
+      <img src="logo.png" alt="Logo">
+      <div class="nav-buttons">
+        <button onclick="showSection('dashboard')" class="active">Dashboard</button>
+        <button onclick="showSection('pos')">POS</button>
+        <button onclick="showSection('inventory')">Inventory</button>
+        <button onclick="showSection('suppliers')">Suppliers</button>
+        <button onclick="showSection('customers')">Customers</button>
+        <button onclick="showSection('expenses')">Expenses</button>
+      </div>
+    </nav>
+
+    <!-- Dashboard -->
+    <section id="dashboard">
+      <h2>Welcome, Sara Ajami 💖</h2>
+      <p id="todayDate"></p>
+      <div class="cards">
+        <div class="card"><h3>Total Sales</h3><p id="cardSales">0 FCFA</p></div>
+        <div class="card"><h3>Total Orders</h3><p id="cardOrders">0</p></div>
+        <div class="card"><h3>Total Customers</h3><p id="cardCustomers">0</p></div>
+        <div class="card"><h3>Total Expenses</h3><p id="cardExpenses">0 FCFA</p></div>
+      </div>
+
+      <div class="filters">
+        <button class="active" onclick="setReport('daily')">Daily</button>
+        <button onclick="setReport('weekly')">Weekly</button>
+        <button onclick="setReport('monthly')">Monthly</button>
+      </div>
+
+      <canvas id="salesChart" width="400" height="200"></canvas>
+    </section>
+
+    <!-- POS -->
+    <section id="pos">
+      <div class="pos-layout">
+        <!-- 🧴 PRODUITS -->
+        <div class="product-section">
+          <h1>Point de Vente</h1>
+          <input type="text" id="searchProduct" placeholder="🔍 Rechercher par nom, code ou catégorie...">
+          <div class="categories">
+            <button class="category-btn active">Savons</button>
+            <button class="category-btn">Lotion</button>
+            <button class="category-btn">Body Butter</button>
+            <button class="category-btn">Masque Cheveux</button>
+            <button class="category-btn">Dessert Savons</button>
+            <button class="category-btn">+ Ajouter</button>
+          </div>
+          <table>
+            <thead>
+              <tr><th>Code</th><th>Produit</th><th>Prix (FCFA)</th><th>Action</th></tr>
+            </thead>
+            <tbody id="productList">
+              <tr><td>SA001</td><td>Rose Vanilla Soap</td><td>1500</td><td><button onclick="addToCart('Rose Vanilla Soap',1500)">+</button></td></tr>
+              <tr><td>SA002</td><td>Lavender Bliss Soap</td><td>2000</td><td><button onclick="addToCart('Lavender Bliss Soap',2000)">+</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 💵 CAISSE -->
+        <div class="cashier-section">
+          <h2>🧾 Caisse</h2>
+          <p><strong>ID Commande :</strong> <span id="orderId">1001</span></p>
+          <div class="client-form">
+            <input type="text" id="clientName" placeholder="Nom du client">
+            <input type="text" id="clientPhone" placeholder="Téléphone">
+            <input type="text" id="clientAddress" placeholder="Adresse">
+          </div>
+          <table>
+            <thead>
+              <tr><th>Produit</th><th>Qté</th><th>Prix</th><th>Total</th></tr>
+            </thead>
+            <tbody id="cartItems"></tbody>
+          </table>
+          <div class="summary">
+            <p><strong>Sous-total :</strong> <span id="subtotal">0</span> FCFA</p>
+            <p><strong>Total :</strong> <span id="total">0</span> FCFA</p>
+          </div>
+          <label>Méthode de paiement :</label>
+          <select id="paymentMethod">
+            <option>Cash</option>
+            <option>Wave</option>
+            <option>Orange Money</option>
+            <option>Moov Money</option>
+            <option>Visa</option>
+          </select>
+          <div style="display:flex; gap:10px; margin-top:10px;">
+            <button onclick="saveOrder()">💾 Enregistrer</button>
+            <button onclick="printReceipt()">🖨️ Imprimer</button>
+          </div>
+
+          <!-- 🧾 REÇU -->
+          <div class="receipt" id="receipt">
+            <h3 style="text-align:center; color:#e91e63;">Bienvenue chez Éclat de Coco</h3>
+            <p style="text-align:center; font-size:13px;">100% Produits Naturels 🌿</p>
+            <hr>
+            <p><strong>Nom:</strong> <span id="rName"></span></p>
+            <p><strong>Adresse:</strong> <span id="rAddress"></span></p>
+            <p><strong>Téléphone:</strong> <span id="rPhone"></span></p>
+            <p><strong>ID Commande:</strong> <span id="rOrder"></span></p>
+            <p><strong>Date:</strong> <span id="rDate"></span></p>
+            <table style="width:100%;border-collapse:collapse;margin-top:10px;">
+              <thead><tr><th>Produit</th><th>Qté</th><th>Total</th></tr></thead>
+              <tbody id="rItems"></tbody>
+            </table>
+            <hr>
+            <p><strong>Total:</strong> <span id="rTotal"></span> FCFA</p>
+            <p>Le total est <span id="rTotal2"></span> FCFA sans la livraison.</p>
+            <hr>
+            <p style="font-size:12px;text-align:center;">
+              WhatsApp : 0777000803<br>
+              📧 eclatdecocoofficialci@gmail.com<br>
+              Instagram : @eclatdecoco.official<br>
+              ⚠️ Aucun retour possible
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="inventory"><h2>Inventory Section</h2></section>
+    <section id="suppliers"><h2>Suppliers Section</h2></section>
+    <section id="customers"><h2>Customers Section</h2></section>
+    <section id="expenses"><h2>Expenses Section</h2></section>
+
+    <footer>© Éclat de Coco 2025 — <a href="#">Visit Website</a></footer>
+  </div>
+
+  <script src="chart.min.js"></script>
+  <script src="JsBarcode.all.min.js"></script>
+  <script src="jspdf.umd.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
