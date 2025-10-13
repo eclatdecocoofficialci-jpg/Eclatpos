@@ -1,0 +1,106 @@
+/* 🌸 Global Styles */
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: #fff;
+  color: #444;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* 💖 Navigation Bar */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  border-bottom: 2px solid #f8bbd0;
+  padding: 10px 25px;
+  box-shadow: 0 2px 8px rgba(233, 30, 99, 0.1);
+}
+
+nav h2 {
+  color: #e91e63;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+/* 🌷 Navigation Links */
+.nav-buttons a {
+  text-decoration: none;
+  color: #e91e63;
+  background: #fce4ec;
+  border-radius: 10px;
+  padding: 8px 14px;
+  margin-left: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.nav-buttons a:hover {
+  background: #f8bbd0;
+  transform: translateY(-2px);
+}
+
+.nav-buttons a.active {
+  background: #e91e63;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(233, 30, 99, 0.3);
+}
+
+/* 💅 Scrollable product area */
+.product-section {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.product-section h3 {
+  color: #e91e63;
+  margin-bottom: 10px;
+}
+
+/* 🧁 Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+th, td {
+  border: 1px solid #f8bbd0;
+  padding: 10px;
+  text-align: center;
+}
+
+th {
+  background-color: #ffe6ef;
+  color: #e91e63;
+}
+
+/* 🪞 Category Buttons */
+.category-btn {
+  background: #f8bbd0;
+  color: #e91e63;
+  border: none;
+  border-radius: 16px;
+  padding: 25px;
+  width: 150px;
+  height: 150px;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(233, 30, 99, 0.1);
+}
+
+.category-btn:hover,
+.category-btn.active {
+  background: #e91e63;
+  color: white;
+  transform: scale(1.05);
+  box-shadow: 0 0 12px rgba(233, 30, 99, 0.3);
+}
