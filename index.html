@@ -3,157 +3,505 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Éclat POS</title>
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#f8bbd0">
+<title>Éclat de Coco POS</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-body{margin:0;font-family:'Poppins',sans-serif;background:#fff5fb;}
-#welcome{position:fixed;inset:0;background:#e91e63;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;z-index:9999;}
-#welcome input{padding:10px;border-radius:8px;border:none;width:160px;text-align:center;font-size:16px;}
-#welcome button{margin-top:12px;background:#fff;color:#e91e63;border:none;border-radius:8px;padding:10px 20px;cursor:pointer;font-weight:600;}
-nav{display:flex;justify-content:space-around;background:white;border-bottom:3px solid #f8bbd0;padding:10px;}
-nav button{background:#f8bbd0;color:#e91e63;border:none;border-radius:10px;padding:8px 14px;cursor:pointer;font-weight:500;}
-nav button.active{background:#e91e63;color:#fff;}
-section{display:none;padding:15px;}
-h2{color:#e91e63;}
-.card{background:#fff;border:2px solid #f8bbd0;border-radius:10px;padding:15px;text-align:center;margin:10px;}
-table{width:100%;border-collapse:collapse;margin-top:10px;}
-th,td{border:1px solid #f8bbd0;padding:8px;text-align:center;font-size:14px;}
-button.edit,button.delete{background:white;border:1px solid #e91e63;color:#e91e63;border-radius:6px;padding:4px 10px;margin:2px;cursor:pointer;}
-button.edit:hover,button.delete:hover{background:#e91e63;color:#fff;}
-input,select{width:100%;padding:8px;margin-bottom:8px;border:1px solid #f8bbd0;border-radius:6px;}
-.sidebar{width:35%;float:left;}
-.tablearea{width:60%;float:right;}
-@media(max-width:900px){.sidebar,.tablearea{width:100%;float:none;}}
+  :root{
+    --pink:#e91e63;
+    --light-pink:#ffe4ef;
+    --white:#ffffff;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Poppins',sans-serif;
+    background-color:var(--light-pink);
+    color:#333;
+  }
+
+  /* WELCOME SCREEN */
+  #welcomeScreen{
+    position:fixed;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    background:var(--white);
+    color:var(--pink);
+    text-align:center;
+    z-index:1000;
+    transition:opacity .8s ease;
+  }
+  #welcomeScreen h1{font-size:26px;margin-bottom:8px;}
+  #welcomeScreen input{
+    margin-top:15px;
+    padding:10px;
+    border-radius:8px;
+    border:1px solid var(--pink);
+    text-align:center;
+    font-size:16px;
+    width:180px;
+  }
+  #welcomeScreen button{
+    margin-top:10px;
+    background:var(--pink);
+    color:var(--white);
+    border:none;
+    border-radius:6px;
+    padding:10px 20px;
+    cursor:pointer;
+    font-size:16px;
+  }
+  #welcomeScreen p#errorMsg{
+    color:red;
+    margin-top:10px;
+    display:none;
+  }
+
+  /* NAVIGATION BAR */
+  nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:var(--white);
+    border-bottom:3px solid #f8bbd0;
+    padding:10px 20px;
+    box-shadow:0 4px 10px rgba(233,30,99,0.1);
+  }
+  .nav-buttons{display:flex;gap:8px;flex-wrap:wrap;}
+  .nav-buttons button{
+    background:var(--pink);
+    color:var(--white);
+    border:none;
+    border-radius:20px;
+    padding:8px 14px;
+    cursor:pointer;
+    font-weight:500;
+  }
+  .nav-buttons button.active{background:#c2185b;}
+  .nav-buttons button:hover{background:#d81b60;}
+
+  section{display:none;padding:20px;}
+  h2{color:var(--pink);text-align:center;}
+
+  /* DASHBOARD */
+  #dashboard .cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:15px;
+    margin-top:25px;
+  }
+  .card{
+    background:var(--white);
+    border-radius:12px;
+    border:2px solid #f8bbd0;
+    box-shadow:0 3px 8px rgba(233,30,99,0.1);
+    text-align:center;
+    padding:20px;
+  }
+  .card h3{margin:0;color:var(--pink);}
+  .card p{font-size:18px;font-weight:500;margin-top:6px;}
+
+  .filters{text-align:center;margin:25px 0;}
+  .filters button{
+    background:#f8bbd0;
+    border:none;
+    border-radius:8px;
+    color:var(--white);
+    padding:8px 12px;
+    margin:0 5px;
+    cursor:pointer;
+  }
+  .filters button.active{background:var(--pink);}
+  canvas{
+    background:var(--white);
+    border-radius:10px;
+    border:1px solid #f8bbd0;
+    padding:10px;
+    max-width:100%;
+  }
 </style>
 </head>
 <body>
-<div id="welcome">
+
+<!-- WELCOME SCREEN -->
+<div id="welcomeScreen">
   <h1>Welcome to Éclat de Coco Official 💖</h1>
-  <p>Enter access code</p>
-  <input type="password" id="code" placeholder="••••">
+  <p>POS System — Enter Access Code</p>
+  <input type="password" id="accessCode" placeholder="Enter code 1234">
   <button onclick="checkCode()">Enter</button>
-  <p id="err" style="display:none;color:#fff;">Wrong code</p>
+  <p id="errorMsg">❌ Incorrect code</p>
 </div>
 
-<nav>
-  <button class="active" onclick="show('dashboard')">Dashboard</button>
-  <button onclick="show('pos')">POS</button>
-  <button onclick="show('inventory')">Inventory</button>
-  <button onclick="show('suppliers')">Suppliers</button>
-  <button onclick="show('customers')">Customers</button>
-  <button onclick="show('expenses')">Expenses</button>
-  <button onclick="show('invoices')">Sales Invoices</button>
-</nav>
+<!-- MAIN APP -->
+<div id="app" style="display:none;">
+  <nav>
+    <div style="font-weight:600;color:var(--pink);font-size:18px;">Éclat de Coco POS</div>
+    <div class="nav-buttons">
+      <button class="active" onclick="showSection('dashboard')">Dashboard</button>
+      <button onclick="showSection('pos')">POS</button>
+      <button onclick="showSection('inventory')">Inventory</button>
+      <button onclick="showSection('suppliers')">Suppliers</button>
+      <button onclick="showSection('customers')">Customers</button>
+      <button onclick="showSection('expenses')">Expenses</button>
+      <button onclick="showSection('invoices')">Sales Invoices</button>
+    </div>
+  </nav>
 
-<section id="dashboard" style="display:block;">
-  <h2>Dashboard</h2>
-  <div class="card">Welcome back, Sara 💖</div>
-</section>
+  <!-- DASHBOARD -->
+  <section id="dashboard">
+    <h2>Welcome back Sara Ajami 💖</h2>
+    <p id="todayDate" style="text-align:center;"></p>
+    <div class="cards">
+      <div class="card"><h3>Total Sales</h3><p id="cardSales">0 FCFA</p></div>
+      <div class="card"><h3>Total Orders</h3><p id="cardOrders">0</p></div>
+      <div class="card"><h3>Total Customers</h3><p id="cardCustomers">0</p></div>
+      <div class="card"><h3>Total Expenses</h3><p id="cardExpenses">0 FCFA</p></div>
+    </div>
+    <div class="filters">
+      <button class="active" onclick="setReport('daily')">Daily</button>
+      <button onclick="setReport('weekly')">Weekly</button>
+      <button onclick="setReport('monthly')">Monthly</button>
+    </div>
+    <canvas id="salesChart" width="400" height="200"></canvas>
+  </section>
+    <!-- POS SECTION -->
+  <section id="pos">
+    <div style="display:flex;gap:20px;flex-wrap:wrap;justify-content:space-between;">
+      
+      <!-- PRODUCTS -->
+      <div style="flex:1.5;background:white;border-radius:12px;padding:20px;box-shadow:0 4px 10px rgba(233,30,99,0.1);">
+        <h2>Point de Vente</h2>
+        <input type="text" id="searchProduct" placeholder="🔍 Search by name, code or category..." 
+          style="width:100%;padding:10px;border-radius:6px;border:1px solid #ddd;margin-bottom:10px;">
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+          <button class="category-btn active">Soaps</button>
+          <button class="category-btn">Lotions</button>
+          <button class="category-btn">Body Butter</button>
+          <button class="category-btn">Hair Mask</button>
+          <button class="category-btn">Dessert Soaps</button>
+          <button class="category-btn">+ Add</button>
+        </div>
+        <table style="width:100%;border-collapse:collapse;">
+          <thead>
+            <tr style="background:#ffe4ef;">
+              <th>Code</th>
+              <th>Product</th>
+              <th>Price (FCFA)</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="productList">
+            <tr>
+              <td>SA001</td>
+              <td>Rose Vanilla Soap</td>
+              <td>1500</td>
+              <td><button onclick="addToCart('Rose Vanilla Soap',1500)">+</button></td>
+            </tr>
+            <tr>
+              <td>SA002</td>
+              <td>Lavender Bliss Soap</td>
+              <td>2000</td>
+              <td><button onclick="addToCart('Lavender Bliss Soap',2000)">+</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-<section id="pos">
-  <h2>Point de Vente</h2>
-  <p>ID Commande: <span id="orderId">1001</span></p>
-  <input id="clientName" placeholder="Client Name">
-  <input id="clientPhone" placeholder="Phone">
-  <table>
-    <thead><tr><th>Product</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead>
-    <tbody id="cart"></tbody>
-  </table>
-  <p>Total: <span id="total">0</span> FCFA</p>
-  <button onclick="saveOrder()">Save</button>
-</section>
+      <!-- CASHIER -->
+      <div style="flex:1;background:white;border-radius:12px;padding:20px;border:2px solid #f8bbd0;">
+        <h2>🧾 Caisse</h2>
+        <p><strong>ID Commande:</strong> <span id="orderId">1001</span></p>
+        <input type="text" id="clientName" placeholder="Client name">
+        <input type="text" id="clientPhone" placeholder="Phone">
+        <input type="text" id="clientAddress" placeholder="Address">
 
-<section id="inventory">
-  <div class="sidebar">
-    <h2>Add Product</h2>
-    <input id="pname" placeholder="Product Name">
-    <input id="pcat" placeholder="Category">
-    <input id="pprice" placeholder="Price (FCFA)" type="number">
-    <input id="pweight" placeholder="Weight/Density (ml or g)">
-    <input id="pqty" placeholder="Quantity" type="number">
-    <input id="psupp" placeholder="Supplier">
-    <button onclick="addProduct()">Save</button>
-    <button onclick="clearForm()">Clear</button>
-  </div>
-  <div class="tablearea">
-    <table>
-      <thead><tr><th>Code</th><th>Name</th><th>Category</th><th>Price</th><th>Weight</th><th>Qty</th><th>Supplier</th><th>Edit</th><th>Delete</th></tr></thead>
-      <tbody id="invtable"></tbody>
-    </table>
-  </div>
-</section>
+        <table style="width:100%;border-collapse:collapse;margin-top:10px;">
+          <thead>
+            <tr style="background:#ffe4ef;">
+              <th>Product</th>
+              <th>Qty</th>
+              <th>Price</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody id="cartItems"></tbody>
+        </table>
 
-<section id="suppliers"><div class="sidebar"><h2>Add Supplier</h2>
-<input id="sname" placeholder="Supplier Name"><input id="sphone" placeholder="Phone"><input id="semail" placeholder="Email"><button onclick="addSupplier()">Save</button></div>
-<div class="tablearea"><table><thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Edit</th><th>Delete</th></tr></thead><tbody id="suptable"></tbody></table></div></section>
+        <div style="margin-top:10px;">
+          <p><strong>Subtotal:</strong> <span id="subtotal">0</span> FCFA</p>
+          <p><strong>Total:</strong> <span id="total">0</span> FCFA</p>
+        </div>
 
-<section id="customers"><div class="sidebar"><h2>Add Customer</h2>
-<input id="cname" placeholder="Name"><input id="cphone" placeholder="Phone"><input id="caddress" placeholder="Address"><button onclick="addCustomer()">Save</button></div>
-<div class="tablearea"><table><thead><tr><th>Name</th><th>Phone</th><th>Address</th><th>Edit</th><th>Delete</th></tr></thead><tbody id="custable"></tbody></table></div></section>
+        <label>Payment Method:</label>
+        <select id="paymentMethod">
+          <option>Cash</option>
+          <option>Wave</option>
+          <option>Orange Money</option>
+          <option>Moov Money</option>
+          <option>Visa</option>
+        </select>
 
-<section id="expenses"><div class="sidebar"><h2>Add Expense</h2>
-<input id="ename" placeholder="Expense Type"><input id="eamount" placeholder="Amount" type="number"><button onclick="addExpense()">Save</button></div>
-<div class="tablearea"><table><thead><tr><th>Type</th><th>Amount</th><th>Edit</th><th>Delete</th></tr></thead><tbody id="exptable"></tbody></table></div></section>
+        <div style="display:flex;gap:10px;margin-top:10px;">
+          <button onclick="saveOrder()">💾 Save</button>
+          <button onclick="printReceipt()">🖨️ Print</button>
+        </div>
 
-<section id="invoices"><h2>Sales Invoices</h2>
-<table><thead><tr><th>ID</th><th>Client</th><th>Total</th><th>Status</th><th>Delete</th></tr></thead><tbody id="invlist"></tbody></table></section>
+        <!-- RECEIPT -->
+        <div id="receipt" style="background:white;padding:15px;border:1px solid #f8bbd0;border-radius:10px;margin-top:15px;display:none;">
+          <h3 style="text-align:center;color:#e91e63;">Bienvenue chez Éclat de Coco</h3>
+          <p style="text-align:center;font-size:13px;">100% Produits Naturels 🌿</p>
+          <hr>
+          <p><strong>Nom:</strong> <span id="rName"></span></p>
+          <p><strong>Adresse:</strong> <span id="rAddress"></span></p>
+          <p><strong>Téléphone:</strong> <span id="rPhone"></span></p>
+          <p><strong>ID Commande:</strong> <span id="rOrder"></span></p>
+          <p><strong>Date:</strong> <span id="rDate"></span></p>
+          <table style="width:100%;border-collapse:collapse;margin-top:10px;">
+            <thead>
+              <tr><th>Produit</th><th>Qté</th><th>Total</th></tr>
+            </thead>
+            <tbody id="rItems"></tbody>
+          </table>
+          <hr>
+          <p><strong>Total:</strong> <span id="rTotal"></span> FCFA</p>
+          <p>Le total est <span id="rTotal2"></span> FCFA sans la livraison.</p>
+          <hr>
+          <p style="font-size:12px;text-align:center;">
+            ⚠️ Aucun retour possible<br>
+            Merci pour votre achat 💖
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
 
+  <!-- INVENTORY SECTION -->
+  <section id="inventory">
+    <h2>Inventory Management</h2>
+    <div style="display:flex;gap:20px;flex-wrap:wrap;">
+      <!-- LEFT BAR -->
+      <div style="flex:0.7;background:white;border-radius:12px;padding:20px;border:2px solid #f8bbd0;">
+        <input id="invCategory" placeholder="Category">
+        <input id="invName" placeholder="Product Name">
+        <input id="invPrice" placeholder="Price (FCFA)" type="number">
+        <input id="invQty" placeholder="Stock Quantity" type="number">
+        <input id="invWeight" placeholder="Weight (g) or Density (ml)">
+        <input id="invCode" placeholder="Auto Code" readonly>
+        <button onclick="generateCode()">Generate Code</button>
+        <input id="invBarcodeNum" placeholder="Barcode Number" readonly>
+        <button onclick="generateBarcode()">Generate Barcode</button>
+        <svg id="barcode" style="margin-top:10px;"></svg>
+        <button onclick="addInventoryItem()">Add Product</button>
+      </div>
+
+      <!-- TABLE -->
+      <div style="flex:1.3;background:white;border-radius:12px;padding:20px;box-shadow:0 4px 10px rgba(233,30,99,0.1);">
+        <table style="width:100%;border-collapse:collapse;">
+          <thead>
+            <tr style="background:#ffe4ef;">
+              <th>Code</th><th>Product</th><th>Category</th><th>Price</th><th>Qty</th><th>Weight/Density</th><th>Barcode</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="inventoryTable"></tbody>
+        </table>
+        <button onclick="downloadPDF('inventoryTable','Inventory.pdf')" style="margin-top:15px;">📄 Download A5 PDF</button>
+      </div>
+    </div>
+  </section>
+    <!-- SUPPLIERS SECTION -->
+  <section id="suppliers">
+    <h2>Suppliers</h2>
+    <div style="display:flex;gap:20px;flex-wrap:wrap;">
+      <div style="flex:0.7;background:white;border:2px solid #f8bbd0;border-radius:12px;padding:20px;">
+        <input id="supName" placeholder="Supplier Name">
+        <input id="supPhone" placeholder="Phone">
+        <input id="supEmail" placeholder="Email">
+        <input id="supAddress" placeholder="Address">
+        <button onclick="addSupplier()">Add Supplier</button>
+      </div>
+      <div style="flex:1.3;background:white;border-radius:12px;padding:20px;box-shadow:0 4px 10px rgba(233,30,99,0.1);">
+        <table style="width:100%;border-collapse:collapse;">
+          <thead><tr style="background:#ffe4ef;"><th>Name</th><th>Phone</th><th>Email</th><th>Address</th><th>Actions</th></tr></thead>
+          <tbody id="supTable"></tbody>
+        </table>
+        <button onclick="downloadPDF('supTable','Suppliers.pdf')" style="margin-top:15px;">📄 Download A5 PDF</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CUSTOMERS -->
+  <section id="customers">
+    <h2>Customers</h2>
+    <div style="display:flex;gap:20px;flex-wrap:wrap;">
+      <div style="flex:0.7;background:white;border:2px solid #f8bbd0;border-radius:12px;padding:20px;">
+        <input id="cusName" placeholder="Customer Name">
+        <input id="cusPhone" placeholder="Phone">
+        <input id="cusEmail" placeholder="Email">
+        <input id="cusAddress" placeholder="Address">
+        <button onclick="addCustomer()">Add Customer</button>
+      </div>
+      <div style="flex:1.3;background:white;border-radius:12px;padding:20px;box-shadow:0 4px 10px rgba(233,30,99,0.1);">
+        <table style="width:100%;border-collapse:collapse;">
+          <thead><tr style="background:#ffe4ef;"><th>Name</th><th>Phone</th><th>Email</th><th>Address</th><th>Actions</th></tr></thead>
+          <tbody id="cusTable"></tbody>
+        </table>
+        <button onclick="downloadPDF('cusTable','Customers.pdf')" style="margin-top:15px;">📄 Download A5 PDF</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPENSES -->
+  <section id="expenses">
+    <h2>Expenses</h2>
+    <div style="display:flex;gap:20px;flex-wrap:wrap;">
+      <div style="flex:0.7;background:white;border:2px solid #f8bbd0;border-radius:12px;padding:20px;">
+        <input id="expName" placeholder="Expense Title">
+        <input id="expAmount" type="number" placeholder="Amount (FCFA)">
+        <input id="expSupplier" placeholder="Supplier Name (optional)">
+        <input id="expDate" type="date">
+        <button onclick="addExpense()">Add Expense</button>
+      </div>
+      <div style="flex:1.3;background:white;border-radius:12px;padding:20px;box-shadow:0 4px 10px rgba(233,30,99,0.1);">
+        <table style="width:100%;border-collapse:collapse;">
+          <thead><tr style="background:#ffe4ef;"><th>Title</th><th>Amount</th><th>Supplier</th><th>Date</th><th>Actions</th></tr></thead>
+          <tbody id="expTable"></tbody>
+        </table>
+        <button onclick="downloadPDF('expTable','Expenses.pdf')" style="margin-top:15px;">📄 Download A5 PDF</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SALES INVOICES -->
+  <section id="invoices">
+    <h2>Sales Invoices</h2>
+    <div style="display:flex;gap:20px;flex-wrap:wrap;">
+      <div style="flex:1;background:white;border-radius:12px;padding:20px;box-shadow:0 4px 10px rgba(233,30,99,0.1);">
+        <table style="width:100%;border-collapse:collapse;">
+          <thead><tr style="background:#ffe4ef;"><th>ID</th><th>Client</th><th>Total</th><th>Date</th><th>Status</th></tr></thead>
+          <tbody id="invoiceTable"></tbody>
+        </table>
+        <button onclick="downloadPDF('invoiceTable','Invoices.pdf')" style="margin-top:15px;">📄 Download A5 PDF</button>
+      </div>
+    </div>
+  </section>
+
+  <footer style="text-align:center;padding:20px;color:#777;">© Éclat de Coco 2025 — Offline POS Dashboard</footer>
+</div>
+
+<!-- JS LOGIC -->
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
+const { jsPDF } = window.jspdf;
+
 function checkCode(){
-  const v=document.getElementById("code").value;
-  if(v==="1234"){document.getElementById("welcome").style.display="none";}
-  else document.getElementById("err").style.display="block";
+  const code=document.getElementById('accessCode').value;
+  if(code==='1234'){
+    document.getElementById('welcomeScreen').style.display='none';
+    document.getElementById('app').style.display='block';
+  }else{
+    document.getElementById('errorMsg').style.display='block';
+  }
 }
-function show(id){
-  document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
-  document.querySelectorAll("section").forEach(s=>s.style.display="none");
-  document.querySelector(`[onclick="show('${id}')"]`).classList.add("active");
-  document.getElementById(id).style.display="block";
+function showSection(id){
+  document.querySelectorAll('section').forEach(s=>s.style.display='none');
+  document.getElementById(id).style.display='block';
+  document.querySelectorAll('.nav-buttons button').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
 }
-let prodList=[];let counter=1;
-function addProduct(){
- let cat=document.getElementById("pcat").value.slice(0,2).toUpperCase()||"XX";
- let code=cat+String(counter).padStart(3,'0');
- counter++;
- const p={code,name:pname.value,cat:pcat.value,price:pprice.value,weight:pweight.value,qty:pqty.value,supp:psupp.value};
- prodList.push(p);
- renderInv();
+
+/* POS */
+let subtotal=0, orderNumber=1001;
+function addToCart(name,price){
+  const row=document.createElement('tr');
+  row.innerHTML=`<td>${name}</td><td>1</td><td>${price}</td><td>${price}</td>`;
+  document.getElementById('cartItems').appendChild(row);
+  subtotal+=price;
+  document.getElementById('subtotal').textContent=subtotal;
+  document.getElementById('total').textContent=subtotal;
 }
-function renderInv(){
- invtable.innerHTML="";
- prodList.forEach((p,i)=>invtable.innerHTML+=`<tr><td>${p.code}</td><td>${p.name}</td><td>${p.cat}</td><td>${p.price}</td><td>${p.weight}</td><td>${p.qty}</td><td>${p.supp}</td><td><button class='edit' onclick='editProd(${i})'>Edit</button></td><td><button class='delete' onclick='delProd(${i})'>Delete</button></td></tr>`);
-}
-function editProd(i){let p=prodList[i];pname.value=p.name;pcat.value=p.cat;pprice.value=p.price;pweight.value=p.weight;pqty.value=p.qty;psupp.value=p.supp;prodList.splice(i,1);renderInv();}
-function delProd(i){prodList.splice(i,1);renderInv();}
-function clearForm(){document.querySelectorAll('#inventory input').forEach(i=>i.value="");}
-let suppliers=[],customers=[],expenses=[],invoices=[];
-function addSupplier(){suppliers.push({name:sname.value,phone:sphone.value,email:semail.value});renderSup();}
-function renderSup(){suptable.innerHTML="";suppliers.forEach((s,i)=>suptable.innerHTML+=`<tr><td>${s.name}</td><td>${s.phone}</td><td>${s.email}</td><td><button class='edit' onclick='editSup(${i})'>Edit</button></td><td><button class='delete' onclick='delSup(${i})'>Delete</button></td></tr>`);}
-function editSup(i){let s=suppliers[i];sname.value=s.name;sphone.value=s.phone;semail.value=s.email;suppliers.splice(i,1);renderSup();}
-function delSup(i){suppliers.splice(i,1);renderSup();}
-function addCustomer(){customers.push({name:cname.value,phone:cphone.value,address:caddress.value});renderCus();}
-function renderCus(){custable.innerHTML="";customers.forEach((c,i)=>custable.innerHTML+=`<tr><td>${c.name}</td><td>${c.phone}</td><td>${c.address}</td><td><button class='edit' onclick='editCus(${i})'>Edit</button></td><td><button class='delete' onclick='delCus(${i})'>Delete</button></td></tr>`);}
-function editCus(i){let c=customers[i];cname.value=c.name;cphone.value=c.phone;caddress.value=c.address;customers.splice(i,1);renderCus();}
-function delCus(i){customers.splice(i,1);renderCus();}
-function addExpense(){expenses.push({type:ename.value,amount:eamount.value});renderExp();}
-function renderExp(){exptable.innerHTML="";expenses.forEach((e,i)=>exptable.innerHTML+=`<tr><td>${e.type}</td><td>${e.amount}</td><td><button class='edit' onclick='editExp(${i})'>Edit</button></td><td><button class='delete' onclick='delExp(${i})'>Delete</button></td></tr>`);}
-function editExp(i){let e=expenses[i];ename.value=e.type;eamount.value=e.amount;expenses.splice(i,1);renderExp();}
-function delExp(i){expenses.splice(i,1);renderExp();}
-let orderID=1001;
 function saveOrder(){
- let c=document.getElementById('clientName').value;
- invoices.push({id:orderID,client:c,total:document.getElementById('total').innerText,status:'Paid'});
- orderID++;
- renderInvList();
- alert("✅ Command saved");
+  alert('✅ Order saved successfully!');
+  const invoices=document.getElementById('invoiceTable');
+  const date=new Date().toLocaleDateString();
+  invoices.innerHTML+=`<tr><td>${orderNumber}</td><td>${document.getElementById('clientName').value}</td><td>${subtotal}</td><td>${date}</td><td>Paid</td></tr>`;
+  orderNumber++;
+  document.getElementById('orderId').textContent=orderNumber;
 }
-function renderInvList(){invlist.innerHTML="";invoices.forEach((v,i)=>invlist.innerHTML+=`<tr><td>${v.id}</td><td>${v.client}</td><td>${v.total}</td><td>${v.status}</td><td><button class='delete' onclick='delInvoice(${i})'>Delete</button></td></tr>`);}
-function delInvoice(i){invoices.splice(i,1);renderInvList();}
-</script>
-<script>
-if('serviceWorker' in navigator){navigator.serviceWorker.register('service-worker.js');}
+function printReceipt(){
+  const name=document.getElementById('clientName').value;
+  const phone=document.getElementById('clientPhone').value;
+  const addr=document.getElementById('clientAddress').value;
+  document.getElementById('rName').textContent=name;
+  document.getElementById('rPhone').textContent=phone;
+  document.getElementById('rAddress').textContent=addr;
+  document.getElementById('rOrder').textContent=orderNumber;
+  document.getElementById('rDate').textContent=new Date().toLocaleDateString();
+  document.getElementById('rTotal').textContent=subtotal;
+  document.getElementById('rTotal2').textContent=subtotal;
+  const rItems=document.getElementById('rItems');
+  rItems.innerHTML='';
+  document.querySelectorAll('#cartItems tr').forEach(r=>{
+    const c=r.cloneNode(true);
+    c.deleteCell(2);
+    rItems.appendChild(c);
+  });
+  document.getElementById('receipt').style.display='block';
+  window.print();
+}
+
+/* INVENTORY */
+let codeCounter=1;
+function generateCode(){
+  const cat=document.getElementById('invCategory').value.trim();
+  if(!cat)return alert('Enter category first!');
+  const prefix=cat.substring(0,2).toUpperCase();
+  const code=prefix+String(codeCounter).padStart(3,'0');
+  document.getElementById('invCode').value=code;
+  codeCounter++;
+}
+function generateBarcode(){
+  const randomNum=Math.floor(100000000000+Math.random()*900000000000);
+  document.getElementById('invBarcodeNum').value=randomNum;
+  JsBarcode("#barcode", randomNum, {format:"CODE128",width:2,height:40,displayValue:true});
+}
+function addInventoryItem(){
+  const code=invCode.value,name=invName.value,cat=invCategory.value,price=invPrice.value,qty=invQty.value,w=invWeight.value,bar=invBarcodeNum.value;
+  const row=`<tr><td>${code}</td><td>${name}</td><td>${cat}</td><td>${price}</td><td>${qty}</td><td>${w}</td><td>${bar}</td><td><button onclick="this.closest('tr').remove()">🗑️</button></td></tr>`;
+  inventoryTable.insertAdjacentHTML('beforeend',row);
+  invName.value=invCategory.value=invPrice.value=invQty.value=invWeight.value=invCode.value=invBarcodeNum.value='';
+  document.getElementById('barcode').innerHTML='';
+}
+
+/* SUPPLIERS / CUSTOMERS / EXPENSES */
+function addSupplier(){supTable.innerHTML+=`<tr><td>${supName.value}</td><td>${supPhone.value}</td><td>${supEmail.value}</td><td>${supAddress.value}</td><td><button onclick="this.closest('tr').remove()">🗑️</button></td></tr>`;}
+function addCustomer(){cusTable.innerHTML+=`<tr><td>${cusName.value}</td><td>${cusPhone.value}</td><td>${cusEmail.value}</td><td>${cusAddress.value}</td><td><button onclick="this.closest('tr').remove()">🗑️</button></td></tr>`;}
+function addExpense(){expTable.innerHTML+=`<tr><td>${expName.value}</td><td>${expAmount.value}</td><td>${expSupplier.value}</td><td>${expDate.value}</td><td><button onclick="this.closest('tr').remove()">🗑️</button></td></tr>`;}
+
+/* PDF EXPORT */
+function downloadPDF(tableId,fileName){
+  const doc=new jsPDF({format:'a5'});
+  doc.text("Éclat de Coco Report",14,15);
+  const rows=[...document.querySelectorAll(`#${tableId} tr`)].map(tr=>[...tr.children].map(td=>td.innerText));
+  doc.autoTable({head:[rows[0]],body:rows.slice(1),startY:25,theme:'grid'});
+  doc.save(fileName);
+}
+
+/* PWA OFFLINE CACHE */
+if('serviceWorker' in navigator){
+  const swCode=`
+    const CACHE='coco-cache-v1';
+    const FILES=['./'];
+    self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES))));
+    self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));
+  `;
+  const blob=new Blob([swCode],{type:'application/javascript'});
+  const swURL=URL.createObjectURL(blob);
+  navigator.serviceWorker.register(swURL);
+}
 </script>
 </body>
 </html>
+  
