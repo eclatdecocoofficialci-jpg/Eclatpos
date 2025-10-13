@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -23,50 +24,81 @@
   </nav>
 
   <section class="sales">
-    <h2>Sales Invoices</h2>
-    <button id="print-btn">🖨️ Print</button>
+    <div class="sales-header">
+      <h2>🧾 Sales Invoices</h2>
+      <button id="print-btn">🖨️ Imprimer</button>
+    </div>
 
     <table>
       <thead>
         <tr>
           <th>Date</th>
-          <th>Produit</th>
-          <th>Quantité</th>
+          <th>Client</th>
+          <th>Produits</th>
           <th>Total (FCFA)</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody id="sales-body">
-        <tr><td colspan="4">Aucune vente pour le moment</td></tr>
+        <tr><td colspan="5">Aucune vente pour le moment</td></tr>
       </tbody>
     </table>
   </section>
 
   <script>
-    // 🌸 Load saved sales
+    // 🌸 Charger les ventes sauvegardées depuis localStorage
     const sales = JSON.parse(localStorage.getItem('sales')) || [];
-
     const tableBody = document.getElementById('sales-body');
-    tableBody.innerHTML = '';
 
-    if (sales.length > 0) {
-      sales.forEach(sale => {
+    function displaySales() {
+      tableBody.innerHTML = '';
+
+      if (sales.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="5">Aucune vente pour le moment</td></tr>';
+        return;
+      }
+
+      sales.slice().reverse().forEach((sale, index) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td>${sale.date || '-'}</td>
-          <td>${sale.product || '-'}</td>
-          <td>${sale.qty || 0}</td>
+          <td>${sale.client || '-'}</td>
+          <td>${sale.items ? sale.items.map(i => `${i.name} (x${i.qty})`).join(', ') : sale.product || '-'}</td>
           <td>${(sale.total || 0).toLocaleString()} FCFA</td>
+          <td>
+            <button onclick="viewSale(${index})">👁️ Voir</button>
+            <button onclick="deleteSale(${index})">🗑️ Supprimer</button>
+          </td>
         `;
         tableBody.appendChild(tr);
       });
-    } else {
-      tableBody.innerHTML = '<tr><td colspan="4">Aucune vente pour le moment</td></tr>';
     }
 
-    // 🖨️ Print option
+    // 👁️ Voir une vente (popup simple)
+    function viewSale(index) {
+      const s = sales[index];
+      alert(
+        `🧾 Facture du ${s.date}\n\nClient: ${s.client || '-'}\nProduits:\n` +
+        (s.items ? s.items.map(i => `• ${i.name} - ${i.qty} x ${(i.price || 0).toLocaleString()} FCFA`).join('\n') : s.product) +
+        `\n\nTotal: ${(s.total || 0).toLocaleString()} FCFA`
+      );
+    }
+
+    // 🗑️ Supprimer une facture
+    function deleteSale(index) {
+      if (confirm('Supprimer cette facture ?')) {
+        sales.splice(index, 1);
+        localStorage.setItem('sales', JSON.stringify(sales));
+        displaySales();
+      }
+    }
+
+    // 🖨️ Impression
     document.getElementById('print-btn').addEventListener('click', () => {
       window.print();
     });
+
+    displaySales();
   </script>
 </body>
 </html>
