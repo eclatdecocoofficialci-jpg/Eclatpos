@@ -1,23 +1,18 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Éclat de Coco POS</title>
-
-  <!-- Google Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-
-  <!-- Link to external CSS -->
   <link rel="stylesheet" href="style.css">
-
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
   <meta name="theme-color" content="#f8bbd0" />
 </head>
 
 <body>
-  <!-- 🌸 Navigation -->
+  <!-- Navigation -->
   <nav>
-    <h2>Éclat de Coco POS</h2>
+    <h2 class="logo">Éclat de Coco POS</h2>
     <div class="nav-buttons">
       <a href="index.html" class="active">POS</a>
       <a href="dashboard.html">Dashboard</a>
@@ -29,61 +24,50 @@
     </div>
   </nav>
 
-  <!-- 💕 POS Section -->
-  <section id="pos" style="display:flex;">
-    <!-- Left Section -->
+  <!-- POS Layout -->
+  <section id="pos">
+    <!-- Left: Products + Categories -->
     <div class="left-section">
       <div class="category-header" onclick="openCategoryMenu()">⋮</div>
 
       <div class="product-section">
-        <h3>Produits</h3>
-        <input type="text" id="search" placeholder="Rechercher un produit..." oninput="searchProduct()">
-
+        <h3>Products</h3>
+        <input type="text" id="search" placeholder="Search products..." oninput="searchProduct()">
         <table>
           <thead>
-            <tr>
-              <th>Code</th>
-              <th>Nom</th>
-              <th>Prix</th>
-              <th>+</th>
-            </tr>
+            <tr><th>Code</th><th>Name</th><th>Price</th><th>Add</th></tr>
           </thead>
           <tbody id="productList">
-            <tr data-category="Savon"><td>SA001</td><td>Rose Vanille</td><td>1500</td><td><button onclick="addToCart('Rose Vanille',1500)">+</button></td></tr>
-            <tr data-category="Savon"><td>SA002</td><td>Lavande Douce</td><td>2000</td><td><button onclick="addToCart('Lavande Douce',2000)">+</button></td></tr>
-            <tr data-category="Lotion"><td>LO001</td><td>Lotion Hydra Glow</td><td>3500</td><td><button onclick="addToCart('Lotion Hydra Glow',3500)">+</button></td></tr>
-            <tr data-category="Beurre corporel"><td>BU001</td><td>Beurre de Cacao</td><td>4000</td><td><button onclick="addToCart('Beurre de Cacao',4000)">+</button></td></tr>
+            <!-- Products will auto-load here -->
           </tbody>
         </table>
       </div>
 
-      <!-- Fixed Category Bar -->
+      <!-- Category Bar -->
       <div class="category-bar" id="categoryList">
         <button class="category-btn active" onclick="filterCategory('Savon')">Savon</button>
         <button class="category-btn" onclick="filterCategory('Lotion')">Lotion</button>
-        <button class="category-btn" onclick="filterCategory('Beurre corporel')">Beurre corporel</button>
+        <button class="category-btn" onclick="filterCategory('Masque')">Masque</button>
+        <button class="category-btn" onclick="filterCategory('Cheveux')">Cheveux</button>
+        <button class="category-btn" onclick="filterCategory('Body Butter')">Body Butter</button>
       </div>
     </div>
 
-    <!-- Right Section (Caisse) -->
+    <!-- Right: Caisse -->
     <div class="cashier">
       <div>
         <h3>Caisse</h3>
-        <input type="text" id="clientName" placeholder="Nom du client">
-        <input type="text" id="clientPhone" placeholder="Téléphone">
-        <input type="text" id="clientAddress" placeholder="Adresse">
-
+        <input type="text" id="clientName" placeholder="Client Name">
+        <input type="text" id="clientPhone" placeholder="Phone">
+        <input type="text" id="clientAddress" placeholder="Address">
         <table style="margin-top:10px;">
-          <thead>
-            <tr><th>Produit</th><th>Qté</th><th>Total</th></tr>
-          </thead>
+          <thead><tr><th>Product</th><th>Qty</th><th>Total</th></tr></thead>
           <tbody id="cart"></tbody>
         </table>
       </div>
-
       <div>
-        <p><strong>Total :</strong> <span id="total">0</span> FCFA</p>
-        <button onclick="saveAndPrint()">🖨️ Imprimer / Sauvegarder</button>
+        <p><strong>Total:</strong> <span id="total">0</span> FCFA</p>
+        <button onclick="saveAndPrint()">🖨️ Print & Save</button>
       </div>
     </div>
   </section>
@@ -91,17 +75,45 @@
   <!-- Popup Add/Delete Category -->
   <div class="popup-overlay" id="popupOverlay">
     <div class="popup">
-      <h3 style="color:#e91e63;">Gérer les Catégories</h3>
-      <input type="text" id="newCategory" placeholder="Nom de la catégorie">
+      <h3>Manage Categories</h3>
+      <input type="text" id="newCategory" placeholder="Category name">
       <div>
-        <button onclick="addCategory()">Ajouter</button>
-        <button class="cancel" onclick="closePopup()">Annuler</button>
+        <button onclick="addCategory()">Add</button>
+        <button class="cancel" onclick="closePopup()">Cancel</button>
       </div>
     </div>
   </div>
 
-  <!-- 🌷 Script -->
   <script>
+    // ===== Load Products from Inventory =====
+    function loadProductsFromInventory() {
+      const inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+      const productList = document.getElementById('productList');
+      productList.innerHTML = '';
+
+      inventory.forEach(item => {
+        const row = document.createElement('tr');
+        row.dataset.category = item.category;
+        row.innerHTML = `
+          <td>${item.code}</td>
+          <td>${item.productName}</td>
+          <td>${item.price}</td>
+          <td><button onclick="addToCart('${item.productName}', ${item.price})">+</button></td>
+        `;
+        productList.appendChild(row);
+      });
+    }
+    document.addEventListener('DOMContentLoaded', loadProductsFromInventory);
+
+    // ===== Search Filter =====
+    function searchProduct() {
+      const searchValue = document.getElementById('search').value.toLowerCase();
+      document.querySelectorAll('#productList tr').forEach(row => {
+        row.style.display = row.innerText.toLowerCase().includes(searchValue) ? '' : 'none';
+      });
+    }
+
+    // ===== Filter by Category =====
     function filterCategory(category) {
       document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
       event.target.classList.add('active');
@@ -110,6 +122,7 @@
       });
     }
 
+    // ===== Cart + Save =====
     let subtotal = 0;
     function addToCart(name, price) {
       const cart = document.getElementById('cart');
@@ -121,20 +134,36 @@
     }
 
     function saveAndPrint() {
-      // 🌸 Simulate saving sale
-      alert("Vente sauvegardée avec succès !");
+      const clientName = document.getElementById('clientName').value;
+      const clientPhone = document.getElementById('clientPhone').value;
+      const total = document.getElementById('total').textContent;
+      const cartItems = Array.from(document.querySelectorAll('#cart tr')).map(tr => {
+        const tds = tr.querySelectorAll('td');
+        return { product: tds[0].innerText, qty: tds[1].innerText, total: tds[2].innerText };
+      });
+
+      const invoices = JSON.parse(localStorage.getItem('salesInvoices')) || [];
+      invoices.push({
+        id: Date.now(),
+        date: new Date().toLocaleString(),
+        clientName,
+        clientPhone,
+        total,
+        items: cartItems
+      });
+      localStorage.setItem('salesInvoices', JSON.stringify(invoices));
+
       window.print();
     }
 
+    // ===== Category Popup =====
     function openCategoryMenu() {
       document.getElementById('popupOverlay').style.display = 'flex';
     }
-
     function closePopup() {
       document.getElementById('popupOverlay').style.display = 'none';
       document.getElementById('newCategory').value = '';
     }
-
     function addCategory() {
       const name = document.getElementById('newCategory').value.trim();
       if (name) {
