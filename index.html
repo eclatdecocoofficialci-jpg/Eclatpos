@@ -1,91 +1,180 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Éclat de Coco POS</title>
+
+  <!-- 🌸 App style and PWA links -->
   <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#f8bbd0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* 🌸 Login screen styles */
+    #loginScreen {
+      position: fixed;
+      inset: 0;
+      background: #ffe6ef;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      font-family: 'Poppins', sans-serif;
+      z-index: 9999;
+    }
+
+    .login-box {
+      background: #fff;
+      padding: 40px 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 300px;
+    }
+
+    .login-box h2 {
+      color: #e91e63;
+      margin-bottom: 20px;
+    }
+
+    .login-box input {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #f8bbd0;
+      border-radius: 10px;
+      outline: none;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    .login-box button {
+      margin-top: 15px;
+      width: 100%;
+      padding: 10px;
+      background-color: #e91e63;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .login-box button:hover {
+      background-color: #d81b60;
+    }
+
+    .login-box small {
+      display: block;
+      margin-top: 20px;
+      font-size: 13px;
+      color: #999;
+    }
+  </style>
 </head>
 
 <body>
-  <!-- Navigation -->
-  <nav>
-    <h2 class="logo">Éclat de Coco POS</h2>
-    <div class="nav-buttons">
-      <a href="index.html" class="active">POS</a>
-      <a href="dashboard.html">Dashboard</a>
-      <a href="sales_invoices.html">Sales Invoices</a>
-      <a href="products.html">Products</a>
-      <a href="inventory.html">Inventory</a>
-      <a href="expenses.html">Expenses</a>
-      <a href="reports.html">Reports</a>
+  <!-- 🌸 LOGIN SCREEN -->
+  <div id="loginScreen">
+    <div class="login-box">
+      <h2>Éclat de Coco POS</h2>
+      <p>Entrer le code d’accès</p>
+      <input type="password" id="accessCode" placeholder="••••••" />
+      <button onclick="checkLogin()">Entrer</button>
+      <small>Version hors ligne prête 💅</small>
     </div>
-  </nav>
+  </div>
 
-  <!-- POS Layout -->
-  <section id="pos">
-    <!-- Left: Products + Categories -->
-    <div class="left-section">
-      <div class="category-header" onclick="openCategoryMenu()">⋮</div>
+  <!-- 🌸 POS PAGE (hidden until login) -->
+  <div id="posApp" style="display:none;">
+    <!-- Navigation -->
+    <nav>
+      <h2 class="logo">Éclat de Coco POS</h2>
+      <div class="nav-buttons">
+        <a href="index.html" class="active">POS</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="sales_invoices.html">Sales Invoices</a>
+        <a href="products.html">Products</a>
+        <a href="inventory.html">Inventory</a>
+        <a href="expenses.html">Expenses</a>
+        <a href="reports.html">Reports</a>
+      </div>
+    </nav>
 
-      <div class="product-section">
-        <h3>Products</h3>
-        <input type="text" id="search" placeholder="Search products..." oninput="searchProduct()">
-        <table>
-          <thead>
-            <tr><th>Code</th><th>Name</th><th>Price</th><th>Add</th></tr>
-          </thead>
-          <tbody id="productList">
-            <!-- Products will auto-load here -->
-          </tbody>
-        </table>
+    <!-- POS Layout -->
+    <section id="pos">
+      <!-- Left: Products + Categories -->
+      <div class="left-section">
+        <div class="category-header" onclick="openCategoryMenu()">⋮</div>
+
+        <div class="product-section">
+          <h3>Products</h3>
+          <input type="text" id="search" placeholder="Search products..." oninput="searchProduct()">
+          <table>
+            <thead>
+              <tr><th>Code</th><th>Name</th><th>Price</th><th>Add</th></tr>
+            </thead>
+            <tbody id="productList"></tbody>
+          </table>
+        </div>
+
+        <!-- Category Bar -->
+        <div class="category-bar" id="categoryList">
+          <button class="category-btn active" onclick="filterCategory('Savon')">Savon</button>
+          <button class="category-btn" onclick="filterCategory('Lotion')">Lotion</button>
+          <button class="category-btn" onclick="filterCategory('Masque')">Masque</button>
+          <button class="category-btn" onclick="filterCategory('Cheveux')">Cheveux</button>
+          <button class="category-btn" onclick="filterCategory('Body Butter')">Body Butter</button>
+        </div>
       </div>
 
-      <!-- Category Bar -->
-      <div class="category-bar" id="categoryList">
-        <button class="category-btn active" onclick="filterCategory('Savon')">Savon</button>
-        <button class="category-btn" onclick="filterCategory('Lotion')">Lotion</button>
-        <button class="category-btn" onclick="filterCategory('Masque')">Masque</button>
-        <button class="category-btn" onclick="filterCategory('Cheveux')">Cheveux</button>
-        <button class="category-btn" onclick="filterCategory('Body Butter')">Body Butter</button>
+      <!-- Right: Caisse -->
+      <div class="cashier">
+        <div>
+          <h3>Caisse</h3>
+          <input type="text" id="clientName" placeholder="Client Name">
+          <input type="text" id="clientPhone" placeholder="Phone">
+          <input type="text" id="clientAddress" placeholder="Address">
+          <table style="margin-top:10px;">
+            <thead><tr><th>Product</th><th>Qty</th><th>Total</th></tr></thead>
+            <tbody id="cart"></tbody>
+          </table>
+        </div>
+        <div>
+          <p><strong>Total:</strong> <span id="total">0</span> FCFA</p>
+          <button onclick="saveAndPrint()">🖨️ Print & Save</button>
+        </div>
       </div>
-    </div>
+    </section>
 
-    <!-- Right: Caisse -->
-    <div class="cashier">
-      <div>
-        <h3>Caisse</h3>
-        <input type="text" id="clientName" placeholder="Client Name">
-        <input type="text" id="clientPhone" placeholder="Phone">
-        <input type="text" id="clientAddress" placeholder="Address">
-        <table style="margin-top:10px;">
-          <thead><tr><th>Product</th><th>Qty</th><th>Total</th></tr></thead>
-          <tbody id="cart"></tbody>
-        </table>
-      </div>
-      <div>
-        <p><strong>Total:</strong> <span id="total">0</span> FCFA</p>
-        <button onclick="saveAndPrint()">🖨️ Print & Save</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- Popup Add/Delete Category -->
-  <div class="popup-overlay" id="popupOverlay">
-    <div class="popup">
-      <h3>Manage Categories</h3>
-      <input type="text" id="newCategory" placeholder="Category name">
-      <div>
-        <button onclick="addCategory()">Add</button>
-        <button class="cancel" onclick="closePopup()">Cancel</button>
+    <!-- Popup Add/Delete Category -->
+    <div class="popup-overlay" id="popupOverlay">
+      <div class="popup">
+        <h3>Manage Categories</h3>
+        <input type="text" id="newCategory" placeholder="Category name">
+        <div>
+          <button onclick="addCategory()">Add</button>
+          <button class="cancel" onclick="closePopup()">Cancel</button>
+        </div>
       </div>
     </div>
   </div>
 
+  <!-- 🌸 JavaScript -->
   <script>
-    // ===== Load Products from Inventory =====
+    // ===== LOGIN =====
+    function checkLogin() {
+      const code = document.getElementById('accessCode').value;
+      if (code === '123') {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('posApp').style.display = 'block';
+      } else {
+        alert('❌ Code incorrect');
+      }
+    }
+
+    // ===== Load Products =====
     function loadProductsFromInventory() {
       const inventory = JSON.parse(localStorage.getItem('inventory')) || [];
       const productList = document.getElementById('productList');
@@ -105,7 +194,7 @@
     }
     document.addEventListener('DOMContentLoaded', loadProductsFromInventory);
 
-    // ===== Search Filter =====
+    // ===== Search =====
     function searchProduct() {
       const searchValue = document.getElementById('search').value.toLowerCase();
       document.querySelectorAll('#productList tr').forEach(row => {
@@ -113,7 +202,7 @@
       });
     }
 
-    // ===== Filter by Category =====
+    // ===== Filter =====
     function filterCategory(category) {
       document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
       event.target.classList.add('active');
@@ -133,7 +222,7 @@
       document.getElementById('total').textContent = subtotal;
     }
 
-    // ===== Save and Print (Connected to Sales Page) =====
+    // ===== Save + Print =====
     function saveAndPrint() {
       const clientName = document.getElementById('clientName').value || "Client anonyme";
       const clientPhone = document.getElementById('clientPhone').value || "-";
@@ -143,10 +232,7 @@
         return { product: tds[0].innerText, qty: parseInt(tds[1].innerText), total: parseFloat(tds[2].innerText) };
       });
 
-      // 🌸 Load existing sales
       const sales = JSON.parse(localStorage.getItem('sales')) || [];
-
-      // 🧾 Add this new sale
       const saleData = {
         id: Date.now(),
         date: new Date().toLocaleString(),
@@ -159,10 +245,9 @@
       sales.push(saleData);
       localStorage.setItem('sales', JSON.stringify(sales));
 
-      alert("✅ Sale saved successfully!");
+      alert("✅ Vente enregistrée !");
       window.print();
 
-      // Reset after printing
       document.getElementById('clientName').value = '';
       document.getElementById('clientPhone').value = '';
       document.getElementById('clientAddress').value = '';
@@ -171,7 +256,7 @@
       subtotal = 0;
     }
 
-    // ===== Category Popup =====
+    // ===== Popup =====
     function openCategoryMenu() {
       document.getElementById('popupOverlay').style.display = 'flex';
     }
@@ -189,6 +274,11 @@
         document.getElementById('categoryList').appendChild(btn);
       }
       closePopup();
+    }
+
+    // ===== PWA install =====
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js');
     }
   </script>
 </body>
