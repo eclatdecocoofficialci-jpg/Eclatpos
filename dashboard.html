@@ -1,11 +1,88 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Page in progress</title>
-</head>
-<body style="font-family:Poppins; text-align:center; margin-top:100px; color:#e91e63;">
-  <h1>This page is under construction 💅</h1>
-  <a href="index.html" style="color:#e91e63; text-decoration:none;">← Back to POS</a>
+<body>
+  <nav>
+    <h2>Éclat de Coco POS</h2>
+    <div class="nav-buttons">
+      <a href="index.html">POS</a>
+      <a href="dashboard.html" class="active">Dashboard</a>
+      <a href="sales.html">Sales Invoices</a>
+      <a href="products.html">Products</a>
+      <a href="inventory.html">Inventory</a>
+      <a href="expenses.html">Expenses</a>
+      <a href="reports.html">Reports</a>
+    </div>
+  </nav>
+
+  <section class="dashboard">
+    <div class="card">
+      <h3>Total Sales</h3>
+      <p id="total-sales">0 FCFA</p>
+    </div>
+    <div class="card">
+      <h3>Total Products</h3>
+      <p id="total-products">0</p>
+    </div>
+    <div class="card">
+      <h3>Total Revenue</h3>
+      <p id="total-revenue">0 FCFA</p>
+    </div>
+    <div class="card">
+      <h3>Expenses</h3>
+      <p id="total-expenses">0 FCFA</p>
+    </div>
+  </section>
+
+  <section class="recent-sales">
+    <h4>Recent Sales</h4>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Product</th>
+          <th>Qty</th>
+          <th>Total (FCFA)</th>
+        </tr>
+      </thead>
+      <tbody id="sales-table-body">
+        <tr><td colspan="4">No sales yet</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <script>
+    // 🌸 Load data from localStorage
+    const products = JSON.parse(localStorage.getItem('products')) || [];
+    const sales = JSON.parse(localStorage.getItem('sales')) || [];
+    const expenses = JSON.parse(localStorage.getItem('expenses')) || [];
+
+    // 🧾 Calculate totals
+    const totalProducts = products.length;
+    const totalSales = sales.length;
+    const totalRevenue = sales.reduce((sum, s) => sum + (s.total || 0), 0);
+    const totalExpenses = expenses.reduce((sum, e) => sum + (e.amount || 0), 0);
+
+    // 🩷 Update dashboard numbers
+    document.getElementById('total-products').textContent = totalProducts;
+    document.getElementById('total-sales').textContent = totalSales + ' ventes';
+    document.getElementById('total-revenue').textContent = totalRevenue.toLocaleString() + ' FCFA';
+    document.getElementById('total-expenses').textContent = totalExpenses.toLocaleString() + ' FCFA';
+
+    // 📋 Display recent sales
+    const salesTable = document.getElementById('sales-table-body');
+    salesTable.innerHTML = '';
+
+    if (sales.length > 0) {
+      sales.slice(-5).reverse().forEach(sale => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${sale.date || '-'}</td>
+          <td>${sale.product || '-'}</td>
+          <td>${sale.qty || 0}</td>
+          <td>${(sale.total || 0).toLocaleString()} FCFA</td>
+        `;
+        salesTable.appendChild(tr);
+      });
+    } else {
+      salesTable.innerHTML = '<tr><td colspan="4">No sales yet</td></tr>';
+    }
+  </script>
 </body>
-</html>
