@@ -8,6 +8,9 @@
   <!-- 🌸 Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Great+Vibes&display=swap" rel="stylesheet">
 
+  <!-- 🌸 App Manifest for Offline Install -->
+  <link rel="manifest" href="manifest.json">
+
   <style>
     body {
       margin: 0;
@@ -26,6 +29,7 @@
       align-items: center;
       flex-direction: column;
       z-index: 9999;
+      transition: opacity 0.6s ease;
     }
 
     #welcomeText {
@@ -38,49 +42,11 @@
       letter-spacing: 2px;
     }
 
-    #loginBox {
-      display: none;
-      margin-top: 40px;
-      background: #fff;
-      padding: 40px 30px;
-      border-radius: 15px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-      text-align: center;
-      width: 300px;
-    }
-
-    #loginBox input {
-      width: 100%;
-      padding: 10px;
-      border: 2px solid #f8bbd0;
-      border-radius: 10px;
-      outline: none;
-      text-align: center;
-      font-size: 16px;
-      margin-bottom: 15px;
-    }
-
-    #loginBox button {
-      width: 100%;
-      padding: 10px;
-      background-color: #e91e63;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-
-    #loginBox button:hover {
-      background-color: #d81b60;
-    }
-
     .fade-in {
       opacity: 1 !important;
     }
 
-    /* 🌸 POS PAGE HIDDEN INITIALLY */
+    /* 🌸 POS PAGE (hidden initially) */
     #posApp {
       display: none;
     }
@@ -108,21 +74,23 @@
     .nav-buttons a.active {
       text-decoration: underline;
     }
+
+    /* Basic POS layout placeholders (you already have full pages) */
+    #pos {
+      display: flex;
+      gap: 20px;
+      padding: 20px;
+    }
+    .left-section { flex: 1; background: #fff; }
+    .cashier { flex: 1; background: #fff; border-left: 2px solid #f8bbd0; padding: 20px;}
   </style>
 </head>
 
 <body>
 
-  <!-- 🌸 WELCOME SCREEN -->
+  <!-- 🌸 WELCOME SCREEN (no login) -->
   <div id="welcomeScreen">
     <div id="welcomeText"></div>
-
-    <div id="loginBox">
-      <p>Entrez le code d’accès</p>
-      <input type="password" id="accessCode" placeholder="••••" />
-      <button onclick="checkCode()">Entrer</button>
-      <small>Éclat de Coco POS – Hors ligne 💅</small>
-    </div>
   </div>
 
   <!-- 🌸 POS APP -->
@@ -139,10 +107,35 @@
         <a href="reports.html">Reports</a>
       </div>
     </nav>
+
+    <section id="pos">
+      <div class="left-section">
+        <h3>Produits</h3>
+        <input type="text" id="search" placeholder="Rechercher..." oninput="searchProduct()">
+        <table>
+          <thead>
+            <tr><th>Code</th><th>Nom</th><th>Prix</th><th>+</th></tr>
+          </thead>
+          <tbody id="productList"></tbody>
+        </table>
+      </div>
+
+      <div class="cashier">
+        <h3>Caisse</h3>
+        <input type="text" id="clientName" placeholder="Client">
+        <input type="text" id="clientPhone" placeholder="Téléphone">
+        <table>
+          <thead><tr><th>Produit</th><th>Qté</th><th>Total</th></tr></thead>
+          <tbody id="cart"></tbody>
+        </table>
+        <p><strong>Total:</strong> <span id="total">0</span> FCFA</p>
+        <button onclick="saveAndPrint()">🖨️ Imprimer & Enregistrer</button>
+      </div>
+    </section>
   </div>
 
   <script>
-    // 🌸 Word-by-word fade animation
+    // 🌸 Word-by-word fade animation (then auto-show POS)
     const text = ["Bienvenue", "à", "Éclat", "de", "Coco", "Official"];
     const welcomeText = document.getElementById("welcomeText");
     let index = 0;
@@ -154,28 +147,97 @@
         index++;
         setTimeout(showWords, 500); // 0.5s per word
       } else {
-        // After all words are shown, display login
+        // After all words are shown -> fade welcome and show POS
         setTimeout(() => {
-          document.getElementById("loginBox").style.display = "block";
+          const welcome = document.getElementById("welcomeScreen");
+          welcome.style.opacity = "0";
+          setTimeout(() => {
+            welcome.style.display = "none";
+            document.getElementById("posApp").style.display = "block";
+            // optional: load product data once POS is visible
+            loadProductsFromInventory();
+          }, 600);
         }, 600);
       }
     }
     window.onload = showWords;
 
-    // 🌸 Login
-    function checkCode() {
-      const code = document.getElementById("accessCode").value.trim();
-      if (code === "123") {
-        document.getElementById("welcomeScreen").style.display = "none";
-        document.getElementById("posApp").style.display = "block";
-      } else {
-        alert("❌ Code incorrect");
-      }
+    // ===== Load products from localStorage (keeps behavior from before) =====
+    function loadProductsFromInventory() {
+      const inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+      const productList = document.getElementById('productList');
+      productList.innerHTML = '';
+
+      inventory.forEach(item => {
+        const row = document.createElement('tr');
+        row.dataset.category = item.category;
+        row.innerHTML = `
+          <td>${item.code}</td>
+          <td>${item.productName}</td>
+          <td>${item.price}</td>
+          <td><button onclick="addToCart('${item.productName}', ${item.price})">+</button></td>
+        `;
+        productList.appendChild(row);
+      });
+    }
+
+    // ===== Search =====
+    function searchProduct() {
+      const searchValue = document.getElementById('search').value.toLowerCase();
+      document.querySelectorAll('#productList tr').forEach(row => {
+        row.style.display = row.innerText.toLowerCase().includes(searchValue) ? '' : 'none';
+      });
+    }
+
+    // ===== Cart =====
+    let subtotal = 0;
+    function addToCart(name, price) {
+      const cart = document.getElementById('cart');
+      const row = document.createElement('tr');
+      row.innerHTML = `<td>${name}</td><td>1</td><td>${price}</td>`;
+      cart.appendChild(row);
+      subtotal += price;
+      document.getElementById('total').textContent = subtotal;
+    }
+
+    // ===== Save + Print (saves to localStorage.sales) =====
+    function saveAndPrint() {
+      const clientName = document.getElementById('clientName').value || "Client anonyme";
+      const clientPhone = document.getElementById('clientPhone').value || "-";
+      const total = parseFloat(document.getElementById('total').textContent) || 0;
+      const cartItems = Array.from(document.querySelectorAll('#cart tr')).map(tr => {
+        const tds = tr.querySelectorAll('td');
+        return { product: tds[0].innerText, qty: parseInt(tds[1].innerText), total: parseFloat(tds[2].innerText) };
+      });
+
+      const sales = JSON.parse(localStorage.getItem('sales')) || [];
+      sales.push({
+        id: Date.now(),
+        date: new Date().toLocaleString(),
+        client: clientName,
+        phone: clientPhone,
+        items: cartItems,
+        total: total
+      });
+      localStorage.setItem('sales', JSON.stringify(sales));
+
+      alert("✅ Vente enregistrée !");
+      window.print();
+
+      // Reset
+      document.getElementById('cart').innerHTML = '';
+      document.getElementById('total').textContent = '0';
+      subtotal = 0;
+    }
+
+    // ===== Service Worker Registration for Offline Mode =====
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(() => console.log('✅ Service Worker registered'))
+        .catch(err => console.error('⚠️ Service Worker failed:', err));
     }
   </script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js');
-}
+
   <!-- 🌸 App Icon -->
   <link rel="icon" type="image/png" href="icon.png">
   <link rel="apple-touch-icon" href="icon.png">
