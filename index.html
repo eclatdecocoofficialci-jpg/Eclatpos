@@ -204,11 +204,32 @@
 </head>
 
 <body>
-  <!-- Splash -->
-  <div id="splash">
-    <img src="logo.png" alt="Logo">
-    <h2>Éclat de Coco — POS System</h2>
-  </div>
+  <div id="welcomeScreen" style="
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  background:#fff5fb;
+  color:#e91e63;
+  font-family:'Poppins', sans-serif;
+  text-align:center;
+  transition: opacity 0.8s ease-in-out;
+">
+  <h1 style="font-size:28px; font-weight:600;">Welcome to Éclat de Coco Official 💖</h1>
+  <p style="margin-top:10px; font-size:16px;">POS System — Enter Access Code Below</p>
+
+  <input type="password" id="accessCode" placeholder="Enter code..." 
+    style="margin-top:20px;padding:10px;border-radius:8px;border:1px solid #f8bbd0; font-size:16px; text-align:center; width:200px;">
+  
+  <button onclick="checkCode()" 
+    style="margin-top:15px;background:#e91e63;color:white;border:none;border-radius:6px;padding:10px 20px;font-size:16px;cursor:pointer;">
+    Enter
+  </button>
+
+  <p id="errorMsg" style="color:red; margin-top:10px; display:none;">❌ Incorrect code</p>
+</div>
+
 
   <!-- Login -->
   <div id="login">
