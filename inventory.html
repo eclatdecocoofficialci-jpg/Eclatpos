@@ -1,119 +1,127 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Inventory | Éclat de Coco POS</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
   <style>
-    /* 🌸 Inventory Page Layout */
+    /* 💗 Specific layout for Inventory Page */
     .inventory-container {
       display: flex;
-      height: calc(100vh - 70px);
-      background-color: #fff;
-    }
-
-    /* 💖 Left Pink Sidebar */
-    .inventory-sidebar {
-      background: #fce4ec;
-      width: 320px;
-      padding: 25px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      border-right: 2px solid #f8bbd0;
-    }
-
-    .inventory-sidebar h3 {
-      color: #e91e63;
-      font-size: 22px;
-      margin-bottom: 10px;
-      text-align: center;
-    }
-
-    .inventory-sidebar label {
-      font-weight: 500;
-      color: #e91e63;
-      font-size: 14px;
-    }
-
-    .inventory-sidebar input,
-    .inventory-sidebar select {
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #f8bbd0;
-      outline: none;
-      font-size: 15px;
+      height: 100vh;
       background: #fff;
     }
 
-    .inventory-sidebar button {
-      margin-top: 10px;
-      padding: 12px;
+    .inventory-form {
+      width: 30%;
+      background: #f8bbd0;
+      padding: 25px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 10px;
+    }
+
+    .inventory-form h3 {
+      color: #e91e63;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .inventory-form input {
+      width: 100%;
+      padding: 10px;
       border: none;
-      border-radius: 10px;
-      background-color: #e91e63;
+      border-radius: 8px;
+      outline: none;
+    }
+
+    .inventory-form label {
+      font-weight: 500;
+      color: #fff;
+    }
+
+    .inventory-form button {
+      background: #e91e63;
       color: white;
-      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      padding: 10px;
       cursor: pointer;
-      transition: 0.3s;
+      font-weight: 600;
+      margin-top: 10px;
+      transition: all 0.3s ease;
     }
 
-    .inventory-sidebar button:hover {
-      background-color: #c2185b;
-      transform: translateY(-2px);
+    .inventory-form button:hover {
+      background: #d81b60;
     }
 
-    /* 💅 Right Side Table */
     .inventory-table {
       flex: 1;
-      padding: 20px;
+      padding: 25px;
       overflow-y: auto;
     }
 
     .inventory-table table {
       width: 100%;
       border-collapse: collapse;
-      background: white;
-      border-radius: 10px;
-      overflow: hidden;
     }
 
     .inventory-table th {
-      background: #ffe6ef;
+      background-color: #ffe6ef;
       color: #e91e63;
-      padding: 12px;
-      border-bottom: 2px solid #f8bbd0;
+      padding: 10px;
+      border: 1px solid #f8bbd0;
     }
 
     .inventory-table td {
-      padding: 12px;
+      border: 1px solid #f8bbd0;
       text-align: center;
-      border-bottom: 1px solid #f8bbd0;
+      padding: 8px;
     }
 
-    .inventory-table tr:hover {
-      background-color: #fce4ec;
-    }
-
-    .action-btn {
-      background: #f8bbd0;
+    .edit-btn, .delete-btn {
       border: none;
-      border-radius: 8px;
-      color: #e91e63;
-      padding: 5px 10px;
+      padding: 6px 10px;
+      border-radius: 6px;
       cursor: pointer;
-      transition: 0.3s;
+      font-size: 13px;
     }
 
-    .action-btn:hover {
-      background: #e91e63;
+    .edit-btn {
+      background-color: #f8bbd0;
+      color: #e91e63;
+    }
+
+    .delete-btn {
+      background-color: #e91e63;
       color: #fff;
+    }
+
+    .barcode-box {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .barcode-box button {
+      background-color: white;
+      color: #e91e63;
+      border: 2px solid #e91e63;
+      font-weight: 600;
+    }
+
+    .barcode-box button:hover {
+      background-color: #e91e63;
+      color: white;
     }
   </style>
 </head>
+
 <body>
-  <!-- 🌸 Navigation Bar -->
   <nav>
     <h2>Éclat de Coco POS</h2>
     <div class="nav-buttons">
@@ -127,17 +135,16 @@
     </div>
   </nav>
 
-  <!-- 💖 Inventory Section -->
   <div class="inventory-container">
-    <!-- Left Sidebar -->
-    <div class="inventory-sidebar">
+    <!-- 💖 Left: Add Product Form -->
+    <div class="inventory-form">
       <h3>Add Product</h3>
 
       <label>Category</label>
       <input type="text" id="category" placeholder="e.g. Savon" />
 
       <label>Product Name</label>
-      <input type="text" id="productName" placeholder="e.g. Rose Vanille" />
+      <input type="text" id="name" placeholder="e.g. Rose Vanille" />
 
       <label>Quantity</label>
       <input type="number" id="quantity" placeholder="e.g. 10" />
@@ -149,14 +156,20 @@
       <input type="number" id="price" placeholder="e.g. 3500" />
 
       <label>Generated Code</label>
-      <input type="text" id="code" readonly placeholder="Auto" />
+      <input type="text" id="code" placeholder="SA001" readonly />
+
+      <label>Barcode</label>
+      <div class="barcode-box">
+        <input type="text" id="barcode" placeholder="Click Generate" readonly />
+        <button type="button" onclick="generateBarcode()">Generate</button>
+      </div>
 
       <button onclick="addProduct()">Add Product</button>
     </div>
 
-    <!-- Right Table -->
+    <!-- 💖 Right: Product Table -->
     <div class="inventory-table">
-      <table id="inventoryTable">
+      <table id="productTable">
         <thead>
           <tr>
             <th>Code</th>
@@ -165,74 +178,98 @@
             <th>Quantity</th>
             <th>Cost</th>
             <th>Price</th>
+            <th>Barcode</th>
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody></tbody>
+        <tbody>
+          <tr>
+            <td>SA001</td>
+            <td>Rose vanille</td>
+            <td>Savon</td>
+            <td>8</td>
+            <td>1000</td>
+            <td>3000</td>
+            <td>123456789012</td>
+            <td>
+              <button class="edit-btn">Edit</button>
+              <button class="delete-btn" onclick="deleteRow(this)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
       </table>
     </div>
   </div>
 
   <script>
-    let counter = 1;
-    function generateCode(category) {
-      if (!category) return '';
-      const prefix = category.substring(0, 2).toUpperCase();
-      const code = prefix + String(counter).padStart(3, '0');
-      counter++;
-      return code;
+    // 💖 Auto Code Generation
+    let categoryCodes = {
+      "savon": "SA",
+      "lotion": "LO",
+      "masque": "MA",
+      "cheveux": "CH",
+      "body butter": "BB"
+    };
+
+    function generateProductCode(category) {
+      const prefix = categoryCodes[category.toLowerCase()] || "PR";
+      const randomNum = Math.floor(1 + Math.random() * 999).toString().padStart(3, '0');
+      return prefix + randomNum;
     }
 
+    // 💖 Generate Barcode (Random 12-digit number)
+    function generateBarcode() {
+      const randomBarcode = Math.floor(100000000000 + Math.random() * 900000000000);
+      document.getElementById('barcode').value = randomBarcode;
+    }
+
+    // 💖 Add Product to Table
     function addProduct() {
       const category = document.getElementById('category').value.trim();
-      const productName = document.getElementById('productName').value.trim();
-      const quantity = document.getElementById('quantity').value;
-      const cost = document.getElementById('cost').value;
-      const price = document.getElementById('price').value;
-      const code = generateCode(category);
+      const name = document.getElementById('name').value.trim();
+      const quantity = document.getElementById('quantity').value.trim();
+      const cost = document.getElementById('cost').value.trim();
+      const price = document.getElementById('price').value.trim();
+      const barcode = document.getElementById('barcode').value.trim();
 
-      if (!category || !productName || !quantity || !cost || !price) {
-        alert('Please fill in all fields.');
+      if (!category || !name || !quantity || !cost || !price) {
+        alert('Please fill all fields.');
         return;
       }
 
-      const table = document.getElementById('inventoryTable').querySelector('tbody');
+      const code = generateProductCode(category);
+      document.getElementById('code').value = code;
+
+      const table = document.getElementById('productTable').getElementsByTagName('tbody')[0];
       const row = table.insertRow();
+
       row.innerHTML = `
         <td>${code}</td>
-        <td>${productName}</td>
+        <td>${name}</td>
         <td>${category}</td>
         <td>${quantity}</td>
         <td>${cost}</td>
         <td>${price}</td>
+        <td>${barcode}</td>
         <td>
-          <button class="action-btn" onclick="editRow(this)">Edit</button>
-          <button class="action-btn" onclick="deleteRow(this)">Delete</button>
+          <button class="edit-btn">Edit</button>
+          <button class="delete-btn" onclick="deleteRow(this)">Delete</button>
         </td>
       `;
 
-      document.getElementById('code').value = code;
       document.getElementById('category').value = '';
-      document.getElementById('productName').value = '';
+      document.getElementById('name').value = '';
       document.getElementById('quantity').value = '';
       document.getElementById('cost').value = '';
       document.getElementById('price').value = '';
+      document.getElementById('barcode').value = '';
+      document.getElementById('code').value = '';
     }
 
-    function editRow(btn) {
-      const row = btn.closest('tr');
-      const cells = row.querySelectorAll('td');
-      document.getElementById('code').value = cells[0].textContent;
-      document.getElementById('productName').value = cells[1].textContent;
-      document.getElementById('category').value = cells[2].textContent;
-      document.getElementById('quantity').value = cells[3].textContent;
-      document.getElementById('cost').value = cells[4].textContent;
-      document.getElementById('price').value = cells[5].textContent;
-      row.remove();
-    }
-
+    // 💖 Delete Row
     function deleteRow(btn) {
-      btn.closest('tr').remove();
+      const row = btn.parentNode.parentNode;
+      row.parentNode.removeChild(row);
     }
   </script>
 </body>
