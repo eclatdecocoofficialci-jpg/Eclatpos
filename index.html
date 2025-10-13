@@ -3,55 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Éclat de Coco</title>
-  <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#f8bbd0" />
+  <title>Éclat de Coco POS</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#f8bbd0" />
   <style>
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
       background: #fff;
       color: #444;
+      overflow: hidden;
     }
 
-    /* Welcome screen */
-    #welcome {
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: #fff5fb;
-      color: #e91e63;
-      text-align: center;
-    }
-    #welcome input {
-      padding: 10px;
-      border: 1px solid #f8bbd0;
-      border-radius: 6px;
-      text-align: center;
-      margin-top: 15px;
-    }
-    #welcome button {
-      background: #e91e63;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      padding: 10px 20px;
-      margin-top: 10px;
-      cursor: pointer;
-    }
-
-    /* Layout */
+    /* Navigation */
     nav {
       display: flex;
       justify-content: space-between;
       align-items: center;
       background: #fff;
-      padding: 10px 20px;
+      padding: 12px 20px;
       border-bottom: 2px solid #f8bbd0;
     }
+
     .nav-buttons button {
       background: #f8bbd0;
       border: none;
@@ -61,184 +34,274 @@
       font-weight: 500;
       cursor: pointer;
     }
+
     .nav-buttons button.active {
       background: #e91e63;
       color: #fff;
     }
 
-    section { display: none; padding: 20px; }
+    section { display: none; height: calc(100vh - 60px); }
 
-    /* Dashboard */
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 15px;
-      margin-top: 20px;
-    }
-    .card {
-      border: 1px solid #f8bbd0;
-      background: #fff;
-      border-radius: 12px;
-      padding: 20px;
-      text-align: center;
-      font-size: 18px;
-    }
-    .card h3 { color: #e91e63; margin-bottom: 10px; }
-
-    /* POS */
-    .pos-layout {
+    /* POS layout */
+    #pos {
       display: flex;
-      gap: 20px;
-      justify-content: space-between;
+      height: 100%;
+      overflow: hidden;
     }
 
+    /* Category Bar */
     .category-bar {
-      flex: 0.7;
+      width: 28%;
+      background: linear-gradient(180deg, #ffe6ef, #fff0f6);
+      border-right: 2px solid #f8bbd0;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 15px;
+      position: relative;
+      overflow-y: auto;
     }
+
+    .category-header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .category-header h3 {
+      color: #e91e63;
+      margin: 0;
+    }
+
+    .menu-dots {
+      font-size: 22px;
+      cursor: pointer;
+      color: #e91e63;
+    }
+
+    .category-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 15px;
+      width: 100%;
+    }
+
     .category-btn {
       background: #f8bbd0;
       color: #e91e63;
       border: none;
-      border-radius: 10px;
-      padding: 30px;
+      border-radius: 12px;
+      padding: 25px 15px;
       font-size: 18px;
       font-weight: 600;
+      text-align: center;
       cursor: pointer;
-      box-shadow: 0 4px 8px rgba(233, 30, 99, 0.15);
-      transition: 0.3s;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(233, 30, 99, 0.1);
     }
+
     .category-btn:hover, .category-btn.active {
       background: #e91e63;
       color: white;
       box-shadow: 0 0 12px rgba(233, 30, 99, 0.3);
+      transform: scale(1.02);
     }
 
+    /* Product Section */
     .product-section {
-      flex: 1.3;
-      border: 1px solid #f8bbd0;
-      border-radius: 10px;
-      padding: 15px;
+      flex: 1.2;
       background: #fff;
+      border-right: 2px solid #f8bbd0;
+      padding: 20px;
+      overflow-y: auto;
     }
+
+    .product-section h3 {
+      color: #e91e63;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
     }
+
     th, td {
-      padding: 10px;
       border: 1px solid #f8bbd0;
+      padding: 10px;
       text-align: center;
     }
 
+    /* Cashier Section */
     .cashier {
-      flex: 1;
-      border: 2px solid #f8bbd0;
-      border-radius: 12px;
-      padding: 15px;
+      flex: 0.8;
       background: #fff;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-left: 2px solid #f8bbd0;
+    }
+
+    .cashier h3 { color: #e91e63; }
+
+    .cashier input {
+      margin: 5px 0;
+      padding: 8px;
+      border: 1px solid #f8bbd0;
+      border-radius: 8px;
     }
 
     .receipt {
       display: none;
       background: #fff;
+      border: 1px solid #f8bbd0;
+      border-radius: 10px;
       padding: 10px;
+      margin-top: 10px;
+    }
+
+    /* Popup Add Category */
+    .popup-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.3);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .popup {
+      background: #fff;
+      padding: 25px;
+      border-radius: 15px;
+      width: 300px;
+      text-align: center;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+      animation: popUp 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes popUp {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .popup input {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
       border: 1px solid #f8bbd0;
       border-radius: 8px;
-      margin-top: 15px;
+      text-align: center;
+    }
+
+    .popup button {
+      background: #e91e63;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 15px;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    .popup button.cancel {
+      background: #f8bbd0;
+      color: #e91e63;
     }
   </style>
 </head>
 
 <body>
-  <div id="welcome">
-    <h1>Welcome to Éclat de Coco 💖</h1>
-    <p>Enter access code to start</p>
-    <input type="password" id="code" placeholder="Enter code">
-    <button onclick="checkCode()">Enter</button>
-    <p id="error" style="color:red; display:none;">Incorrect code ❌</p>
-  </div>
+  <nav>
+    <h2 style="color:#e91e63;">Éclat de Coco POS</h2>
+    <div class="nav-buttons">
+      <button onclick="showSection('pos')" class="active">POS</button>
+    </div>
+  </nav>
 
-  <div id="app" style="display:none;">
-    <nav>
-      <h2 style="color:#e91e63;">Éclat de Coco POS</h2>
-      <div class="nav-buttons">
-        <button onclick="showSection('dashboard')" class="active">Dashboard</button>
-        <button onclick="showSection('pos')">POS</button>
+  <!-- POS Section -->
+  <section id="pos" style="display:flex;">
+    <!-- Category Bar -->
+    <div class="category-bar">
+      <div class="category-header">
+        <h3>Categories</h3>
+        <div class="menu-dots" onclick="openCategoryMenu()">⋮</div>
       </div>
-    </nav>
 
-    <!-- Dashboard -->
-    <section id="dashboard">
-      <h2>Dashboard</h2>
-      <div class="cards">
-        <div class="card"><h3>Total Sales</h3><p>0 FCFA</p></div>
-        <div class="card"><h3>Total Orders</h3><p>0</p></div>
-        <div class="card"><h3>Total Customers</h3><p>0</p></div>
-        <div class="card"><h3>Total Expenses</h3><p>0 FCFA</p></div>
-      </div>
-    </section>
-
-    <!-- POS -->
-    <section id="pos" style="display:flex;">
-      <div class="category-bar">
-        <button class="category-btn" onclick="filterCategory('Soap')">Soap</button>
+      <div class="category-list" id="categoryList">
+        <button class="category-btn active" onclick="filterCategory('Savon')">Savon</button>
         <button class="category-btn" onclick="filterCategory('Lotion')">Lotion</button>
-        <button class="category-btn" onclick="filterCategory('Butter')">Butter</button>
+        <button class="category-btn" onclick="filterCategory('Beurre corporel')">Beurre corporel</button>
       </div>
+    </div>
 
-      <div class="product-section">
-        <h3>Products</h3>
-        <input type="text" id="search" placeholder="Search products..." oninput="searchProduct()" style="width:100%; padding:8px; border:1px solid #f8bbd0; margin-bottom:10px;">
-        <table>
-          <thead><tr><th>Code</th><th>Name</th><th>Price</th><th>Add</th></tr></thead>
-          <tbody id="productList">
-            <tr><td>SA001</td><td>Rose Vanilla Soap</td><td>1500</td><td><button onclick="addToCart('Rose Vanilla Soap',1500)">+</button></td></tr>
-            <tr><td>SA002</td><td>Lavender Bliss Soap</td><td>2000</td><td><button onclick="addToCart('Lavender Bliss Soap',2000)">+</button></td></tr>
-          </tbody>
-        </table>
-      </div>
+    <!-- Product Section -->
+    <div class="product-section">
+      <h3>Products</h3>
+      <input type="text" id="search" placeholder="Search products..." oninput="searchProduct()" style="width:100%; padding:8px; border:1px solid #f8bbd0; margin-bottom:10px;">
+      <table>
+        <thead><tr><th>Code</th><th>Name</th><th>Price</th><th>Add</th></tr></thead>
+        <tbody id="productList">
+          <tr data-category="Savon"><td>SA001</td><td>Rose Vanilla Soap</td><td>1500</td><td><button onclick="addToCart('Rose Vanilla Soap',1500)">+</button></td></tr>
+          <tr data-category="Savon"><td>SA002</td><td>Lavender Bliss Soap</td><td>2000</td><td><button onclick="addToCart('Lavender Bliss Soap',2000)">+</button></td></tr>
+          <tr data-category="Lotion"><td>LO001</td><td>Hydra Glow Lotion</td><td>3500</td><td><button onclick="addToCart('Hydra Glow Lotion',3500)">+</button></td></tr>
+          <tr data-category="Beurre corporel"><td>BU001</td><td>Cocoa Dream Butter</td><td>4000</td><td><button onclick="addToCart('Cocoa Dream Butter',4000)">+</button></td></tr>
+        </tbody>
+      </table>
+    </div>
 
-      <div class="cashier">
+    <!-- Cashier Section -->
+    <div class="cashier">
+      <div>
         <h3>Caisse</h3>
-        <p><strong>ID Commande:</strong> <span id="orderId">1001</span></p>
         <input type="text" id="clientName" placeholder="Nom du client">
         <input type="text" id="clientPhone" placeholder="Téléphone">
         <input type="text" id="clientAddress" placeholder="Adresse">
-        <table><thead><tr><th>Produit</th><th>Qté</th><th>Total</th></tr></thead><tbody id="cart"></tbody></table>
+        <table style="margin-top:10px;"><thead><tr><th>Produit</th><th>Qté</th><th>Total</th></tr></thead><tbody id="cart"></tbody></table>
+      </div>
+      <div>
         <p><strong>Total:</strong> <span id="total">0</span> FCFA</p>
         <button onclick="printReceipt()">🖨️ Imprimer Reçu</button>
-        <div class="receipt" id="receipt">
-          <h4 style="text-align:center; color:#e91e63;">Bienvenue chez Éclat de Coco</h4>
-          <p><strong>Nom:</strong> <span id="rName"></span></p>
-          <p><strong>Téléphone:</strong> <span id="rPhone"></span></p>
-          <p><strong>Adresse:</strong> <span id="rAddress"></span></p>
-          <table><thead><tr><th>Produit</th><th>Total</th></tr></thead><tbody id="rItems"></tbody></table>
-          <p><strong>Total:</strong> <span id="rTotal"></span> FCFA</p>
-          <p style="text-align:center;font-size:13px;">WhatsApp : 0777000803<br>📧 eclatdecocoofficialci@gmail.com<br>Instagram : @eclatdecoco.official<br>⚠️ Aucun retour possible</p>
-        </div>
       </div>
-    </section>
+    </div>
+  </section>
+
+  <!-- Popup -->
+  <div class="popup-overlay" id="popupOverlay">
+    <div class="popup">
+      <h3 style="color:#e91e63;">Add New Category</h3>
+      <input type="text" id="newCategory" placeholder="Category name">
+      <div>
+        <button onclick="addCategory()">Save</button>
+        <button class="cancel" onclick="closePopup()">Cancel</button>
+      </div>
+    </div>
   </div>
 
   <script>
-    function checkCode() {
-      const code = document.getElementById('code').value;
-      if (code === '1234') {
-        document.getElementById('welcome').style.display = 'none';
-        document.getElementById('app').style.display = 'block';
-      } else {
-        document.getElementById('error').style.display = 'block';
-      }
-    }
-
     function showSection(id) {
       document.querySelectorAll('section').forEach(s => s.style.display = 'none');
-      document.querySelector('.nav-buttons button.active')?.classList.remove('active');
-      document.getElementById(id).style.display = 'block';
+      document.getElementById(id).style.display = 'flex';
+      document.querySelectorAll('.nav-buttons button').forEach(b => b.classList.remove('active'));
       event.target.classList.add('active');
+    }
+
+    function filterCategory(category) {
+      document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      document.querySelectorAll('#productList tr').forEach(row => {
+        row.style.display = row.dataset.category === category ? '' : 'none';
+      });
     }
 
     let subtotal = 0;
@@ -252,17 +315,28 @@
     }
 
     function printReceipt() {
-      document.getElementById('rName').textContent = document.getElementById('clientName').value;
-      document.getElementById('rPhone').textContent = document.getElementById('clientPhone').value;
-      document.getElementById('rAddress').textContent = document.getElementById('clientAddress').value;
-      document.getElementById('rItems').innerHTML = document.getElementById('cart').innerHTML;
-      document.getElementById('rTotal').textContent = subtotal;
-      document.getElementById('receipt').style.display = 'block';
       window.print();
     }
 
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js');
+    function openCategoryMenu() {
+      document.getElementById('popupOverlay').style.display = 'flex';
+    }
+
+    function closePopup() {
+      document.getElementById('popupOverlay').style.display = 'none';
+      document.getElementById('newCategory').value = '';
+    }
+
+    function addCategory() {
+      const name = document.getElementById('newCategory').value.trim();
+      if (name) {
+        const btn = document.createElement('button');
+        btn.className = 'category-btn';
+        btn.textContent = name;
+        btn.onclick = function() { filterCategory(name); };
+        document.getElementById('categoryList').appendChild(btn);
+      }
+      closePopup();
     }
   </script>
 </body>
