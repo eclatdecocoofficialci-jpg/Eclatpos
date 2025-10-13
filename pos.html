@@ -23,19 +23,13 @@
       padding: 20px;
     }
 
-    .product-section {
-      flex: 1.5;
-    }
-
+    .product-section { flex: 1.5; }
     .cashier-section {
       flex: 1;
       border: 2px solid #f8bbd0;
     }
 
-    h1, h2 {
-      color: #e91e63;
-      text-align: center;
-    }
+    h1, h2 { color: #e91e63; text-align: center; }
 
     input, select, button {
       font-family: 'Poppins', sans-serif;
@@ -58,9 +52,7 @@
       cursor: pointer;
     }
 
-    button:hover {
-      background-color: #d81b60;
-    }
+    button:hover { background-color: #d81b60; }
 
     .categories {
       display: flex;
@@ -78,9 +70,7 @@
       cursor: pointer;
     }
 
-    .category-btn.active {
-      background: #e91e63;
-    }
+    .category-btn.active { background: #e91e63; }
 
     table {
       width: 100%;
@@ -223,58 +213,7 @@
     </div>
   </div>
 
-  <script>
-    let subtotal = 0;
-    let orderId = 1001;
-
-    function addToCart(name, price) {
-      const tbody = document.getElementById("cartItems");
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${name}</td>
-        <td>1</td>
-        <td>${price}</td>
-        <td>${price}</td>
-      `;
-      tbody.appendChild(row);
-      subtotal += price;
-      document.getElementById("subtotal").textContent = subtotal;
-      document.getElementById("total").textContent = subtotal;
-    }
-
-    function saveOrder() {
-      alert("✅ Commande enregistrée !");
-      orderId++;
-      document.getElementById("orderId").textContent = orderId;
-    }
-
-    function printReceipt() {
-      const name = document.getElementById("clientName").value;
-      const phone = document.getElementById("clientPhone").value;
-      const address = document.getElementById("clientAddress").value;
-      const receipt = document.getElementById("receipt");
-      const now = new Date().toLocaleDateString();
-
-      document.getElementById("rName").textContent = name;
-      document.getElementById("rPhone").textContent = phone;
-      document.getElementById("rAddress").textContent = address;
-      document.getElementById("rOrder").textContent = orderId;
-      document.getElementById("rDate").textContent = now;
-      document.getElementById("rTotal").textContent = subtotal;
-      document.getElementById("rTotal2").textContent = subtotal;
-
-      const cartRows = document.querySelectorAll("#cartItems tr");
-      const rItems = document.getElementById("rItems");
-      rItems.innerHTML = "";
-      cartRows.forEach(r => {
-        const cloned = r.cloneNode(true);
-        cloned.deleteCell(2);
-        rItems.appendChild(cloned);
-      });
-
-      receipt.style.display = "block";
-      window.print();
-    }
-  </script>
+  <!-- 🔗 External JavaScript -->
+  <script src="script.js"></script>
 </body>
 </html>
