@@ -1,260 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Éclat de Coco POS</title>
+
+  <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Link to external CSS -->
+  <link rel="stylesheet" href="style.css">
+
   <meta name="theme-color" content="#f8bbd0" />
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background: #fff;
-      color: #444;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    /* Navigation */
-    nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #fff;
-      padding: 12px 20px;
-      border-bottom: 2px solid #f8bbd0;
-    }
-
-    .nav-buttons button {
-      background: #f8bbd0;
-      border: none;
-      border-radius: 8px;
-      color: #e91e63;
-      padding: 8px 12px;
-      font-weight: 500;
-      cursor: pointer;
-    }
-
-    .nav-buttons button.active {
-      background: #e91e63;
-      color: #fff;
-    }
-
-    /* Layout */
-    #pos {
-      display: flex;
-      flex: 1;
-      overflow: hidden;
-    }
-
-    /* Left section (Products + Categories) */
-    .left-section {
-      flex: 1.4;
-      display: flex;
-      flex-direction: column;
-      border-right: 2px solid #f8bbd0;
-      position: relative;
-      background: #fff;
-    }
-
-    .product-section {
-      flex: 1;
-      padding: 20px;
-      overflow-y: auto;
-    }
-
-    .product-section h3 {
-      color: #e91e63;
-      margin-bottom: 10px;
-    }
-
-    .product-section input {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid #f8bbd0;
-      border-radius: 8px;
-      margin-bottom: 10px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      border: 1px solid #f8bbd0;
-      padding: 10px;
-      text-align: center;
-    }
-
-    /* Fixed Categories at bottom */
-    .category-bar {
-      background: linear-gradient(180deg, #ffe6ef, #fff0f6);
-      border-top: 2px solid #f8bbd0;
-      padding: 10px 15px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 15px;
-      flex-wrap: wrap;
-      position: sticky;
-      bottom: 0;
-      z-index: 10;
-    }
-
-    .category-header {
-      position: absolute;
-      top: 10px;
-      right: 20px;
-      color: #e91e63;
-      font-size: 22px;
-      cursor: pointer;
-    }
-
-    .category-btn {
-      background: #f8bbd0;
-      color: #e91e63;
-      border: none;
-      border-radius: 16px;
-      padding: 25px;
-      width: 150px;
-      height: 150px;
-      font-size: 18px;
-      font-weight: 600;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 10px rgba(233, 30, 99, 0.1);
-    }
-
-    .category-btn:hover, .category-btn.active {
-      background: #e91e63;
-      color: white;
-      transform: scale(1.05);
-      box-shadow: 0 0 12px rgba(233, 30, 99, 0.3);
-    }
-
-    /* Caisse */
-    .cashier {
-      flex: 0.7;
-      background: #fff;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .cashier h3 {
-      color: #e91e63;
-    }
-
-    .cashier input {
-      margin: 5px 0;
-      padding: 8px;
-      border: 1px solid #f8bbd0;
-      border-radius: 8px;
-    }
-
-    .receipt {
-      display: none;
-      background: #fff;
-      border: 1px solid #f8bbd0;
-      border-radius: 10px;
-      padding: 10px;
-      margin-top: 10px;
-    }
-
-    /* Popup Add/Delete Category */
-    .popup-overlay {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.35);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      animation: fadeIn 0.4s ease;
-      z-index: 100;
-    }
-
-    .popup {
-      background: #fff;
-      padding: 25px;
-      border-radius: 15px;
-      width: 300px;
-      text-align: center;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-      animation: popUp 0.4s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    @keyframes popUp {
-      from { transform: scale(0.8); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-
-    .popup input {
-      width: 90%;
-      padding: 10px;
-      margin: 10px 0;
-      border: 1px solid #f8bbd0;
-      border-radius: 8px;
-      text-align: center;
-    }
-
-    .popup button {
-      background: #e91e63;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 15px;
-      cursor: pointer;
-      margin: 5px;
-    }
-
-    .popup button.cancel {
-      background: #f8bbd0;
-      color: #e91e63;
-    }
-  </style>
 </head>
 
 <body>
+  <!-- 🌸 Navigation -->
   <nav>
-  <h2 style="color:#e91e63;">Éclat de Coco POS</h2>
-  <div class="nav-buttons">
-    <a href="index.html" class="active">POS</a>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="sales_invoices.html">Sales Invoices</a>
-    <a href="products.html">Products</a>
-    <a href="inventory.html">Inventory</a>
-    <a href="expenses.html">Expenses</a>
-    <a href="reports.html">Reports</a>
-  </div>
+    <h2>Éclat de Coco POS</h2>
+    <div class="nav-buttons">
+      <a href="index.html" class="active">POS</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="sales_invoices.html">Sales Invoices</a>
+      <a href="products.html">Products</a>
+      <a href="inventory.html">Inventory</a>
+      <a href="expenses.html">Expenses</a>
+      <a href="reports.html">Reports</a>
+    </div>
   </nav>
 
+  <!-- 💕 POS Section -->
   <section id="pos" style="display:flex;">
     <!-- Left Section -->
     <div class="left-section">
       <div class="category-header" onclick="openCategoryMenu()">⋮</div>
 
       <div class="product-section">
-        <h3>Products</h3>
-        <input type="text" id="search" placeholder="Search products..." oninput="searchProduct()">
+        <h3>Produits</h3>
+        <input type="text" id="search" placeholder="Rechercher un produit..." oninput="searchProduct()">
+
         <table>
-          <thead><tr><th>Code</th><th>Name</th><th>Price</th><th>Add</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Nom</th>
+              <th>Prix</th>
+              <th>+</th>
+            </tr>
+          </thead>
           <tbody id="productList">
-            <tr data-category="Savon"><td>SA001</td><td>Rose Vanilla Soap</td><td>1500</td><td><button onclick="addToCart('Rose Vanilla Soap',1500)">+</button></td></tr>
-            <tr data-category="Savon"><td>SA002</td><td>Lavender Bliss Soap</td><td>2000</td><td><button onclick="addToCart('Lavender Bliss Soap',2000)">+</button></td></tr>
-            <tr data-category="Lotion"><td>LO001</td><td>Hydra Glow Lotion</td><td>3500</td><td><button onclick="addToCart('Hydra Glow Lotion',3500)">+</button></td></tr>
-            <tr data-category="Beurre corporel"><td>BU001</td><td>Cocoa Dream Butter</td><td>4000</td><td><button onclick="addToCart('Cocoa Dream Butter',4000)">+</button></td></tr>
+            <tr data-category="Savon"><td>SA001</td><td>Rose Vanille</td><td>1500</td><td><button onclick="addToCart('Rose Vanille',1500)">+</button></td></tr>
+            <tr data-category="Savon"><td>SA002</td><td>Lavande Douce</td><td>2000</td><td><button onclick="addToCart('Lavande Douce',2000)">+</button></td></tr>
+            <tr data-category="Lotion"><td>LO001</td><td>Lotion Hydra Glow</td><td>3500</td><td><button onclick="addToCart('Lotion Hydra Glow',3500)">+</button></td></tr>
+            <tr data-category="Beurre corporel"><td>BU001</td><td>Beurre de Cacao</td><td>4000</td><td><button onclick="addToCart('Beurre de Cacao',4000)">+</button></td></tr>
           </tbody>
         </table>
       </div>
@@ -267,21 +65,25 @@
       </div>
     </div>
 
-    <!-- Right Caisse -->
+    <!-- Right Section (Caisse) -->
     <div class="cashier">
       <div>
         <h3>Caisse</h3>
         <input type="text" id="clientName" placeholder="Nom du client">
         <input type="text" id="clientPhone" placeholder="Téléphone">
         <input type="text" id="clientAddress" placeholder="Adresse">
+
         <table style="margin-top:10px;">
-          <thead><tr><th>Produit</th><th>Qté</th><th>Total</th></tr></thead>
+          <thead>
+            <tr><th>Produit</th><th>Qté</th><th>Total</th></tr>
+          </thead>
           <tbody id="cart"></tbody>
         </table>
       </div>
+
       <div>
-        <p><strong>Total:</strong> <span id="total">0</span> FCFA</p>
-        <button onclick="printReceipt()">🖨️ Imprimer Reçu</button>
+        <p><strong>Total :</strong> <span id="total">0</span> FCFA</p>
+        <button onclick="saveAndPrint()">🖨️ Imprimer / Sauvegarder</button>
       </div>
     </div>
   </section>
@@ -289,23 +91,17 @@
   <!-- Popup Add/Delete Category -->
   <div class="popup-overlay" id="popupOverlay">
     <div class="popup">
-      <h3 style="color:#e91e63;">Manage Categories</h3>
-      <input type="text" id="newCategory" placeholder="Category name">
+      <h3 style="color:#e91e63;">Gérer les Catégories</h3>
+      <input type="text" id="newCategory" placeholder="Nom de la catégorie">
       <div>
-        <button onclick="addCategory()">Add</button>
-        <button class="cancel" onclick="closePopup()">Cancel</button>
+        <button onclick="addCategory()">Ajouter</button>
+        <button class="cancel" onclick="closePopup()">Annuler</button>
       </div>
     </div>
   </div>
 
+  <!-- 🌷 Script -->
   <script>
-    function showSection(id) {
-      document.querySelectorAll('section').forEach(s => s.style.display = 'none');
-      document.getElementById(id).style.display = 'flex';
-      document.querySelectorAll('.nav-buttons button').forEach(b => b.classList.remove('active'));
-      event.target.classList.add('active');
-    }
-
     function filterCategory(category) {
       document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
       event.target.classList.add('active');
@@ -324,7 +120,9 @@
       document.getElementById('total').textContent = subtotal;
     }
 
-    function printReceipt() {
+    function saveAndPrint() {
+      // 🌸 Simulate saving sale
+      alert("Vente sauvegardée avec succès !");
       window.print();
     }
 
