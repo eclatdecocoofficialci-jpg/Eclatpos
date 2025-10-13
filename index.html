@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,67 +10,17 @@
       margin: 0;
       font-family: 'Poppins', sans-serif;
       background-color: #fff5fb;
+      color: #333;
     }
 
-    /* Splash Screen */
-    #splash {
-      position: fixed;
-      inset: 0;
-      background-color: #e91e63;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      z-index: 1000;
-      transition: opacity 1s ease;
-    }
-    #splash img {
-      width: 120px;
-      border-radius: 50%;
-      margin-bottom: 15px;
-    }
-
-    /* Login */
-    #login {
-      display: none;
-      text-align: center;
-      margin-top: 200px;
-    }
-    #login input {
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #ddd;
-      width: 150px;
-      font-size: 18px;
-      text-align: center;
-    }
-    #login button {
-      background-color: #e91e63;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 20px;
-      margin-left: 8px;
-      cursor: pointer;
-    }
-
-    /* Navigation */
     nav {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      background: white;
+      align-items: center;
+      background: #fff;
       border-bottom: 3px solid #f8bbd0;
       padding: 10px 20px;
-      box-shadow: 0 4px 10px rgba(233, 30, 99, 0.15);
-    }
-    nav img {
-      height: 40px;
-    }
-    .nav-buttons {
-      display: flex;
-      gap: 10px;
+      box-shadow: 0 2px 10px rgba(233, 30, 99, 0.15);
     }
     .nav-buttons button {
       background: #e91e63;
@@ -78,16 +28,17 @@
       border: none;
       border-radius: 20px;
       padding: 8px 14px;
+      margin-left: 8px;
       cursor: pointer;
       font-weight: 500;
     }
-    .nav-buttons button:hover { background: #d81b60; }
-    .nav-buttons button.active { background: #c2185b; }
+    .nav-buttons button:hover, .nav-buttons button.active {
+      background: #c2185b;
+    }
 
-    /* Sections */
     section { display: none; padding: 20px; }
 
-    /* Dashboard Layout */
+    /* Dashboard */
     .cards {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -102,10 +53,8 @@
       text-align: center;
     }
     .card h3 { color: #e91e63; margin-bottom: 5px; }
-    .filters {
-      text-align: center;
-      margin: 20px 0;
-    }
+
+    .filters { text-align: center; margin: 20px 0; }
     .filters button {
       background: #f8bbd0;
       border: none;
@@ -116,14 +65,18 @@
       cursor: pointer;
     }
     .filters button.active { background: #e91e63; }
+
     canvas {
       background: white;
       border-radius: 10px;
       padding: 10px;
-      max-width: 100%;
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      display: block;
     }
 
-    /* POS layout (your current design) */
+    /* POS */
     .pos-layout {
       display: flex;
       justify-content: space-between;
@@ -138,7 +91,9 @@
     }
     .product-section { flex: 1.5; }
     .cashier-section { flex: 1; border: 2px solid #f8bbd0; }
+
     h1, h2 { color: #e91e63; text-align: center; }
+
     input, select, button {
       font-family: 'Poppins', sans-serif;
     }
@@ -158,21 +113,7 @@
       cursor: pointer;
     }
     button:hover { background-color: #d81b60; }
-    .categories {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-    .category-btn {
-      background: #f8bbd0;
-      border: none;
-      border-radius: 8px;
-      padding: 8px 12px;
-      color: #fff;
-      cursor: pointer;
-    }
-    .category-btn.active { background: #e91e63; }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -183,15 +124,27 @@
       padding: 8px;
       text-align: center;
     }
-    .summary p { font-size: 15px; margin: 6px 0; }
-    .receipt {
-      background: white;
-      padding: 15px;
+
+    /* Inventory Layout */
+    .inventory-layout {
+      display: flex;
+      gap: 20px;
+      padding: 20px;
+    }
+    .inventory-form {
+      flex: 0.7;
+      background: #fff;
       border-radius: 10px;
-      border: 1px solid #f8bbd0;
-      width: 320px;
-      margin: 20px auto;
-      display: none;
+      box-shadow: 0 4px 10px rgba(233,30,99,0.1);
+      padding: 20px;
+    }
+    .inventory-table {
+      flex: 2;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(233,30,99,0.1);
+      padding: 20px;
+      overflow-x: auto;
     }
 
     footer {
@@ -204,172 +157,153 @@
 </head>
 
 <body>
-  <div id="welcomeScreen" style="
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-  background:#fff5fb;
-  color:#e91e63;
-  font-family:'Poppins', sans-serif;
-  text-align:center;
-  transition: opacity 0.8s ease-in-out;
-">
-  <h1 style="font-size:28px; font-weight:600;">Welcome to Éclat de Coco Official 💖</h1>
-  <p style="margin-top:10px; font-size:16px;">POS System — Enter Access Code Below</p>
+  <nav>
+    <h2 style="color:#e91e63;">Éclat de Coco POS</h2>
+    <div class="nav-buttons">
+      <button class="active" onclick="showSection('dashboard')">Dashboard</button>
+      <button onclick="showSection('pos')">POS</button>
+      <button onclick="showSection('inventory')">Inventory</button>
+      <button onclick="showSection('suppliers')">Suppliers</button>
+      <button onclick="showSection('customers')">Customers</button>
+      <button onclick="showSection('expenses')">Expenses</button>
+    </div>
+  </nav>
 
-  <input type="password" id="accessCode" placeholder="Enter code..." 
-    style="margin-top:20px;padding:10px;border-radius:8px;border:1px solid #f8bbd0; font-size:16px; text-align:center; width:200px;">
-  
-  <button onclick="checkCode()" 
-    style="margin-top:15px;background:#e91e63;color:white;border:none;border-radius:6px;padding:10px 20px;font-size:16px;cursor:pointer;">
-    Enter
-  </button>
+  <!-- DASHBOARD -->
+  <section id="dashboard" style="display:block;">
+    <h2>Welcome, Sara Ajami 💖</h2>
+    <p id="todayDate"></p>
+    <div class="cards">
+      <div class="card"><h3>Total Sales</h3><p>0 FCFA</p></div>
+      <div class="card"><h3>Total Orders</h3><p>0</p></div>
+      <div class="card"><h3>Total Customers</h3><p>0</p></div>
+      <div class="card"><h3>Total Expenses</h3><p>0 FCFA</p></div>
+    </div>
 
-  <p id="errorMsg" style="color:red; margin-top:10px; display:none;">❌ Incorrect code</p>
-</div>
+    <div class="filters">
+      <button class="active">Daily</button>
+      <button>Weekly</button>
+      <button>Monthly</button>
+    </div>
 
+    <canvas id="salesChart"></canvas>
+  </section>
 
-  <!-- Login -->
-  <div id="login">
-    <h2>Enter Access Code</h2>
-    <input type="password" id="pin" placeholder="••••">
-    <button onclick="checkPin()">Login</button>
-  </div>
-
-  <!-- App -->
-  <div id="app" style="display:none;">
-    <nav>
-      <img src="logo.png" alt="Logo">
-      <div class="nav-buttons">
-        <button onclick="showSection('dashboard')" class="active">Dashboard</button>
-        <button onclick="showSection('pos')">POS</button>
-        <button onclick="showSection('inventory')">Inventory</button>
-        <button onclick="showSection('suppliers')">Suppliers</button>
-        <button onclick="showSection('customers')">Customers</button>
-        <button onclick="showSection('expenses')">Expenses</button>
-      </div>
-    </nav>
-
-    <!-- Dashboard -->
-    <section id="dashboard">
-      <h2>Welcome, Sara Ajami 💖</h2>
-      <p id="todayDate"></p>
-      <div class="cards">
-        <div class="card"><h3>Total Sales</h3><p id="cardSales">0 FCFA</p></div>
-        <div class="card"><h3>Total Orders</h3><p id="cardOrders">0</p></div>
-        <div class="card"><h3>Total Customers</h3><p id="cardCustomers">0</p></div>
-        <div class="card"><h3>Total Expenses</h3><p id="cardExpenses">0 FCFA</p></div>
+  <!-- POS -->
+  <section id="pos">
+    <div class="pos-layout">
+      <div class="product-section">
+        <h1>Point de Vente</h1>
+        <input type="text" id="searchProduct" placeholder="🔍 Search by name, code or category...">
+        <table>
+          <thead><tr><th>Code</th><th>Product</th><th>Price (FCFA)</th><th>Action</th></tr></thead>
+          <tbody id="productList">
+            <tr><td>SA001</td><td>Rose Vanilla Soap</td><td>1500</td><td><button>+</button></td></tr>
+          </tbody>
+        </table>
       </div>
 
-      <div class="filters">
-        <button class="active" onclick="setReport('daily')">Daily</button>
-        <button onclick="setReport('weekly')">Weekly</button>
-        <button onclick="setReport('monthly')">Monthly</button>
+      <div class="cashier-section">
+        <h2>🧾 Caisse</h2>
+        <p><strong>ID Commande :</strong> <span>1001</span></p>
+        <input type="text" placeholder="Client name">
+        <input type="text" placeholder="Phone">
+        <input type="text" placeholder="Address">
+        <table>
+          <thead><tr><th>Product</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <p><strong>Total:</strong> 0 FCFA</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- INVENTORY -->
+  <section id="inventory">
+    <h2>Inventory</h2>
+    <div class="inventory-layout">
+      <div class="inventory-form">
+        <input type="text" id="productName" placeholder="Product Name">
+        <input type="text" id="category" placeholder="Category">
+        <input type="text" id="perfume" placeholder="Perfume">
+        <input type="text" id="weight" placeholder="Weight (g) or Density (ml)">
+        <input type="number" id="unitPrice" placeholder="Unit Price (FCFA)">
+        <input type="number" id="quantity" placeholder="Quantity">
+        <input type="text" id="supplier" placeholder="Supplier">
+        <button onclick="addInventory()">Add Product</button>
       </div>
 
-      <canvas id="salesChart" width="400" height="200"></canvas>
-    </section>
-
-    <!-- POS -->
-    <section id="pos">
-      <div class="pos-layout">
-        <!-- 🧴 PRODUITS -->
-        <div class="product-section">
-          <h1>Point de Vente</h1>
-          <input type="text" id="searchProduct" placeholder="🔍 Rechercher par nom, code ou catégorie...">
-          <div class="categories">
-            <button class="category-btn active">Savons</button>
-            <button class="category-btn">Lotion</button>
-            <button class="category-btn">Body Butter</button>
-            <button class="category-btn">Masque Cheveux</button>
-            <button class="category-btn">Dessert Savons</button>
-            <button class="category-btn">+ Ajouter</button>
-          </div>
-          <table>
-            <thead>
-              <tr><th>Code</th><th>Produit</th><th>Prix (FCFA)</th><th>Action</th></tr>
-            </thead>
-            <tbody id="productList">
-              <tr><td>SA001</td><td>Rose Vanilla Soap</td><td>1500</td><td><button onclick="addToCart('Rose Vanilla Soap',1500)">+</button></td></tr>
-              <tr><td>SA002</td><td>Lavender Bliss Soap</td><td>2000</td><td><button onclick="addToCart('Lavender Bliss Soap',2000)">+</button></td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- 💵 CAISSE -->
-        <div class="cashier-section">
-          <h2>🧾 Caisse</h2>
-          <p><strong>ID Commande :</strong> <span id="orderId">1001</span></p>
-          <div class="client-form">
-            <input type="text" id="clientName" placeholder="Nom du client">
-            <input type="text" id="clientPhone" placeholder="Téléphone">
-            <input type="text" id="clientAddress" placeholder="Adresse">
-          </div>
-          <table>
-            <thead>
-              <tr><th>Produit</th><th>Qté</th><th>Prix</th><th>Total</th></tr>
-            </thead>
-            <tbody id="cartItems"></tbody>
-          </table>
-          <div class="summary">
-            <p><strong>Sous-total :</strong> <span id="subtotal">0</span> FCFA</p>
-            <p><strong>Total :</strong> <span id="total">0</span> FCFA</p>
-          </div>
-          <label>Méthode de paiement :</label>
-          <select id="paymentMethod">
-            <option>Cash</option>
-            <option>Wave</option>
-            <option>Orange Money</option>
-            <option>Moov Money</option>
-            <option>Visa</option>
-          </select>
-          <div style="display:flex; gap:10px; margin-top:10px;">
-            <button onclick="saveOrder()">💾 Enregistrer</button>
-            <button onclick="printReceipt()">🖨️ Imprimer</button>
-          </div>
-
-          <!-- 🧾 REÇU -->
-          <div class="receipt" id="receipt">
-            <h3 style="text-align:center; color:#e91e63;">Bienvenue chez Éclat de Coco</h3>
-            <p style="text-align:center; font-size:13px;">100% Produits Naturels 🌿</p>
-            <hr>
-            <p><strong>Nom:</strong> <span id="rName"></span></p>
-            <p><strong>Adresse:</strong> <span id="rAddress"></span></p>
-            <p><strong>Téléphone:</strong> <span id="rPhone"></span></p>
-            <p><strong>ID Commande:</strong> <span id="rOrder"></span></p>
-            <p><strong>Date:</strong> <span id="rDate"></span></p>
-            <table style="width:100%;border-collapse:collapse;margin-top:10px;">
-              <thead><tr><th>Produit</th><th>Qté</th><th>Total</th></tr></thead>
-              <tbody id="rItems"></tbody>
-            </table>
-            <hr>
-            <p><strong>Total:</strong> <span id="rTotal"></span> FCFA</p>
-            <p>Le total est <span id="rTotal2"></span> FCFA sans la livraison.</p>
-            <hr>
-            <p style="font-size:12px;text-align:center;">
-              WhatsApp : 0777000803<br>
-              📧 eclatdecocoofficialci@gmail.com<br>
-              Instagram : @eclatdecoco.official<br>
-              ⚠️ Aucun retour possible
-            </p>
-          </div>
-        </div>
+      <div class="inventory-table">
+        <table id="inventoryTable">
+          <thead>
+            <tr>
+              <th>Code</th><th>Barcode</th><th>Product</th><th>Category</th>
+              <th>Perfume</th><th>Weight/Density</th><th>Unit Price</th><th>Quantity</th><th>Supplier</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section id="inventory"><h2>Inventory Section</h2></section>
-    <section id="suppliers"><h2>Suppliers Section</h2></section>
-    <section id="customers"><h2>Customers Section</h2></section>
-    <section id="expenses"><h2>Expenses Section</h2></section>
+  <section id="suppliers"><h2>Suppliers</h2></section>
+  <section id="customers"><h2>Customers</h2></section>
+  <section id="expenses"><h2>Expenses</h2></section>
 
-    <footer>© Éclat de Coco 2025 — <a href="#">Visit Website</a></footer>
-  </div>
+  <footer>© Éclat de Coco 2025 — Visit Website</footer>
 
-  <script src="chart.min.js"></script>
-  <script src="JsBarcode.all.min.js"></script>
-  <script src="jspdf.umd.min.js"></script>
-  <script src="script.js"></script>
+  <script>
+    function showSection(id) {
+      document.querySelectorAll('section').forEach(s => s.style.display = 'none');
+      document.getElementById(id).style.display = 'block';
+      document.querySelectorAll('.nav-buttons button').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    let counter = 1;
+    function generateCode(category) {
+      const prefix = category.slice(0, 2).toUpperCase();
+      const code = prefix + String(counter).padStart(3, '0');
+      counter++;
+      return code;
+    }
+
+    function generateBarcode(text) {
+      return '|||' + text + '|||';
+    }
+
+    function addInventory() {
+      const name = document.getElementById('productName').value;
+      const cat = document.getElementById('category').value;
+      const perfume = document.getElementById('perfume').value;
+      const weight = document.getElementById('weight').value;
+      const price = document.getElementById('unitPrice').value;
+      const qty = document.getElementById('quantity').value;
+      const supplier = document.getElementById('supplier').value;
+
+      if (!name || !cat) return alert('Please fill product name and category');
+
+      const code = generateCode(cat);
+      const barcode = generateBarcode(code);
+
+      const table = document.querySelector('#inventoryTable tbody');
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${code}</td>
+        <td>${barcode}</td>
+        <td>${name}</td>
+        <td>${cat}</td>
+        <td>${perfume}</td>
+        <td>${weight}</td>
+        <td>${price}</td>
+        <td>${qty}</td>
+        <td>${supplier}</td>
+      `;
+      table.appendChild(row);
+
+      document.querySelectorAll('.inventory-form input').forEach(i => i.value = '');
+    }
+  </script>
 </body>
 </html>
