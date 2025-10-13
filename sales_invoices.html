@@ -1,21 +1,101 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sales Invoices | Éclat de Coco POS</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <title>Éclat de Coco – Factures</title>
   <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#f8bbd0" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #fff0f5;
+      margin: 0;
+      padding: 0;
+    }
+    nav {
+      background: #f8bbd0;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      font-size: 20px;
+      font-weight: 600;
+      color: white;
+    }
+    .nav-buttons a {
+      text-decoration: none;
+      margin: 0 8px;
+      color: white;
+      font-weight: 500;
+    }
+    .nav-buttons a.active {
+      border-bottom: 2px solid white;
+    }
+    section {
+      padding: 20px;
+    }
+    h2 {
+      color: #d81b60;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+    }
+    th {
+      background: #f8bbd0;
+      color: white;
+    }
+    tr:hover {
+      background-color: #fff5f8;
+    }
+    .details {
+      background: #fffafc;
+      border-left: 4px solid #f8bbd0;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 8px;
+    }
+    .no-data {
+      text-align: center;
+      color: #aaa;
+      padding: 30px;
+    }
+    button {
+      background: #f8bbd0;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #f48fb1;
+    }
+  </style>
 </head>
 
 <body>
+  <!-- Navigation -->
   <nav>
-    <h2>Éclat de Coco POS</h2>
+    <h2 class="logo">Éclat de Coco POS</h2>
     <div class="nav-buttons">
       <a href="index.html">POS</a>
       <a href="dashboard.html">Dashboard</a>
-      <a href="sales.html" class="active">Sales Invoices</a>
+      <a href="sales_invoices.html" class="active">Sales Invoices</a>
       <a href="products.html">Products</a>
       <a href="inventory.html">Inventory</a>
       <a href="expenses.html">Expenses</a>
@@ -23,82 +103,70 @@
     </div>
   </nav>
 
-  <section class="sales">
-    <div class="sales-header">
-      <h2>🧾 Sales Invoices</h2>
-      <button id="print-btn">🖨️ Imprimer</button>
-    </div>
-
-    <table>
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Client</th>
-          <th>Produits</th>
-          <th>Total (FCFA)</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="sales-body">
-        <tr><td colspan="5">Aucune vente pour le moment</td></tr>
-      </tbody>
-    </table>
+  <!-- Sales Table -->
+  <section>
+    <h2>🧾 Historique des ventes</h2>
+    <div id="salesContainer"></div>
   </section>
 
   <script>
-    // 🌸 Charger les ventes sauvegardées depuis localStorage
-    const sales = JSON.parse(localStorage.getItem('sales')) || [];
-    const tableBody = document.getElementById('sales-body');
-
-    function displaySales() {
-      tableBody.innerHTML = '';
+    function loadSales() {
+      const salesContainer = document.getElementById('salesContainer');
+      const sales = JSON.parse(localStorage.getItem('sales')) || [];
 
       if (sales.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="5">Aucune vente pour le moment</td></tr>';
+        salesContainer.innerHTML = '<p class="no-data">Aucune facture enregistrée.</p>';
         return;
       }
 
-      sales.slice().reverse().forEach((sale, index) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${sale.date || '-'}</td>
-          <td>${sale.client || '-'}</td>
-          <td>${sale.items ? sale.items.map(i => `${i.name} (x${i.qty})`).join(', ') : sale.product || '-'}</td>
-          <td>${(sale.total || 0).toLocaleString()} FCFA</td>
-          <td>
-            <button onclick="viewSale(${index})">👁️ Voir</button>
-            <button onclick="deleteSale(${index})">🗑️ Supprimer</button>
-          </td>
+      let html = `
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Client</th>
+              <th>Téléphone</th>
+              <th>Total (FCFA)</th>
+              <th>Détails</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      sales.forEach(sale => {
+        html += `
+          <tr>
+            <td>${sale.date}</td>
+            <td>${sale.client}</td>
+            <td>${sale.phone}</td>
+            <td>${sale.total.toLocaleString()}</td>
+            <td><button onclick="toggleDetails('${sale.id}')">Voir</button></td>
+          </tr>
+          <tr id="details-${sale.id}" style="display:none;">
+            <td colspan="5">
+              <div class="details">
+                <strong>Produits achetés:</strong>
+                <ul>
+                  ${sale.items.map(item => `
+                    <li>${item.product} — ${item.qty} × ${item.total} FCFA</li>
+                  `).join('')}
+                </ul>
+              </div>
+            </td>
+          </tr>
         `;
-        tableBody.appendChild(tr);
       });
+
+      html += '</tbody></table>';
+      salesContainer.innerHTML = html;
     }
 
-    // 👁️ Voir une vente (popup simple)
-    function viewSale(index) {
-      const s = sales[index];
-      alert(
-        `🧾 Facture du ${s.date}\n\nClient: ${s.client || '-'}\nProduits:\n` +
-        (s.items ? s.items.map(i => `• ${i.name} - ${i.qty} x ${(i.price || 0).toLocaleString()} FCFA`).join('\n') : s.product) +
-        `\n\nTotal: ${(s.total || 0).toLocaleString()} FCFA`
-      );
+    function toggleDetails(id) {
+      const row = document.getElementById('details-' + id);
+      row.style.display = (row.style.display === 'none') ? 'table-row' : 'none';
     }
 
-    // 🗑️ Supprimer une facture
-    function deleteSale(index) {
-      if (confirm('Supprimer cette facture ?')) {
-        sales.splice(index, 1);
-        localStorage.setItem('sales', JSON.stringify(sales));
-        displaySales();
-      }
-    }
-
-    // 🖨️ Impression
-    document.getElementById('print-btn').addEventListener('click', () => {
-      window.print();
-    });
-
-    displaySales();
+    document.addEventListener('DOMContentLoaded', loadSales);
   </script>
 </body>
 </html>
