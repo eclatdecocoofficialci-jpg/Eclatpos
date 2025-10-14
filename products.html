@@ -5,35 +5,110 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Produits | Éclat de Coco POS</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
   <style>
-    /* Small inline styles for editable state */
-    td.editable {
-      background-color: #fff;
-      transition: background 0.15s;
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background-color: #fff0f6;
     }
-    td.editing {
-      background-color: #fff0f5;
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #f8bbd0;
+      padding: 15px 25px;
+    }
+
+    nav h2 {
+      color: white;
+      margin: 0;
+    }
+
+    .nav-buttons a {
+      color: white;
+      text-decoration: none;
+      margin-left: 15px;
+      font-weight: 500;
+    }
+
+    .nav-buttons a.active {
+      text-decoration: underline;
+    }
+
+    .product-layout {
+      display: flex;
+      justify-content: space-between;
+      padding: 30px;
+      gap: 20px;
+    }
+
+    .add-product {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      flex: 1;
+    }
+
+    .add-product input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 12px;
+      border: 2px solid #f8bbd0;
+      border-radius: 10px;
       outline: none;
-      border-radius: 4px;
-      padding: 4px;
     }
-    .add-product input[readonly] {
-      background:#f2f2f2;
+
+    .add-product button {
+      width: 100%;
+      padding: 10px;
+      background-color: #e91e63;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
     }
-    .add-btn {
-      margin-top:12px;
-      background:#e91e63;
-      color:#fff;
-      border:none;
-      padding:10px;
-      border-radius:8px;
-      cursor:pointer;
-      font-weight:600;
+
+    .add-product button:hover {
+      background-color: #d81b60;
     }
-    .add-btn:hover { background:#d81b60; }
-    /* make table text selectable when editing */
-    td[contenteditable="true"] { -webkit-user-modify: read-write-plaintext-only; }
+
+    .product-table {
+      flex: 2;
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th, td {
+      border-bottom: 1px solid #f8bbd0;
+      padding: 10px;
+    }
+
+    tr:hover {
+      background-color: #fff5f8;
+    }
+
+    td[contenteditable="true"] {
+      background-color: #fff7fa;
+      border-radius: 5px;
+    }
+
+    .edit-btn, .delete-btn {
+      cursor: pointer;
+      border: none;
+      background: none;
+      font-size: 18px;
+    }
   </style>
 </head>
 
@@ -53,23 +128,135 @@
   </nav>
 
   <!-- 💅 Main Layout -->
-  <div class="product-layout" style="display:flex; gap:20px; padding:20px;">
+  <div class="product-layout">
     
     <!-- 🌸 Left Form -->
-    <div class="add-product" style="width:32%; background:#f8bbd0; padding:20px; border-radius:10px; color:#fff;">
-      <h3 style="text-align:center; color:#fff;">Ajouter un Produit</h3>
+    <div class="add-product">
+      <h3>Ajouter un Produit</h3>
 
-      <label style="color:#fff;">Code Produit</label>
-      <input type="text" id="code" placeholder="Auto" readonly style="width:100%; padding:8px; margin-bottom:8px; border-radius:6px; border:none;">
+      <label>Nom du Produit</label>
+      <input type="text" id="name" placeholder="Ex: Savon Rose Vanille">
 
-      <label style="color:#fff;">Nom du Produit</label>
-      <input type="text" id="name" placeholder="Ex: Savon Rose Vanille" oninput="autoGenerateCode()" style="width:100%; padding:8px; margin-bottom:8px; border-radius:6px;">
+      <label>Catégorie</label>
+      <input type="text" id="category" placeholder="Ex: Savons">
 
-      <label style="color:#fff;">Catégorie</label>
-      <input type="text" id="category" placeholder="Ex: Savon" oninput="autoGenerateCode()" style="width:100%; padding:8px; margin-bottom:8px; border-radius:6px;">
+      <label>Quantité</label>
+      <input type="number" id="quantity" placeholder="Ex: 10">
 
-      <label style="color:#fff;">Quantité</label>
-      <input type="number" id="quantity" placeholder="Ex: 10" style="width:100%; padding:8px; margin-bottom:8px; border-radius:6px;">
+      <label>Prix (FCFA)</label>
+      <input type="number" id="price" placeholder="Ex: 2500">
 
-      <label style="color:#fff;">Prix (FCFA)</label>
-      <input type="number" id="price" placeholder="Ex: 2500"
+      <label>Coût (FCFA)</label>
+      <input type="number" id="cost" placeholder="Ex: 1500">
+
+      <button onclick="addProduct()">➕ Ajouter Produit</button>
+    </div>
+
+    <!-- 🧾 Right Table -->
+    <div class="product-table">
+      <h3>Liste des Produits</h3>
+      <table id="product-table">
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Nom</th>
+            <th>Catégorie</th>
+            <th>Quantité</th>
+            <th>Prix</th>
+            <th>Coût</th>
+            <th>Barcode</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="product-table-body">
+          <tr><td colspan="8">Aucun produit ajouté</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- 🌼 Script -->
+  <script>
+    let products = JSON.parse(localStorage.getItem('products')) || [];
+    const tableBody = document.getElementById('product-table-body');
+
+    // 🧁 Refresh Table
+    function refreshTable() {
+      tableBody.innerHTML = products.length
+        ? ""
+        : '<tr><td colspan="8">Aucun produit ajouté</td></tr>';
+
+      products.forEach((p, index) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${p.code}</td>
+          <td contenteditable="true" onblur="updateField(${index}, 'name', this.innerText)">${p.name}</td>
+          <td contenteditable="true" onblur="updateField(${index}, 'category', this.innerText)">${p.category}</td>
+          <td contenteditable="true" onblur="updateField(${index}, 'quantity', this.innerText)">${p.quantity}</td>
+          <td contenteditable="true" onblur="updateField(${index}, 'price', this.innerText)">${p.price}</td>
+          <td contenteditable="true" onblur="updateField(${index}, 'cost', this.innerText)">${p.cost}</td>
+          <td>${p.barcode}</td>
+          <td>
+            <button class="delete-btn" onclick="deleteProduct(${index})">🗑️</button>
+          </td>`;
+        tableBody.appendChild(tr);
+      });
+    }
+
+    // 🧁 Auto Code Generator
+    function generateCode(category) {
+      const prefix = category.substring(0, 2).toUpperCase();
+      const filtered = products.filter(p => p.code.startsWith(prefix));
+      const num = (filtered.length + 1).toString().padStart(3, '0');
+      return prefix + num;
+    }
+
+    // 🎟️ Auto Barcode
+    function generateBarcode() {
+      return Math.floor(100000000 + Math.random() * 900000000);
+    }
+
+    // ➕ Add Product
+    function addProduct() {
+      const name = document.getElementById('name').value.trim();
+      const category = document.getElementById('category').value.trim();
+      const quantity = parseInt(document.getElementById('quantity').value) || 0;
+      const price = parseFloat(document.getElementById('price').value) || 0;
+      const cost = parseFloat(document.getElementById('cost').value) || 0;
+
+      if (!name || !category) {
+        alert('Veuillez entrer le nom et la catégorie.');
+        return;
+      }
+
+      const code = generateCode(category);
+      const barcode = generateBarcode();
+
+      products.push({ code, name, category, quantity, price, cost, barcode });
+      localStorage.setItem('products', JSON.stringify(products));
+
+      document.querySelectorAll('.add-product input').forEach(i => i.value = '');
+      refreshTable();
+    }
+
+    // ✏️ Update Field
+    function updateField(index, field, value) {
+      products[index][field] = isNaN(value) ? value.trim() : Number(value);
+      localStorage.setItem('products', JSON.stringify(products));
+      refreshTable();
+    }
+
+    // 🗑️ Delete Product
+    function deleteProduct(index) {
+      if (confirm('Supprimer ce produit ?')) {
+        products.splice(index, 1);
+        localStorage.setItem('products', JSON.stringify(products));
+        refreshTable();
+      }
+    }
+
+    refreshTable();
+  </script>
+</body>
+</html>
