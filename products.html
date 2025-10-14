@@ -6,6 +6,35 @@
   <title>Produits | Éclat de Coco POS</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* Small inline styles for editable state */
+    td.editable {
+      background-color: #fff;
+      transition: background 0.15s;
+    }
+    td.editing {
+      background-color: #fff0f5;
+      outline: none;
+      border-radius: 4px;
+      padding: 4px;
+    }
+    .add-product input[readonly] {
+      background:#f2f2f2;
+    }
+    .add-btn {
+      margin-top:12px;
+      background:#e91e63;
+      color:#fff;
+      border:none;
+      padding:10px;
+      border-radius:8px;
+      cursor:pointer;
+      font-weight:600;
+    }
+    .add-btn:hover { background:#d81b60; }
+    /* make table text selectable when editing */
+    td[contenteditable="true"] { -webkit-user-modify: read-write-plaintext-only; }
+  </style>
 </head>
 
 <body>
@@ -24,153 +53,23 @@
   </nav>
 
   <!-- 💅 Main Layout -->
-  <div class="product-layout">
+  <div class="product-layout" style="display:flex; gap:20px; padding:20px;">
     
     <!-- 🌸 Left Form -->
-    <div class="add-product">
-      <h3>Ajouter un Produit</h3>
+    <div class="add-product" style="width:32%; background:#f8bbd0; padding:20px; border-radius:10px; color:#fff;">
+      <h3 style="text-align:center; color:#fff;">Ajouter un Produit</h3>
 
-      <label>Code Produit</label>
-      <input type="text" id="code" placeholder="Auto" readonly>
+      <label style="color:#fff;">Code Produit</label>
+      <input type="text" id="code" placeholder="Auto" readonly style="width:100%; padding:8px; margin-bottom:8px; border-radius:6px; border:none;">
 
-      <label>Nom du Produit</label>
-      <input type="text" id="name" placeholder="Ex: Savon Rose Vanille" oninput="autoGenerateCode()">
+      <label style="color:#fff;">Nom du Produit</label>
+      <input type="text" id="name" placeholder="Ex: Savon Rose Vanille" oninput="autoGenerateCode()" style="width:100%; padding:8px; margin-bottom:8px; border-radius:6px;">
 
-      <label>Catégorie</label>
-      <input type="text" id="category" placeholder="Ex: Savon" oninput="autoGenerateCode()">
+      <label style="color:#fff;">Catégorie</label>
+      <input type="text" id="category" placeholder="Ex: Savon" oninput="autoGenerateCode()" style="width:100%; padding:8px; margin-bottom:8px; border-radius:6px;">
 
-      <label>Quantité</label>
-      <input type="number" id="quantity" placeholder="Ex: 10">
+      <label style="color:#fff;">Quantité</label>
+      <input type="number" id="quantity" placeholder="Ex: 10" style="width:100%; padding:8px; margin-bottom:8px; border-radius:6px;">
 
-      <label>Prix (FCFA)</label>
-      <input type="number" id="price" placeholder="Ex: 2500">
-
-      <label>Coût (FCFA)</label>
-      <input type="number" id="cost" placeholder="Ex: 1500">
-
-      <label>Code-barres</label>
-      <input type="text" id="barcode" placeholder="Auto" readonly>
-
-      <button class="add-btn" onclick="addProduct()">➕ Ajouter Produit</button>
-    </div>
-
-    <!-- 🧾 Right Table -->
-    <div class="product-table">
-      <h3>Liste des Produits</h3>
-      <table id="product-table">
-        <thead>
-          <tr>
-            <th>Code</th>
-            <th>Nom</th>
-            <th>Catégorie</th>
-            <th>Quantité</th>
-            <th>Prix</th>
-            <th>Coût</th>
-            <th>Barcode</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="product-table-body">
-          <tr><td colspan="8">Aucun produit ajouté</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-  </div>
-
-  <!-- 🌼 Script -->
-  <script>
-    const products = JSON.parse(localStorage.getItem('products')) || [];
-    const tableBody = document.getElementById('product-table-body');
-
-    // 🧁 Refresh Table
-    function refreshTable() {
-      if (products.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="8">Aucun produit ajouté</td></tr>';
-        return;
-      }
-      tableBody.innerHTML = '';
-      products.forEach((p, index) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${p.code}</td>
-          <td>${p.name}</td>
-          <td>${p.category}</td>
-          <td>${p.quantity}</td>
-          <td>${p.price?.toLocaleString()}</td>
-          <td>${p.cost?.toLocaleString()}</td>
-          <td>${p.barcode}</td>
-          <td>
-            <button onclick="editProduct(${index})">✏️</button>
-            <button onclick="deleteProduct(${index})">🗑️</button>
-          </td>`;
-        tableBody.appendChild(tr);
-      });
-    }
-
-    // 🌸 Auto Code + Barcode Generator
-    function autoGenerateCode() {
-      const category = document.getElementById('category').value.trim();
-      const name = document.getElementById('name').value.trim();
-
-      if (category.length < 2) return;
-
-      const prefix = category.substring(0, 2).toUpperCase();
-      const existing = products.filter(p => p.category?.substring(0, 2).toUpperCase() === prefix);
-      const nextNum = String(existing.length + 1).padStart(3, '0');
-      const code = prefix + nextNum;
-
-      document.getElementById('code').value = code;
-
-      // Auto barcode based on time + code
-      if (name) {
-        const barcode = Date.now().toString().slice(-6) + Math.floor(Math.random() * 90 + 10);
-        document.getElementById('barcode').value = barcode;
-      }
-    }
-
-    // ➕ Add Product
-    function addProduct() {
-      const code = document.getElementById('code').value;
-      const name = document.getElementById('name').value.trim();
-      const category = document.getElementById('category').value.trim();
-      const quantity = parseInt(document.getElementById('quantity').value) || 0;
-      const price = parseFloat(document.getElementById('price').value) || 0;
-      const cost = parseFloat(document.getElementById('cost').value) || 0;
-      const barcode = document.getElementById('barcode').value;
-
-      if (!name || !category) {
-        alert('Veuillez entrer un nom et une catégorie.');
-        return;
-      }
-
-      products.push({ code, name, category, quantity, price, cost, barcode });
-      localStorage.setItem('products', JSON.stringify(products));
-
-      document.querySelectorAll('.add-product input').forEach(i => i.value = '');
-      refreshTable();
-    }
-
-    // ✏️ Edit Product
-    function editProduct(index) {
-      const newName = prompt("Modifier le nom du produit :", products[index].name);
-      if (newName) {
-        products[index].name = newName.trim();
-        localStorage.setItem('products', JSON.stringify(products));
-        refreshTable();
-      }
-    }
-
-    // 🗑️ Delete Product
-    function deleteProduct(index) {
-      if (confirm("Supprimer ce produit ?")) {
-        products.splice(index, 1);
-        localStorage.setItem('products', JSON.stringify(products));
-        refreshTable();
-      }
-    }
-
-    refreshTable();
-  </script>
-</body>
-</html>
+      <label style="color:#fff;">Prix (FCFA)</label>
+      <input type="number" id="price" placeholder="Ex: 2500"
