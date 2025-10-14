@@ -31,13 +31,13 @@
       <h3>Ajouter un Produit</h3>
 
       <label>Code Produit</label>
-      <input type="text" id="code" placeholder="Ex: P001">
+      <input type="text" id="code" placeholder="Auto" readonly>
 
       <label>Nom du Produit</label>
-      <input type="text" id="name" placeholder="Ex: Savon Rose Vanille">
+      <input type="text" id="name" placeholder="Ex: Savon Rose Vanille" oninput="autoGenerateCode()">
 
       <label>Catégorie</label>
-      <input type="text" id="category" placeholder="Ex: Savons">
+      <input type="text" id="category" placeholder="Ex: Savon" oninput="autoGenerateCode()">
 
       <label>Quantité</label>
       <input type="number" id="quantity" placeholder="Ex: 10">
@@ -49,10 +49,7 @@
       <input type="number" id="cost" placeholder="Ex: 1500">
 
       <label>Code-barres</label>
-      <div class="barcode-row">
-        <input type="text" id="barcode" placeholder="Ex: 123456789">
-        <button onclick="generateBarcode()">🎟️</button>
-      </div>
+      <input type="text" id="barcode" placeholder="Auto" readonly>
 
       <button class="add-btn" onclick="addProduct()">➕ Ajouter Produit</button>
     </div>
@@ -86,7 +83,7 @@
     const products = JSON.parse(localStorage.getItem('products')) || [];
     const tableBody = document.getElementById('product-table-body');
 
-    // 🧁 Display products
+    // 🧁 Refresh Table
     function refreshTable() {
       if (products.length === 0) {
         tableBody.innerHTML = '<tr><td colspan="8">Aucun produit ajouté</td></tr>';
@@ -96,71 +93,83 @@
       products.forEach((p, index) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td>${p.code || '-'}</td>
-          <td>${p.name || '-'}</td>
-          <td>${p.category || '-'}</td>
-          <td>${p.quantity || 0}</td>
-          <td>${p.price?.toLocaleString() || 0}</td>
-          <td>${p.cost?.toLocaleString() || 0}</td>
-          <td>${p.barcode || '-'}</td>
+          <td>${p.code}</td>
+          <td>${p.name}</td>
+          <td>${p.category}</td>
+          <td>${p.quantity}</td>
+          <td>${p.price?.toLocaleString()}</td>
+          <td>${p.cost?.toLocaleString()}</td>
+          <td>${p.barcode}</td>
           <td>
-            <button class="edit-btn" onclick="editProduct(${index})">✏️</button>
-            <button class="delete-btn" onclick="deleteProduct(${index})">🗑️</button>
+            <button onclick="editProduct(${index})">✏️</button>
+            <button onclick="deleteProduct(${index})">🗑️</button>
           </td>`;
         tableBody.appendChild(tr);
       });
     }
 
-    // ➕ Add product
+    // 🌸 Auto Code + Barcode Generator
+    function autoGenerateCode() {
+      const category = document.getElementById('category').value.trim();
+      const name = document.getElementById('name').value.trim();
+
+      if (category.length < 2) return;
+
+      const prefix = category.substring(0, 2).toUpperCase();
+      const existing = products.filter(p => p.category?.substring(0, 2).toUpperCase() === prefix);
+      const nextNum = String(existing.length + 1).padStart(3, '0');
+      const code = prefix + nextNum;
+
+      document.getElementById('code').value = code;
+
+      // Auto barcode based on time + code
+      if (name) {
+        const barcode = Date.now().toString().slice(-6) + Math.floor(Math.random() * 90 + 10);
+        document.getElementById('barcode').value = barcode;
+      }
+    }
+
+    // ➕ Add Product
     function addProduct() {
-      const code = document.getElementById('code').value.trim();
+      const code = document.getElementById('code').value;
       const name = document.getElementById('name').value.trim();
       const category = document.getElementById('category').value.trim();
       const quantity = parseInt(document.getElementById('quantity').value) || 0;
       const price = parseFloat(document.getElementById('price').value) || 0;
       const cost = parseFloat(document.getElementById('cost').value) || 0;
-      const barcode = document.getElementById('barcode').value.trim();
+      const barcode = document.getElementById('barcode').value;
 
-      if (!name) {
-        alert('Veuillez entrer un nom de produit.');
+      if (!name || !category) {
+        alert('Veuillez entrer un nom et une catégorie.');
         return;
       }
 
       products.push({ code, name, category, quantity, price, cost, barcode });
       localStorage.setItem('products', JSON.stringify(products));
 
-      // reset form
       document.querySelectorAll('.add-product input').forEach(i => i.value = '');
       refreshTable();
     }
 
-    // ✏️ Edit product
+    // ✏️ Edit Product
     function editProduct(index) {
-      const p = products[index];
-      const newName = prompt('Modifier le nom du produit :', p.name);
-      if (newName !== null && newName.trim() !== '') {
+      const newName = prompt("Modifier le nom du produit :", products[index].name);
+      if (newName) {
         products[index].name = newName.trim();
         localStorage.setItem('products', JSON.stringify(products));
         refreshTable();
       }
     }
 
-    // 🗑️ Delete product
+    // 🗑️ Delete Product
     function deleteProduct(index) {
-      if (confirm('Supprimer ce produit ?')) {
+      if (confirm("Supprimer ce produit ?")) {
         products.splice(index, 1);
         localStorage.setItem('products', JSON.stringify(products));
         refreshTable();
       }
     }
 
-    // 🎟️ Auto-generate barcode
-    function generateBarcode() {
-      const randomCode = Math.floor(100000000 + Math.random() * 900000000);
-      document.getElementById('barcode').value = randomCode;
-    }
-
-    // Load table on start
     refreshTable();
   </script>
 </body>
