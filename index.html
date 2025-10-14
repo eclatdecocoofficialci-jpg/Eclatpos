@@ -1,49 +1,73 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Éclat de Coco POS</title>
+  <title>Éclat de Coco</title>
 
-  <!-- 🌸 Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Amatic+SC:wght@700&display=swap" rel="stylesheet">
 
   <style>
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
-      background: #fff;
-      transition: background 1s ease;
+      background: white;
+      overflow: hidden;
     }
 
-    /* 🌸 Splash Screen (for app launch or offline) */
-    #splash {
+    /* 🌸 Splash + Animation */
+    #welcome {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: #f8bbd0;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-direction: column;
       z-index: 1000;
-      color: white;
-      font-size: 32px;
-      font-weight: 600;
+      color: #e91e63;
+      font-size: 48px;
+      font-family: 'Amatic SC', cursive;
+      font-weight: bold;
       text-align: center;
-      letter-spacing: 1px;
     }
 
-    #splash.fade-out {
+    .fade-word {
       opacity: 0;
-      transition: opacity 1s ease;
-      pointer-events: none;
+      display: inline-block;
+      animation: fadeIn 0.5s forwards;
     }
 
-    /* 🌸 Navbar */
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    /* 🌸 Password box */
+    #passwordBox {
+      opacity: 0;
+      margin-top: 30px;
+      transition: opacity 1s ease;
+    }
+
+    #passwordInput {
+      font-size: 22px;
+      padding: 10px 20px;
+      border: 2px solid #e91e63;
+      border-radius: 10px;
+      text-align: center;
+      outline: none;
+      color: #e91e63;
+    }
+
+    /* 🌸 Main System */
+    #mainApp {
+      display: none;
+      flex-direction: column;
+      min-height: 100vh;
+      background: #fff;
+    }
+
     nav {
       display: flex;
       justify-content: space-between;
@@ -52,15 +76,15 @@
       padding: 15px 25px;
     }
 
-    nav .logo {
+    nav h2 {
+      color: white;
       font-weight: 600;
-      color: #fff;
       font-size: 20px;
     }
 
     .nav-buttons a {
       text-decoration: none;
-      color: #fff;
+      color: white;
       margin-left: 10px;
       font-weight: 500;
     }
@@ -69,295 +93,98 @@
       text-decoration: underline;
     }
 
-    /* 🌸 POS Layout */
-    #pos {
-      display: flex;
-      justify-content: space-between;
-      padding: 20px;
-      gap: 20px;
-      opacity: 0;
-      transition: opacity 1s ease;
-    }
-
-    #pos.show {
-      opacity: 1;
-    }
-
-    /* Left: Categories */
-    .categories {
-      width: 25%;
-      background: #ffe6ef;
-      border-radius: 10px;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-
-    .categories h3 {
-      color: #e91e63;
-      margin-bottom: 10px;
-    }
-
-    .category-btn {
-      background-color: #f8bbd0;
+    iframe {
+      flex-grow: 1;
       border: none;
-      border-radius: 12px;
-      padding: 20px;
-      font-size: 18px;
-      font-weight: 600;
-      cursor: pointer;
-      color: #b6004a;
-      transition: 0.3s;
-    }
-
-    .category-btn.active {
-      background-color: #e91e63;
-      color: #fff;
-    }
-
-    .category-btn:hover {
-      background-color: #ec407a;
-      color: white;
-    }
-
-    /* Middle: Products */
-    .products {
-      width: 45%;
-      border-left: 2px solid #f8bbd0;
-      border-right: 2px solid #f8bbd0;
-      padding: 0 20px;
-    }
-
-    .products h3 {
-      color: #e91e63;
-    }
-
-    .products input {
       width: 100%;
-      padding: 8px;
-      margin-bottom: 10px;
-      border-radius: 8px;
-      border: 1px solid #f8bbd0;
+      height: 100%;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      border: 1px solid #f8bbd0;
-      padding: 8px;
+    footer {
       text-align: center;
-    }
-
-    th {
-      background-color: #fff0f5;
-      color: #e91e63;
-    }
-
-    /* Right: Cashier */
-    .cashier {
-      width: 28%;
-    }
-
-    .cashier h3 {
-      color: #e91e63;
-    }
-
-    .cashier input {
-      width: 100%;
-      padding: 8px;
-      margin-bottom: 10px;
-      border: 1px solid #f8bbd0;
-      border-radius: 8px;
-    }
-
-    .cashier button {
-      width: 100%;
-      background-color: #e91e63;
-      color: white;
-      border: none;
-      border-radius: 8px;
       padding: 10px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-
-    .cashier button:hover {
-      background-color: #d81b60;
+      font-size: 14px;
+      background: #f8bbd0;
+      color: white;
     }
   </style>
 </head>
 
 <body>
-  <!-- 🌸 Splash Screen -->
-  <div id="splash">
-    <div>🌸 Bienvenue à<br>Éclat de Coco POS 🌸</div>
+  <!-- 🌸 Animated Welcome -->
+  <div id="welcome">
+    <div id="animatedText"></div>
+    <div id="passwordBox">
+      <input type="password" id="passwordInput" placeholder="Entrez le code" maxlength="4" />
+    </div>
   </div>
 
-  <!-- 🌸 Navigation -->
-  <nav>
-    <h2 class="logo">Éclat de Coco POS</h2>
-    <div class="nav-buttons">
-      <a href="index.html" class="active">POS</a>
-      <a href="dashboard.html">Dashboard</a>
-      <a href="sales_invoices.html">Sales Invoices</a>
-      <a href="products.html">Products</a>
-      <a href="inventory.html">Inventory</a>
-      <a href="expenses.html">Expenses</a>
-      <a href="reports.html">Reports</a>
-    </div>
-  </nav>
+  <!-- 🌸 Main App -->
+  <div id="mainApp">
+    <nav>
+      <h2>Éclat de Coco POS</h2>
+      <div class="nav-buttons">
+        <a href="dashboard.html" id="dashboardLink" class="active">Dashboard</a>
+        <a href="sales_invoices.html">Sales Invoices</a>
+        <a href="products.html">Products</a>
+        <a href="inventory.html">Inventory</a>
+        <a href="expenses.html">Expenses</a>
+        <a href="reports.html">Reports</a>
+      </div>
+    </nav>
 
-  <!-- 🌸 POS Section -->
-  <section id="pos">
-    <!-- Categories -->
-    <div class="categories">
-      <h3>Catégories</h3>
-      <button class="category-btn active" onclick="filterCategory('Savon')">Savon</button>
-      <button class="category-btn" onclick="filterCategory('Lotion')">Lotion</button>
-      <button class="category-btn" onclick="filterCategory('Beurre corporel')">Beurre corporel</button>
-    </div>
+    <iframe id="pageFrame" src="dashboard.html"></iframe>
 
-    <!-- Products -->
-    <div class="products">
-      <h3>Produits</h3>
-      <input type="text" id="search" placeholder="Rechercher un produit..." oninput="searchProduct()">
-      <table>
-        <thead>
-          <tr>
-            <th>Code</th>
-            <th>Nom</th>
-            <th>Prix</th>
-            <th>+</th>
-          </tr>
-        </thead>
-        <tbody id="productList"></tbody>
-      </table>
-    </div>
-
-    <!-- Cashier -->
-    <div class="cashier">
-      <h3>Caisse</h3>
-      <input type="text" id="clientName" placeholder="Nom du client">
-      <input type="text" id="clientPhone" placeholder="Téléphone">
-      <input type="text" id="clientAddress" placeholder="Adresse">
-
-      <table>
-        <thead>
-          <tr><th>Produit</th><th>Qté</th><th>Total</th></tr>
-        </thead>
-        <tbody id="cart"></tbody>
-      </table>
-
-      <p><strong>Total:</strong> <span id="total">0</span> FCFA</p>
-      <button onclick="saveAndPrint()">🖨️ Imprimer & Enregistrer</button>
-    </div>
-  </section>
+    <footer>© 2025 Éclat de Coco. Tous droits réservés.</footer>
+  </div>
 
   <script>
-    // 🌸 Splash Animation
-    window.addEventListener("load", () => {
-      setTimeout(() => {
-        document.getElementById("splash").classList.add("fade-out");
-        document.getElementById("pos").classList.add("show");
-      }, 2000); // 2s splash delay
+    const text = ["Bienvenue", "à", "Éclat", "de", "Coco"];
+    const container = document.getElementById("animatedText");
+    const passwordBox = document.getElementById("passwordBox");
+    const welcome = document.getElementById("welcome");
+    const app = document.getElementById("mainApp");
+    const input = document.getElementById("passwordInput");
+
+    // Animation: fade each word one by one
+    text.forEach((word, i) => {
+      const span = document.createElement("span");
+      span.textContent = word + " ";
+      span.classList.add("fade-word");
+      span.style.animationDelay = `${i * 0.5}s`;
+      container.appendChild(span);
     });
 
-    // ===== Products =====
-    const sampleProducts = [
-      { code: "SA001", productName: "Rose Vanilla Soap", price: 1500, category: "Savon" },
-      { code: "SA002", productName: "Lavender Bliss Soap", price: 2000, category: "Savon" },
-      { code: "LO001", productName: "Coconut Lotion", price: 3500, category: "Lotion" },
-      { code: "BB001", productName: "Vanilla Body Butter", price: 4000, category: "Beurre corporel" },
-    ];
+    // Show password box after animation
+    setTimeout(() => {
+      passwordBox.style.opacity = 1;
+    }, text.length * 500 + 500);
 
-    localStorage.setItem("inventory", JSON.stringify(sampleProducts));
+    // Check code
+    input.addEventListener("keyup", e => {
+      if (e.key === "Enter" || input.value === "1234") {
+        if (input.value === "1234") {
+          welcome.style.display = "none";
+          app.style.display = "flex";
+        } else {
+          input.style.borderColor = "red";
+          setTimeout(() => input.style.borderColor = "#e91e63", 1000);
+        }
+      }
+    });
 
-    function loadProducts() {
-      const inventory = JSON.parse(localStorage.getItem("inventory")) || [];
-      const productList = document.getElementById("productList");
-      productList.innerHTML = "";
-      inventory.forEach(item => {
-        const row = document.createElement("tr");
-        row.dataset.category = item.category;
-        row.innerHTML = `
-          <td>${item.code}</td>
-          <td>${item.productName}</td>
-          <td>${item.price}</td>
-          <td><button onclick="addToCart('${item.productName}', ${item.price})">+</button></td>
-        `;
-        productList.appendChild(row);
-      });
-    }
-
-    function filterCategory(category) {
-      document.querySelectorAll(".category-btn").forEach(btn => btn.classList.remove("active"));
-      event.target.classList.add("active");
-      document.querySelectorAll("#productList tr").forEach(row => {
-        row.style.display = row.dataset.category === category ? "" : "none";
-      });
-    }
-
-    function searchProduct() {
-      const searchValue = document.getElementById("search").value.toLowerCase();
-      document.querySelectorAll("#productList tr").forEach(row => {
-        row.style.display = row.innerText.toLowerCase().includes(searchValue) ? "" : "none";
-      });
-    }
-
-    // ===== Cart =====
-    let subtotal = 0;
-    function addToCart(name, price) {
-      const cart = document.getElementById("cart");
-      const row = document.createElement("tr");
-      row.innerHTML = `<td>${name}</td><td>1</td><td>${price}</td>`;
-      cart.appendChild(row);
-      subtotal += price;
-      document.getElementById("total").textContent = subtotal;
-    }
-
-    function saveAndPrint() {
-      const clientName = document.getElementById("clientName").value || "Client anonyme";
-      const clientPhone = document.getElementById("clientPhone").value || "-";
-      const total = parseFloat(document.getElementById("total").textContent);
-      const cartItems = Array.from(document.querySelectorAll("#cart tr")).map(tr => {
-        const tds = tr.querySelectorAll("td");
-        return { product: tds[0].innerText, qty: parseInt(tds[1].innerText), total: parseFloat(tds[2].innerText) };
-      });
-
-      const sales = JSON.parse(localStorage.getItem("sales")) || [];
-      const saleData = {
-        id: Date.now(),
-        date: new Date().toLocaleString(),
-        client: clientName,
-        phone: clientPhone,
-        items: cartItems,
-        total: total
-      };
-
-      sales.push(saleData);
-      localStorage.setItem("sales", JSON.stringify(sales));
-      alert("✅ Vente enregistrée !");
-      window.print();
-    }
-
-    window.onload = loadProducts;
-
-    // ===== Offline Support =====
+    // Offline support
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("service-worker.js");
     }
   </script>
 
-  <!-- 🌸 App Icon & PWA -->
+  <!-- 🌸 App Icon for iPad -->
   <link rel="icon" type="image/png" href="icon.png">
   <link rel="apple-touch-icon" href="icon.png">
   <meta name="theme-color" content="#f8bbd0">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Éclat de Coco POS">
+  <meta name="apple-mobile-web-app-title" content="Éclat de Coco">
 </body>
 </html>
