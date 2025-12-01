@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>POS - Éclat de Coco</title>
+
+  <style>
+    body {
+      font-family: Poppins, sans-serif;
+      margin: 0;
+      background: #fff4fa;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #e91e63;
+    }
+
+    .product-inputs, .invoice-box {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
+    }
+
+    label { font-weight: 600; }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      border: 1px solid #e91e63;
+      border-radius: 8px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #e91e63;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+
+    table th, table td {
+      padding: 10px;
+      border-bottom: 1px solid #ffd3e0;
+    }
+
+    .total-display {
+      font-size: 22px;
+      text-align: right;
+      font-weight: bold;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>Point de Vente - Éclat de Coco</h1>
+
+<!-- 🔸 Ajouter un produit -->
+<div class="product-inputs">
+  <label>Nom du produit :</label>
+  <input type="text" id="productName" placeholder="Ex: Savon coco">
+
+  <label>Prix (FCFA) :</label>
+  <input type="number" id="productPrice" placeholder="Ex: 3500">
+
+  <label>Quantité :</label>
+  <input type="number" id="productQty" placeholder="Ex: 2">
+
+  <button onclick="addToCart()">➕ Ajouter au panier</button>
+</div>
+
+<!-- 🔸 Panier -->
+<table id="cartTable">
+  <thead>
+    <tr>
+      <th>Produit</th>
+      <th>Prix</th>
+      <th>Qté</th>
+      <th>Total</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<div class="total-display" id="totalDisplay">Total : 0 FCFA</div>
+
+<button onclick="saveInvoice()">💾 Enregistrer la facture</button>
+
+<script>
+  let cart = [];
+
+  function addToCart() {
+    const name = document.getElementById("productName").value;
+    const price = parseFloat(document.getElementById("productPrice").value);
+    const qty = parseInt(document.getElementById("productQty").value);
+
+    if (!name || !price || !qty) {
+      alert("Veuillez remplir tous les champs.");
+      return;
+    }
+
+    const total = price * qty;
+    cart.push({ name, price, qty, total });
+    updateTable();
+  }
+
+  function updateTable() {
+    const tbody = document.querySelector("#cartTable tbody");
+    tbody.innerHTML = "";
+
+    let grandTotal = 0;
+
+    cart.forEach(item => {
+      grandTotal += item.total;
+
+      const row = `
+        <tr>
+          <td>${item.name}</td>
+          <td>${item.price} FCFA</td>
+          <td>${item.qty}</td>
+          <td>${item.total} FCFA</td>
+        </tr>
+      `;
+
+      tbody.innerHTML += row;
+    });
+
+    document.getElementById("totalDisplay").textContent =
+      "Total : " + grandTotal + " FCFA";
+  }
+
+  function saveInvoice() {
+    if (cart.length === 0) {
+      alert("Le panier est vide.");
+      return;
+    }
+
+    const invoices = JSON.parse(localStorage.getItem("invoices") || "[]");
+
+    const invoice = {
+      id: Date.now(),
+      date: new Date().toLocaleString(),
+      items: cart,
+      total: cart.reduce((sum, item) => sum + item.total, 0)
+    };
+
+    invoices.push(invoice);
+
+    localStorage.setItem("invoices", JSON.stringify(invoices));
+
+    alert("Facture enregistrée !");
+    cart = [];
+    updateTable();
+  }
+</script>
+
+</body>
+</html>
