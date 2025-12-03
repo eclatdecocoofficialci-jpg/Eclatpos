@@ -15,7 +15,7 @@
       overflow: hidden;
     }
 
-    /* 🌸 Splash + Animation */
+    /* Splash */
     #welcome {
       position: fixed;
       top: 0; left: 0;
@@ -43,7 +43,7 @@
       to { opacity: 1; }
     }
 
-    /* 🌸 Password box */
+    /* Password box */
     #passwordBox {
       opacity: 0;
       margin-top: 30px;
@@ -60,7 +60,7 @@
       color: #e91e63;
     }
 
-    /* 🌸 Main System */
+    /* Main System */
     #mainApp {
       display: none;
       flex-direction: column;
@@ -92,7 +92,7 @@
     .nav-buttons a.active {
       text-decoration: underline;
     }
-<a href="pos.html">POS</a>
+
     iframe {
       flex-grow: 1;
       border: none;
@@ -111,7 +111,8 @@
 </head>
 
 <body>
-  <!-- 🌸 Animated Welcome -->
+
+  <!-- Welcome -->
   <div id="welcome">
     <div id="animatedText"></div>
     <div id="passwordBox">
@@ -119,12 +120,13 @@
     </div>
   </div>
 
-  <!-- 🌸 Main App -->
+  <!-- Main App -->
   <div id="mainApp">
     <nav>
       <h2>Éclat de Coco POS</h2>
       <div class="nav-buttons">
-        <a href="dashboard.html" id="dashboardLink" class="active">Dashboard</a>
+        <a href="dashboard.html" class="active">Dashboard</a>
+        <a href="pos.html">POS</a>
         <a href="sales_invoices.html">Sales Invoices</a>
         <a href="products.html">Products</a>
         <a href="inventory.html">Inventory</a>
@@ -146,7 +148,6 @@
     const app = document.getElementById("mainApp");
     const input = document.getElementById("passwordInput");
 
-    // Animation: fade each word one by one
     text.forEach((word, i) => {
       const span = document.createElement("span");
       span.textContent = word + " ";
@@ -155,12 +156,10 @@
       container.appendChild(span);
     });
 
-    // Show password box after animation
     setTimeout(() => {
       passwordBox.style.opacity = 1;
     }, text.length * 500 + 500);
 
-    // Check code
     input.addEventListener("keyup", e => {
       if (e.key === "Enter" || input.value === "1234") {
         if (input.value === "1234") {
@@ -173,13 +172,11 @@
       }
     });
 
-    // Offline support
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("service-worker.js");
     }
   </script>
 
-  <!-- 🌸 App Icon for iPad -->
   <link rel="icon" type="image/png" href="icon.png">
   <link rel="apple-touch-icon" href="icon.png">
   <meta name="theme-color" content="#f8bbd0">
