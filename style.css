@@ -511,3 +511,12 @@ th {
     padding: 15px;
   }
 }
+.invoice-header {
+  text-align: center;
+  background: #ffe4ed;
+  padding: 10px;
+  border-radius: 10px;
+  margin: 15px;
+  color: #e91e63;
+  font-weight: 600;
+}
