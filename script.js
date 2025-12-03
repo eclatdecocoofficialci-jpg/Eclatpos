@@ -53,3 +53,15 @@ function saveOrder() {
 invoiceCount++;
 localStorage.setItem("invoiceCount", invoiceCount);
 updateInvoiceNumber();
+function press(key) {
+  document.getElementById("calcDisplay").value += key;
+}
+
+function calculate() {
+  try {
+    let result = eval(document.getElementById("calcDisplay").value);
+    document.getElementById("calcDisplay").value = result;
+  } catch {
+    document.getElementById("calcDisplay").value = "Erreur";
+  }
+}
