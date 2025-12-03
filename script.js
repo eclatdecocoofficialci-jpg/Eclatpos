@@ -50,3 +50,6 @@ function saveOrder() {
   document.getElementById("clientPhone").value = "";
   document.getElementById("clientAddress").value = "";
 }
+invoiceCount++;
+localStorage.setItem("invoiceCount", invoiceCount);
+updateInvoiceNumber();
