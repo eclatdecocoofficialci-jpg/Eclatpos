@@ -142,7 +142,31 @@
 
     <footer>© 2025 Éclat de Coco. Tous droits réservés.</footer>
   </div>
+<div class="calculator">
+  <input type="text" id="calcDisplay" disabled>
 
+  <div class="calc-grid">
+    <button onclick="press('7')">7</button>
+    <button onclick="press('8')">8</button>
+    <button onclick="press('9')">9</button>
+    <button onclick="press('/')">/</button>
+
+    <button onclick="press('4')">4</button>
+    <button onclick="press('5')">5</button>
+    <button onclick="press('6')">6</button>
+    <button onclick="press('*')">*</button>
+
+    <button onclick="press('1')">1</button>
+    <button onclick="press('2')">2</button>
+    <button onclick="press('3')">3</button>
+    <button onclick="press('-')">-</button>
+
+    <button onclick="press('0')">0</button>
+    <button onclick="press('.')">.</button>
+    <button onclick="calculate()">=</button>
+    <button onclick="press('+')">+</button>
+  </div>
+</div>
   <script>
     const text = ["Bienvenue", "à", "Éclat", "de", "Coco"];
     const container = document.getElementById("animatedText");
