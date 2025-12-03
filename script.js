@@ -65,3 +65,29 @@ function calculate() {
     document.getElementById("calcDisplay").value = "Erreur";
   }
 }
+printWindow.document.write(`
+  <html>
+  <head>
+    <title>Facture Éclat de Coco</title>
+    <style>
+      body { font-family: Poppins, sans-serif; padding: 20px; }
+      h2 { color: #e91e63; text-align: center; }
+      table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+      td, th { border: 1px solid #f8bbd0; padding: 8px; text-align: center; }
+      .footerMsg { margin-top: 20px; text-align: center; color: #e91e63; font-weight: 600; }
+    </style>
+  </head>
+  <body>
+    <h2>Facture Éclat de Coco</h2>
+    <p><strong>Facture N° :</strong> ${document.getElementById("invoiceNumber").textContent}</p>
+    <p><strong>Client :</strong> ${sale.client}</p>
+    <p><strong>Lieu :</strong> Abidjan, Côte d’Ivoire</p>
+    <p><strong>Date :</strong> ${sale.date}</p>
+
+    ${document.getElementById("invoiceDetails").innerHTML}
+
+    <p class="footerMsg">Éclat de Coco vous remercie 💗<br>
+    WhatsApp : 07 00 08 03</p>
+  </body>
+  </html>
+`);
